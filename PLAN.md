@@ -1,6 +1,12 @@
 # Block Attack implementation plan
 
-Status: ready for implementation. This document plans the new game; it does not implement it.
+Status: CPU and local two-player implementations are present. Direct menu, original presentation/audio,
+single CPU matches, 1–10-level CPU series, best-of-three local sets with jumping victory stars,
+settings, controls, and automated checks are implemented. LAN remains a future milestone.
+See README.md for run instructions and current verification limits.
+Presentation now uses one fixed 256 × 224 scene with integer nearest-neighbor scaling, native-size
+96 × 192 boards and 16 × 16 panels, bitmap lettering, a compact SELECT menu/HUD, original pixel scenery,
+and square Red/Blue trash-block mascots. Direct-file play is supported through the classic-script bundle.
 
 ## Goal and boundaries
 
@@ -54,6 +60,8 @@ the match still starts. Preserve an obvious mute button.
 Every match shows both boards, Red/Blue labels, scores, danger, attack feedback, pause,
 and the relevant bindings. End with a simple winner/draw panel and explicit next action.
 Single/local/LAN matches offer Rematch and Main Menu; LAN rematches require both players ready.
+Local versus uses best-of-three sets: one star per round win, first to two wins the set;
+draws replay the round without changing either player's stars. A new set clears both counters.
 
 CPU series shows `Level X / N`. A win advances; a loss offers retry of the same level or exit;
 a draw offers replay of that level. The final win completes the series. New levels reset both boards
@@ -93,10 +101,10 @@ Tune only after the new game is playable; keep both human boards on identical ru
 
 ### Original presentation and audio
 
-- Draw two simple geometric mascots from scratch: Red and Blue, with idle, attack, hit,
+- Draw two square trash-block mascots from scratch: Red and Blue, with idle, attack, hit,
   win, and loss poses made from basic shapes. No character sprite pipeline is necessary.
-- Use a new clean arcade arena: dark background, red/blue accents, readable panels,
-  brief particles, attack trails, and restrained danger pulses.
+- Use a colorful SNES-style console frame and beveled SELECT menu based on the clone's layout,
+  with an original pixel garden, red/blue accents, readable panels, and restrained danger pulses.
 - Create an original panel palette and symbol set. Pair color with distinct symbols;
   label players with both names/numbers and colors.
 - Draw panels, cursor, garbage, mascots, and effects in Canvas/CSS. Use system fonts.
@@ -114,9 +122,9 @@ This is an asset and design separation plan, not a legal clearance assessment.
 
 | Action | Red / Player 1 | Blue / Player 2 |
 | --- | --- | --- |
-| Move | W / A / S / D | Arrow keys |
-| Swap | F | Enter |
-| Raise | G | Right Shift |
+| Move | W / A / S / D | I / J / K / L |
+| Swap | Enter | Right Shift |
+| Raise | Left Shift | Space |
 | Pause / back | Escape | Escape |
 
 - Use these non-overlapping defaults consistently across modes. LAN users control only their assigned board.
@@ -166,7 +174,7 @@ Keep its installation and lockfile in the LAN milestone.
 ## Small implementation structure
 
 Use plain JavaScript ES modules, Canvas, CSS, and Node's test runner. No UI framework or game engine.
-Do not preserve direct `file://` startup: HTTP serving is the simplest shared path for all modes.
+Support direct `file://` CPU/local startup through a generated classic script; LAN still requires HTTP serving.
 
 ```text
 index.html, style.css       Menu, two-board game view, lobby, results

@@ -1,0 +1,900 @@
+{
+  "source": "tetrisAttack/src/engine.js and src/main.js, captured 2026-11-03",
+  "engineSha256": "7ce9a9d35e09882018ac4c4a68ce4770f537db6a399a5ca4070f77314181fde3",
+  "coverage": {
+    "clear": 1016,
+    "pop": 3138,
+    "land": 747,
+    "convert": 683,
+    "chain-end": 55,
+    "move": 50,
+    "swap": 46
+  },
+  "cursor": [
+    {
+      "down": [
+        "KeyW"
+      ],
+      "move": [
+        0,
+        1
+      ]
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": [
+        0,
+        1
+      ]
+    },
+    {
+      "move": [
+        0,
+        1
+      ]
+    },
+    {
+      "down": [
+        "KeyD"
+      ],
+      "move": [
+        0,
+        1
+      ]
+    },
+    {
+      "up": [
+        "KeyW"
+      ],
+      "move": [
+        1,
+        0
+      ]
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": [
+        1,
+        0
+      ]
+    },
+    {
+      "down": [
+        "KeyA"
+      ],
+      "move": [
+        -1,
+        0
+      ]
+    },
+    {
+      "down": [
+        "KeyS"
+      ],
+      "move": [
+        0,
+        -1
+      ]
+    },
+    {
+      "down": [
+        "KeyW"
+      ],
+      "move": [
+        0,
+        1
+      ]
+    },
+    {
+      "up": [
+        "KeyW",
+        "KeyS",
+        "KeyA",
+        "KeyD"
+      ],
+      "move": null
+    },
+    {
+      "down": [
+        "ArrowLeft"
+      ],
+      "move": [
+        -1,
+        0
+      ]
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": null
+    },
+    {
+      "move": [
+        -1,
+        0
+      ]
+    },
+    {
+      "move": [
+        -1,
+        0
+      ]
+    },
+    {
+      "down": [
+        "KeyA"
+      ],
+      "up": [
+        "ArrowLeft"
+      ],
+      "move": [
+        -1,
+        0
+      ]
+    },
+    {
+      "up": [
+        "KeyA"
+      ],
+      "move": null
+    },
+    {
+      "down": [
+        "ArrowUp"
+      ],
+      "up": [
+        "ArrowUp"
+      ],
+      "move": null
+    },
+    {
+      "move": null
+    }
+  ],
+  "replays": [
+    {
+      "config": {
+        "seed": 71,
+        "difficulty": "easy",
+        "stage": 1,
+        "ticks": 7200,
+        "input": "pilot"
+      },
+      "expected": {
+        "snapshots": [
+          {
+            "tick": 0,
+            "hash": "64a71db4862f6bb7509aaffc4b8178e13309f1eec008977601ca8291c4f860f8"
+          },
+          {
+            "tick": 1,
+            "hash": "d35a7fd1208639da53af54dfe7b85627b7f67d9c5d3c862dfdb00b24a7d1d1b8"
+          },
+          {
+            "tick": 11,
+            "hash": "c8ef0e353b40a0103d25383ecbbccebff70a43d74dd29d6cf1784be67a9982d0"
+          },
+          {
+            "tick": 60,
+            "hash": "8475ddee5d5065646f23b0991945092be4e6f1821b17eb77239dc016c90fabf8"
+          },
+          {
+            "tick": 120,
+            "hash": "e32a188bef39c206a780750ec4a8affcc3e64ecd652f099ef03c61888bbec003"
+          },
+          {
+            "tick": 300,
+            "hash": "52464706665217ff3d596bf3b05bcf6eea6d428ac99dc2b3a02d92bd4f9b61e1"
+          },
+          {
+            "tick": 900,
+            "hash": "28e26cf82a92f5dc27202c9d010b5f0f7b783199862e324c9645934d7d68c758"
+          },
+          {
+            "tick": 1800,
+            "hash": "043fc894ca68246303e0def9c43101c3fd959ede59026930d58037648906a3ca"
+          },
+          {
+            "tick": 3600,
+            "hash": "1f9fecf346c50245863c8c137ceb6ec3c02372a6a8d4d79bcab9a57547c7c389"
+          },
+          {
+            "tick": 7200,
+            "hash": "c72ebca2aa056f3aa8077b8cb89c59b87fee5570fff50f4ff98a0749edd88848"
+          }
+        ],
+        "eventsHash": "21c2c9e8509331afe1998214260996df07926fe9010020a553562be93a6ecf09",
+        "counts": {
+          "clear": 119,
+          "pop": 356,
+          "land": 49,
+          "convert": 88,
+          "chain-end": 4
+        },
+        "result": null,
+        "scores": [
+          3290,
+          1650
+        ],
+        "chains": [
+          3,
+          3
+        ]
+      }
+    },
+    {
+      "config": {
+        "seed": 112,
+        "difficulty": "easy",
+        "stage": 10,
+        "ticks": 7200,
+        "input": "pilot"
+      },
+      "expected": {
+        "snapshots": [
+          {
+            "tick": 0,
+            "hash": "41e8687126abad49cf744d4de40ab9e68275b007c84a5084ee9824410302eda6"
+          },
+          {
+            "tick": 1,
+            "hash": "52e2c98e7235c170d528cdc4d3596c0a8ed57c3bd1ed5e6bb37f7fc3e12500a0"
+          },
+          {
+            "tick": 11,
+            "hash": "333c292ed08d7b7a6bb6dd7e3c2043af87da703e2ec42374a89f01331b828b1c"
+          },
+          {
+            "tick": 60,
+            "hash": "95d0dbd4e875908aaccdb87b811779a19c3cd9b9376f2110b8adcb7ae208f76f"
+          },
+          {
+            "tick": 120,
+            "hash": "832ff8961f58de42cc1d3eb58a750c77811682011f11b830427b9392bdb2c372"
+          },
+          {
+            "tick": 300,
+            "hash": "7de29ba96ff49ec497944095b2987398ad4b4fe8c5bb992b21ba7462ffa8dde3"
+          },
+          {
+            "tick": 900,
+            "hash": "14cd8f5de9a58c94c646ddd869f27627bbbb4c7385e917ba7689ecc17cc63e15"
+          },
+          {
+            "tick": 1800,
+            "hash": "e00fa8a7a81e42adbc17b5f40de7d08c5aa895395b6e797635162a5217f8ccd0"
+          },
+          {
+            "tick": 3600,
+            "hash": "d7a739182ddd5ce7e3705a886e3883eeb950ba43231840d74787083513246bbf"
+          },
+          {
+            "tick": 6613,
+            "hash": "1de802685eaa4b272ca7e8abdf8373f5f8abf3ab7f43208de638cb760ba3ea7d"
+          }
+        ],
+        "eventsHash": "e4fb63d5eff5834e984eb0d43bf2b8eee6bfb7d87e45f55550dc24ef91256163",
+        "counts": {
+          "clear": 94,
+          "pop": 300,
+          "chain-end": 5,
+          "land": 104,
+          "convert": 61
+        },
+        "result": "loss",
+        "scores": [
+          1760,
+          3320
+        ],
+        "chains": [
+          2,
+          4
+        ]
+      }
+    },
+    {
+      "config": {
+        "seed": 333,
+        "difficulty": "normal",
+        "stage": 1,
+        "ticks": 7200,
+        "input": "pilot"
+      },
+      "expected": {
+        "snapshots": [
+          {
+            "tick": 0,
+            "hash": "d856c3c0b11e8af4470cf8cffd6c9fa8aa3b06f271eb828edfcf0ea144c65732"
+          },
+          {
+            "tick": 1,
+            "hash": "1afbbcd44e320bfa569de2a9ac2ccd436a8fe61efe51ebb9554d72ddf1d67b41"
+          },
+          {
+            "tick": 11,
+            "hash": "e6c9315f2f0cc657f23af4d3949f1d648ca5473e6ca57a44de4cc8d40d964d98"
+          },
+          {
+            "tick": 60,
+            "hash": "95b764605da67d9ffd9bd9f00198cd17a7710a5ba2057602d3234c3873085e01"
+          },
+          {
+            "tick": 120,
+            "hash": "c4b28a2a9343b25c8c73b62303982d8668d54f243fddf7cf4ebe3bdf6024273d"
+          },
+          {
+            "tick": 300,
+            "hash": "d230b53f4f9e8c493fdf8b54ef170470254273a2b30930e74e1b168ae5008cda"
+          },
+          {
+            "tick": 900,
+            "hash": "afbed7e58195f70b7976069bc6c7a337f1ccc04e96482a5c34a8c6086ceb3ce8"
+          },
+          {
+            "tick": 1800,
+            "hash": "934e743a2941c4fc568cca1fda4dbb477162224b5da1424d9e8cd3fbcbf9f7ea"
+          },
+          {
+            "tick": 3600,
+            "hash": "71f7062cb52fa6f685e08a8f3ae6cfd7e00c8fc660fae40facd8743356017542"
+          },
+          {
+            "tick": 7200,
+            "hash": "5f0a977914acb5f3c186b76d451b85ca07014f6225be9b76db5c30b2731eb63b"
+          }
+        ],
+        "eventsHash": "a04b6dac674bea13b441b9e235afe9769cbc1c8ffccefae7ebf4659352e82b7c",
+        "counts": {
+          "clear": 124,
+          "pop": 380,
+          "chain-end": 9,
+          "land": 146,
+          "convert": 96
+        },
+        "result": null,
+        "scores": [
+          2830,
+          3070
+        ],
+        "chains": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "config": {
+        "seed": 991,
+        "difficulty": "normal",
+        "stage": 6,
+        "ticks": 7200,
+        "input": "pilot"
+      },
+      "expected": {
+        "snapshots": [
+          {
+            "tick": 0,
+            "hash": "a9fa9b76cb4b043cbf06e2c5bbc13d088bdd78168463c5b88e76d1982ea5e8cb"
+          },
+          {
+            "tick": 1,
+            "hash": "98c4d0f9150f6096c5c793429197fe33a3de253f30461a84a3fbbf5ac692f74f"
+          },
+          {
+            "tick": 11,
+            "hash": "6d9a99df4959550953a26e91c90260f0ba8e2fac71edc19589e03476dfa15ae9"
+          },
+          {
+            "tick": 60,
+            "hash": "ffd88badbc7a8c05b655448aa314811f2adfac40f34492c9928b650b780bc980"
+          },
+          {
+            "tick": 120,
+            "hash": "6a5e19eb1f54e023d2465113fb4c0fea2296b22498163ef061088d172022f815"
+          },
+          {
+            "tick": 300,
+            "hash": "ce06f4ae8a1af7ec2403dadae93fc1b1a960e72b55b3c392d523e08fb8cf2473"
+          },
+          {
+            "tick": 900,
+            "hash": "ae7e4dbd6b42938e915a1f5971fa0669d51b8c3f19e0eb2e63044fde6c1d2f07"
+          },
+          {
+            "tick": 1800,
+            "hash": "41db5ae52109d0866130cfb6696579cbe85ab4dca977b17f6d15ada562635306"
+          },
+          {
+            "tick": 3600,
+            "hash": "dab701ef609d4af2791baf286045df581d0a5a08204c63ed22c49493df78b42c"
+          },
+          {
+            "tick": 7200,
+            "hash": "f9690ab56ffe95adadb09adcfbb11e9b98228ed7e72b9dd152b950e52dc6780a"
+          }
+        ],
+        "eventsHash": "de3d7a8c00d7c00ce8f42644d19c5e8871532fc012526307b353cc08748ec55f",
+        "counts": {
+          "clear": 149,
+          "pop": 466,
+          "land": 76,
+          "convert": 104,
+          "chain-end": 6
+        },
+        "result": null,
+        "scores": [
+          3290,
+          3500
+        ],
+        "chains": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "config": {
+        "seed": 71,
+        "difficulty": "normal",
+        "stage": 11,
+        "ticks": 7200,
+        "input": "pilot"
+      },
+      "expected": {
+        "snapshots": [
+          {
+            "tick": 0,
+            "hash": "5c2de18e9c50dede5596cb85e8b5cf497f48270056e1422d6f771037a6ba8f4c"
+          },
+          {
+            "tick": 1,
+            "hash": "a22e0c5c2413d41ab9987d5d34c38ec1bf65c68e17bff59e8248ae0c8c19599f"
+          },
+          {
+            "tick": 11,
+            "hash": "e92db505f6094b2f0e8dc9b9854a5dec3d338b1b8b1664241ba69b4ee3eef6df"
+          },
+          {
+            "tick": 60,
+            "hash": "3d8b4ac25e79887fdc63f2ecdeda1a31d212dac590c136870b6768cc47ce6a9d"
+          },
+          {
+            "tick": 120,
+            "hash": "10146df65bd6e795dc5d416355c9861e960bf62f57b8ec9813d9a9b7a1dfc115"
+          },
+          {
+            "tick": 300,
+            "hash": "3200d08697240f7fa6e588a8fb08c044a817306830278b17ddcab72dec1cf61e"
+          },
+          {
+            "tick": 900,
+            "hash": "49456313e8c470b1c3c220fbe10131271799a19f8384fc5a2d6fe3f0ccebbb30"
+          },
+          {
+            "tick": 1800,
+            "hash": "98a23c607f672cba183172ccae265ce3e8d6a040aafc3889346fda2d11cb6f27"
+          },
+          {
+            "tick": 3116,
+            "hash": "608f936d7f2df0cbefbffd68508f107ab337195f90d1169f8917e48e19bf4471"
+          }
+        ],
+        "eventsHash": "7213dcab3243634a172cbe520f45de6431d7bd7281cfa5de9fa94b4fee1625ad",
+        "counts": {
+          "clear": 71,
+          "pop": 216,
+          "chain-end": 3,
+          "land": 28,
+          "convert": 18
+        },
+        "result": "loss",
+        "scores": [
+          1150,
+          1820
+        ],
+        "chains": [
+          2,
+          2
+        ]
+      }
+    },
+    {
+      "config": {
+        "seed": 112,
+        "difficulty": "hard",
+        "stage": 1,
+        "ticks": 7200,
+        "input": "pilot"
+      },
+      "expected": {
+        "snapshots": [
+          {
+            "tick": 0,
+            "hash": "156222962400004bcca829df69523a27513d45953382c0cdbe2a940c35bbdc90"
+          },
+          {
+            "tick": 1,
+            "hash": "40b8f1d8c08fdc72a198f211a5b21f6206f7298a065c91daa5619af93d07bce2"
+          },
+          {
+            "tick": 11,
+            "hash": "2e9dcb0de881fedcd2a55d5855c085901b0404e155de47e9aed57d9c822330da"
+          },
+          {
+            "tick": 60,
+            "hash": "95e8bc171af0a4e0d33085c157e3e9bc3480bb08f94b5bcc52b6346beb9be1ef"
+          },
+          {
+            "tick": 120,
+            "hash": "ea8be5b26d461bc11b76f62953f930a01156a61fd416f6fd1841f3129636151f"
+          },
+          {
+            "tick": 300,
+            "hash": "7cb1b1bde6c6d40dea6d59349205b2d85ac23ab5a8a4f0cc83ef42f4a3f637a9"
+          },
+          {
+            "tick": 900,
+            "hash": "128821cf1fe8743e465c292951e91032e208f684d87291bb1ad0490aa4f15b95"
+          },
+          {
+            "tick": 1800,
+            "hash": "f23e72c1d6390c220ee780ecaa9cb2aeb42725062299e49d0acf9efcc8d3cb5a"
+          },
+          {
+            "tick": 3493,
+            "hash": "2ea00d6acbcd54ef95597f1e9e5c627cd152e24548d1c60d7aaf338e9b648cee"
+          }
+        ],
+        "eventsHash": "205b7eb7aad525f44a0c43541db46dca3141eac519434dffc8c8639affbf6a87",
+        "counts": {
+          "clear": 76,
+          "pop": 242,
+          "chain-end": 9,
+          "land": 51,
+          "convert": 75
+        },
+        "result": "win",
+        "scores": [
+          2610,
+          2100
+        ],
+        "chains": [
+          3,
+          3
+        ]
+      }
+    },
+    {
+      "config": {
+        "seed": 333,
+        "difficulty": "hard",
+        "stage": 6,
+        "ticks": 7200,
+        "input": "pilot"
+      },
+      "expected": {
+        "snapshots": [
+          {
+            "tick": 0,
+            "hash": "60261b94804c204d13d925aeec22fe3036e9bbdf47e1919f633387119349630f"
+          },
+          {
+            "tick": 1,
+            "hash": "6177d48c3fdd74466dd1d1d7195caad9254048d6b9638fa2455b51a082c7920c"
+          },
+          {
+            "tick": 11,
+            "hash": "6501c72373055591c305d35b9a24ace6082e3217a29e7439ac045986980f9daf"
+          },
+          {
+            "tick": 60,
+            "hash": "a9ccb85914d2250a321ee36efd5b7e107c7f037aa6548d34c59a776665f0aeb6"
+          },
+          {
+            "tick": 120,
+            "hash": "a9d8175ada0e6a4779854dac0ba90f65f0f340d02d78495fca90c146dbaf735e"
+          },
+          {
+            "tick": 300,
+            "hash": "997feaf1e555484bc626a5cd319f8b8399f7034a7ad9eacdaa290164a3f30a76"
+          },
+          {
+            "tick": 900,
+            "hash": "9ec6f101a4041828bcea13e3feba9ee15477e16dd290937b8d69782ebe1954fa"
+          },
+          {
+            "tick": 1800,
+            "hash": "38155a7af8dc37b16dc48b9c8ae06c82cfa08b44b49b77c49ca9b0f732be47a4"
+          },
+          {
+            "tick": 3600,
+            "hash": "e83551409ab217a79d48b93c576f3f467b7d7c518d545d47fd4a60d745c09859"
+          },
+          {
+            "tick": 7200,
+            "hash": "b85c67fd0964e28e4d5b64386eb4fa8e5952a33a4b3ad63cbce77ad1e68895ce"
+          }
+        ],
+        "eventsHash": "1562909d7fc1fcf82e795d2da92918152734db5271be218f08101c98a32d144e",
+        "counts": {
+          "clear": 174,
+          "pop": 539,
+          "chain-end": 10,
+          "land": 164,
+          "convert": 99
+        },
+        "result": null,
+        "scores": [
+          3560,
+          4180
+        ],
+        "chains": [
+          2,
+          3
+        ]
+      }
+    },
+    {
+      "config": {
+        "seed": 991,
+        "difficulty": "hard",
+        "stage": 12,
+        "ticks": 7200,
+        "input": "pilot"
+      },
+      "expected": {
+        "snapshots": [
+          {
+            "tick": 0,
+            "hash": "c392fe0a8df106a2c4ee95d5f81e3d775f51729cdd5dda4a66c50da79cac6cb1"
+          },
+          {
+            "tick": 1,
+            "hash": "4406d76aa26e6d58a26ed22b8bf131c21e911b219a10931a24f9419028fe5c81"
+          },
+          {
+            "tick": 11,
+            "hash": "905bec863e0dc6518aec13611d49b66507bae3e2afaafb5b6d3e671420aa9f6b"
+          },
+          {
+            "tick": 60,
+            "hash": "437d29487302cf1d191ddd5695d12f79d05a1374ff411503af0810087472c15f"
+          },
+          {
+            "tick": 120,
+            "hash": "c46b636137ab6bb5373211cc71714c43b944ef171311ef6953c6afd96ad9b75c"
+          },
+          {
+            "tick": 300,
+            "hash": "0f2e4f92cc60d65ed82bb9faefed5d6b2327a84ada60a790bd86a09eda8f5826"
+          },
+          {
+            "tick": 900,
+            "hash": "ed6e19e7c349f790231cc92edabd765f539d7e80c856b8c88bb5a4d6c6b7bfa2"
+          },
+          {
+            "tick": 1800,
+            "hash": "12ffd04ee07013da1f6380c8d1dccea6a09c66ed242335303e431d5fed7b4e13"
+          },
+          {
+            "tick": 3600,
+            "hash": "7c364523937808d74a7b3091968e20a2fc7dc785e06fb52dd3790416dd0d6f1f"
+          },
+          {
+            "tick": 7200,
+            "hash": "76c672000b533f9b2946e3b12b1ba65f6e8204cff5a211e685f9f9162fead4c2"
+          }
+        ],
+        "eventsHash": "de444ce8986f08df156f49ee166cca4708fe2f45846acdb245f072402d393085",
+        "counts": {
+          "clear": 184,
+          "pop": 566,
+          "chain-end": 9,
+          "land": 127,
+          "convert": 142
+        },
+        "result": null,
+        "scores": [
+          4610,
+          3850
+        ],
+        "chains": [
+          3,
+          2
+        ]
+      }
+    },
+    {
+      "config": {
+        "seed": 991,
+        "difficulty": "normal",
+        "stage": 1,
+        "ticks": 3600,
+        "input": "scripted"
+      },
+      "expected": {
+        "snapshots": [
+          {
+            "tick": 0,
+            "hash": "d8587c33036d3f720934b7e5fc3d578d3f7fc460379c387243339eb78a279c92"
+          },
+          {
+            "tick": 1,
+            "hash": "a24d666807655f0e8ae277e2f644fe021b0da426c9e66bd0aad2672d3fee1b0f"
+          },
+          {
+            "tick": 11,
+            "hash": "10300fb3c5e8f2d9cb56bc4179eaf25b59e051c62b7c663ad0dc405095b9bc7e"
+          },
+          {
+            "tick": 60,
+            "hash": "ae3bacfc4a83be60651527f85c0820dcf9f98791c8f3dc263abd002a7a5b05c9"
+          },
+          {
+            "tick": 120,
+            "hash": "cb98ebad7a7743678c62047ecd375c521d49a446ebbbbfcffe6419141a9974dc"
+          },
+          {
+            "tick": 300,
+            "hash": "e894ff8dde07de8cc009e2d99b0111f1df28f68350074456867b91410e71c358"
+          },
+          {
+            "tick": 601,
+            "hash": "776cd718e7c728001604d7321a0cfc2157f780a5df017def1bc0ff95eb08895e"
+          }
+        ],
+        "eventsHash": "2663dfd50894e599637f0070e923c5c5c677b875563b597f7f61b8b4548cd7b3",
+        "counts": {
+          "move": 50,
+          "swap": 46,
+          "clear": 8,
+          "pop": 22,
+          "land": 1
+        },
+        "result": "loss",
+        "scores": [
+          120,
+          210
+        ],
+        "chains": [
+          1,
+          1
+        ]
+      }
+    },
+    {
+      "config": {
+        "seed": 12345,
+        "difficulty": "hard",
+        "stage": 1,
+        "ticks": 7200,
+        "input": "idle"
+      },
+      "expected": {
+        "snapshots": [
+          {
+            "tick": 0,
+            "hash": "edf23faefe57b5645dab201b5657e5aad5da3021107833389d1804993b03e3cb"
+          },
+          {
+            "tick": 1,
+            "hash": "bf69ec0568860986a0dc1ef457ee0b99dd166d0e1775444d0565b42cbda821f1"
+          },
+          {
+            "tick": 11,
+            "hash": "089b410d87b2c5d1482a9d77edcb79d05c3e8d1531bbdd7d14270cd815d058c7"
+          },
+          {
+            "tick": 60,
+            "hash": "aed4c826e104a2eb2bebe7ba4b976b62b887843e9070e57dfab9e900b48d418b"
+          },
+          {
+            "tick": 120,
+            "hash": "ece52655316f070a9ae37b2a1f4171ca12f0fb8ed4bc4694cae749a3948e369a"
+          },
+          {
+            "tick": 300,
+            "hash": "bd60c2003293df9914139b5b066ac0572b52382c799cc5b31fee036104fb2886"
+          },
+          {
+            "tick": 900,
+            "hash": "e7b707e3f9414a5c7c3e1b77dd989838b2a06c652c10d98770f9dea42e522d86"
+          },
+          {
+            "tick": 1228,
+            "hash": "bc7df8e168bf0aea04081c95b25f64acbca98d97f3fb729d013bc24665908014"
+          }
+        ],
+        "eventsHash": "108d38cde61ad0e7f084a0e7385228f1d3ef0217323190f61fcdac60ce37688f",
+        "counts": {
+          "clear": 17,
+          "pop": 51,
+          "land": 1
+        },
+        "result": "loss",
+        "scores": [
+          0,
+          660
+        ],
+        "chains": [
+          1,
+          1
+        ]
+      }
+    }
+  ]
+}

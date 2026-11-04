@@ -1,0 +1,1475 @@
+{
+  "date": "2026-10-30",
+  "romSha1": "2dc56eab3e70c0910ae47119d8b69f494e6000df",
+  "profiles": [
+    {
+      "mode": "story-easy",
+      "colors": 5,
+      "hover": 12,
+      "flashRegister": 22,
+      "faceRegister": 20,
+      "popRegister": 8,
+      "firstPopAfterMatchCalls": 68,
+      "finalRemovalAfterMatchCalls": 86
+    },
+    {
+      "mode": "story-normal",
+      "colors": 5,
+      "hover": 10,
+      "flashRegister": 21,
+      "faceRegister": 18,
+      "popRegister": 7,
+      "firstPopAfterMatchCalls": 64,
+      "finalRemovalAfterMatchCalls": 80
+    },
+    {
+      "mode": "story-hard",
+      "colors": 5,
+      "hover": 6,
+      "flashRegister": 18,
+      "faceRegister": 16,
+      "popRegister": 7,
+      "firstPopAfterMatchCalls": 56,
+      "finalRemovalAfterMatchCalls": 72
+    },
+    {
+      "mode": "endless-easy",
+      "colors": 5,
+      "hover": 12,
+      "flashRegister": 22,
+      "faceRegister": 22,
+      "popRegister": 8,
+      "firstPopAfterMatchCalls": 70,
+      "finalRemovalAfterMatchCalls": 88
+    },
+    {
+      "mode": "endless-normal",
+      "colors": 6,
+      "hover": 9,
+      "flashRegister": 18,
+      "faceRegister": 17,
+      "popRegister": 7,
+      "firstPopAfterMatchCalls": 57,
+      "finalRemovalAfterMatchCalls": 73
+    },
+    {
+      "mode": "endless-hard",
+      "colors": 6,
+      "hover": 6,
+      "flashRegister": 14,
+      "faceRegister": 12,
+      "popRegister": 6,
+      "firstPopAfterMatchCalls": 44,
+      "finalRemovalAfterMatchCalls": 58
+    }
+  ],
+  "combos": [
+    {
+      "count": 3,
+      "widths": [],
+      "arrivals": [],
+      "endlessNormalScore": 30,
+      "endlessNormalStop": 0
+    },
+    {
+      "count": 4,
+      "widths": [
+        3
+      ],
+      "arrivals": [
+        {
+          "frame": 165,
+          "x": 1,
+          "width": 3,
+          "metal": false
+        }
+      ],
+      "endlessNormalScore": 60,
+      "endlessNormalStop": 90
+    },
+    {
+      "count": 5,
+      "widths": [
+        4
+      ],
+      "arrivals": [
+        {
+          "frame": 165,
+          "x": 1,
+          "width": 4,
+          "metal": false
+        }
+      ],
+      "endlessNormalScore": 80,
+      "endlessNormalStop": 120
+    },
+    {
+      "count": 6,
+      "widths": [
+        5
+      ],
+      "arrivals": [
+        {
+          "frame": 165,
+          "x": 1,
+          "width": 5,
+          "metal": false
+        }
+      ],
+      "endlessNormalScore": 110,
+      "endlessNormalStop": 150
+    },
+    {
+      "count": 7,
+      "widths": [
+        6
+      ],
+      "arrivals": [
+        {
+          "frame": 158,
+          "x": 1,
+          "width": 6,
+          "metal": false
+        }
+      ],
+      "endlessNormalScore": 130,
+      "endlessNormalStop": 180
+    },
+    {
+      "count": 8,
+      "widths": [
+        3,
+        4
+      ],
+      "arrivals": [
+        {
+          "frame": 159,
+          "x": 1,
+          "width": 3,
+          "metal": false
+        },
+        {
+          "frame": 168,
+          "x": 1,
+          "width": 4,
+          "metal": false
+        }
+      ],
+      "endlessNormalScore": 150,
+      "endlessNormalStop": 210
+    },
+    {
+      "count": 9,
+      "widths": [
+        4,
+        4
+      ],
+      "arrivals": [
+        {
+          "frame": 163,
+          "x": 1,
+          "width": 4,
+          "metal": false
+        },
+        {
+          "frame": 172,
+          "x": 2,
+          "width": 4,
+          "metal": false
+        }
+      ],
+      "endlessNormalScore": 170,
+      "endlessNormalStop": 240
+    },
+    {
+      "count": 10,
+      "widths": [
+        5,
+        5
+      ],
+      "arrivals": [
+        {
+          "frame": 163,
+          "x": 1,
+          "width": 5,
+          "metal": false
+        },
+        {
+          "frame": 172,
+          "x": 2,
+          "width": 5,
+          "metal": false
+        }
+      ],
+      "endlessNormalScore": 200,
+      "endlessNormalStop": 270
+    },
+    {
+      "count": 11,
+      "widths": [
+        5,
+        6
+      ],
+      "arrivals": [
+        {
+          "frame": 163,
+          "x": 1,
+          "width": 5,
+          "metal": false
+        },
+        {
+          "frame": 172,
+          "x": 1,
+          "width": 6,
+          "metal": false
+        }
+      ],
+      "endlessNormalScore": 250,
+      "endlessNormalStop": 300
+    },
+    {
+      "count": 12,
+      "widths": [
+        6,
+        6
+      ],
+      "arrivals": [
+        {
+          "frame": 163,
+          "x": 1,
+          "width": 6,
+          "metal": false
+        },
+        {
+          "frame": 172,
+          "x": 1,
+          "width": 6,
+          "metal": false
+        }
+      ],
+      "endlessNormalScore": 290,
+      "endlessNormalStop": 330
+    }
+  ],
+  "chains": [
+    {
+      "depth": 2,
+      "linkFrames": [
+        0,
+        97
+      ],
+      "finalRemovalFrame": 177,
+      "firstArrivalFrame": 258,
+      "width": 6,
+      "height": 1,
+      "endlessNormalScore": 110,
+      "endlessNormalStop": 225
+    },
+    {
+      "depth": 3,
+      "linkFrames": [
+        0,
+        97,
+        188
+      ],
+      "finalRemovalFrame": 268,
+      "firstArrivalFrame": 347,
+      "width": 6,
+      "height": 2,
+      "endlessNormalScore": 220,
+      "endlessNormalStop": 285
+    },
+    {
+      "depth": 4,
+      "linkFrames": [
+        0,
+        97,
+        188,
+        279
+      ],
+      "finalRemovalFrame": 360,
+      "firstArrivalFrame": 442,
+      "width": 6,
+      "height": 3,
+      "endlessNormalScore": 400,
+      "endlessNormalStop": 345
+    }
+  ],
+  "input": {
+    "skillBoundary": [
+      {
+        "inputFrame": 86,
+        "chain": true,
+        "chainMatchFrame": 97
+      },
+      {
+        "inputFrame": 87,
+        "chain": false,
+        "note": "One-frame tap not registered; two-frame repeat succeeds"
+      },
+      {
+        "inputFrame": 88,
+        "chain": true,
+        "chainMatchFrame": 97
+      },
+      {
+        "inputFrame": 89,
+        "chain": true,
+        "chainMatchFrame": 97
+      },
+      {
+        "inputFrame": 90,
+        "chain": true,
+        "chainMatchFrame": 97
+      },
+      {
+        "inputFrame": 91,
+        "chain": true,
+        "chainMatchFrame": 97
+      },
+      {
+        "inputFrame": 92,
+        "chain": true,
+        "chainMatchFrame": 97
+      },
+      {
+        "inputFrame": 93,
+        "chain": true,
+        "chainMatchFrame": 97
+      },
+      {
+        "inputFrame": 94,
+        "chain": true,
+        "chainMatchFrame": 97
+      },
+      {
+        "inputFrame": 95,
+        "chain": false
+      },
+      {
+        "inputFrame": 96,
+        "chain": false
+      },
+      {
+        "inputFrame": 97,
+        "chain": false
+      },
+      {
+        "inputFrame": 98,
+        "chain": false
+      },
+      {
+        "inputFrame": 99,
+        "chain": false
+      }
+    ],
+    "inProgressSwapReversalAcceptedAt": [
+      4,
+      5,
+      6,
+      7
+    ],
+    "heldSwapRepeats": false,
+    "fallingSwapsRejectedAt": [
+      16,
+      17,
+      18
+    ]
+  },
+  "garbage": [
+    {
+      "case": "combo-4",
+      "initialCells": 3,
+      "traversal": [
+        {
+          "frame": 104,
+          "x": 3,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 112,
+          "x": 2,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 120,
+          "x": 1,
+          "y": 13,
+          "ordinaryPreview": true
+        }
+      ],
+      "releaseFrame": 121,
+      "postReleaseHover": 25,
+      "remainingGarbageCells": 0
+    },
+    {
+      "case": "combo-5",
+      "initialCells": 4,
+      "traversal": [
+        {
+          "frame": 104,
+          "x": 4,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 112,
+          "x": 3,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 120,
+          "x": 2,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 128,
+          "x": 1,
+          "y": 13,
+          "ordinaryPreview": true
+        }
+      ],
+      "releaseFrame": 129,
+      "postReleaseHover": 25,
+      "remainingGarbageCells": 0
+    },
+    {
+      "case": "combo-6",
+      "initialCells": 5,
+      "traversal": [
+        {
+          "frame": 104,
+          "x": 5,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 112,
+          "x": 4,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 120,
+          "x": 3,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 128,
+          "x": 2,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 136,
+          "x": 1,
+          "y": 13,
+          "ordinaryPreview": true
+        }
+      ],
+      "releaseFrame": 137,
+      "postReleaseHover": 25,
+      "remainingGarbageCells": 0
+    },
+    {
+      "case": "combo-7",
+      "initialCells": 6,
+      "traversal": [
+        {
+          "frame": 104,
+          "x": 6,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 112,
+          "x": 5,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 120,
+          "x": 4,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 128,
+          "x": 3,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 136,
+          "x": 2,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 144,
+          "x": 1,
+          "y": 13,
+          "ordinaryPreview": true
+        }
+      ],
+      "releaseFrame": 145,
+      "postReleaseHover": 25,
+      "remainingGarbageCells": 0
+    },
+    {
+      "case": "combo-8",
+      "initialCells": 7,
+      "traversal": [
+        {
+          "frame": 104,
+          "x": 3,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 112,
+          "x": 2,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 120,
+          "x": 1,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 128,
+          "x": 4,
+          "y": 12,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 136,
+          "x": 3,
+          "y": 12,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 144,
+          "x": 2,
+          "y": 12,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 152,
+          "x": 1,
+          "y": 12,
+          "ordinaryPreview": true
+        }
+      ],
+      "releaseFrame": 153,
+      "postReleaseHover": 25,
+      "remainingGarbageCells": 0
+    },
+    {
+      "case": "chain-2",
+      "initialCells": 6,
+      "traversal": [
+        {
+          "frame": 104,
+          "x": 6,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 112,
+          "x": 5,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 120,
+          "x": 4,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 128,
+          "x": 3,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 136,
+          "x": 2,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 144,
+          "x": 1,
+          "y": 13,
+          "ordinaryPreview": true
+        }
+      ],
+      "releaseFrame": 145,
+      "postReleaseHover": 25,
+      "remainingGarbageCells": 0
+    },
+    {
+      "case": "chain-3",
+      "initialCells": 12,
+      "traversal": [
+        {
+          "frame": 105,
+          "x": 6,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 113,
+          "x": 5,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 121,
+          "x": 4,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 129,
+          "x": 3,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 137,
+          "x": 2,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 145,
+          "x": 1,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 153,
+          "x": 6,
+          "y": 12,
+          "ordinaryPreview": false
+        },
+        {
+          "frame": 161,
+          "x": 5,
+          "y": 12,
+          "ordinaryPreview": false
+        },
+        {
+          "frame": 169,
+          "x": 4,
+          "y": 12,
+          "ordinaryPreview": false
+        },
+        {
+          "frame": 177,
+          "x": 3,
+          "y": 12,
+          "ordinaryPreview": false
+        },
+        {
+          "frame": 185,
+          "x": 2,
+          "y": 12,
+          "ordinaryPreview": false
+        },
+        {
+          "frame": 193,
+          "x": 1,
+          "y": 12,
+          "ordinaryPreview": false
+        }
+      ],
+      "releaseFrame": 194,
+      "postReleaseHover": 25,
+      "remainingGarbageCells": 6
+    },
+    {
+      "case": "chain-4",
+      "initialCells": 18,
+      "traversal": [
+        {
+          "frame": 105,
+          "x": 6,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 113,
+          "x": 5,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 121,
+          "x": 4,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 129,
+          "x": 3,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 137,
+          "x": 2,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 145,
+          "x": 1,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 153,
+          "x": 6,
+          "y": 12,
+          "ordinaryPreview": false
+        },
+        {
+          "frame": 161,
+          "x": 5,
+          "y": 12,
+          "ordinaryPreview": false
+        },
+        {
+          "frame": 169,
+          "x": 4,
+          "y": 12,
+          "ordinaryPreview": false
+        },
+        {
+          "frame": 177,
+          "x": 3,
+          "y": 12,
+          "ordinaryPreview": false
+        },
+        {
+          "frame": 185,
+          "x": 2,
+          "y": 12,
+          "ordinaryPreview": false
+        },
+        {
+          "frame": 193,
+          "x": 1,
+          "y": 12,
+          "ordinaryPreview": false
+        },
+        {
+          "frame": 201,
+          "x": 6,
+          "y": 11,
+          "ordinaryPreview": false
+        },
+        {
+          "frame": 209,
+          "x": 5,
+          "y": 11,
+          "ordinaryPreview": false
+        },
+        {
+          "frame": 217,
+          "x": 4,
+          "y": 11,
+          "ordinaryPreview": false
+        },
+        {
+          "frame": 225,
+          "x": 3,
+          "y": 11,
+          "ordinaryPreview": false
+        },
+        {
+          "frame": 233,
+          "x": 2,
+          "y": 11,
+          "ordinaryPreview": false
+        },
+        {
+          "frame": 241,
+          "x": 1,
+          "y": 11,
+          "ordinaryPreview": false
+        }
+      ],
+      "releaseFrame": 242,
+      "postReleaseHover": 25,
+      "remainingGarbageCells": 12
+    },
+    {
+      "case": "metal",
+      "initialCells": 6,
+      "traversal": [
+        {
+          "frame": 104,
+          "x": 6,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 112,
+          "x": 5,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 120,
+          "x": 4,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 128,
+          "x": 3,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 136,
+          "x": 2,
+          "y": 13,
+          "ordinaryPreview": true
+        },
+        {
+          "frame": 144,
+          "x": 1,
+          "y": 13,
+          "ordinaryPreview": true
+        }
+      ],
+      "releaseFrame": 145,
+      "postReleaseHover": 25,
+      "remainingGarbageCells": 0
+    }
+  ],
+  "danger": [
+    {
+      "mode": "story-easy",
+      "firstNonGameplayFrame": 104,
+      "limit": "Already-full, partly raised RAM fixture; exact grace timer not isolated"
+    },
+    {
+      "mode": "story-normal",
+      "firstNonGameplayFrame": 68,
+      "limit": "Already-full, partly raised RAM fixture; exact grace timer not isolated"
+    },
+    {
+      "mode": "story-hard",
+      "firstNonGameplayFrame": 42,
+      "limit": "Already-full, partly raised RAM fixture; exact grace timer not isolated"
+    },
+    {
+      "mode": "endless-normal",
+      "firstNonGameplayFrame": 0,
+      "limit": "Already-full, partly raised RAM fixture; exact grace timer not isolated"
+    }
+  ],
+  "automaticRise": [
+    {
+      "requestedInitialLevel": 1,
+      "initializedLevel": 1,
+      "speedWord": 71,
+      "rowTransitionFrames": [
+        817,
+        1759
+      ]
+    },
+    {
+      "requestedInitialLevel": 13,
+      "initializedLevel": 13,
+      "speedWord": 175,
+      "rowTransitionFrames": [
+        268,
+        661
+      ]
+    },
+    {
+      "requestedInitialLevel": 50,
+      "initializedLevel": 50,
+      "speedWord": 2340,
+      "rowTransitionFrames": [
+        16,
+        63,
+        110,
+        157
+      ]
+    },
+    {
+      "requestedInitialLevel": 99,
+      "initializedLevel": 50,
+      "speedWord": 2340,
+      "rowTransitionFrames": [
+        16,
+        63,
+        110,
+        157
+      ]
+    }
+  ],
+  "shockAttacks": [
+    {
+      "count": 3,
+      "attacks": [
+        {
+          "frame": 166,
+          "x": 1,
+          "width": 6,
+          "metal": true
+        }
+      ]
+    },
+    {
+      "count": 4,
+      "attacks": [
+        {
+          "frame": 165,
+          "x": 1,
+          "width": 3,
+          "metal": false
+        },
+        {
+          "frame": 174,
+          "x": 1,
+          "width": 6,
+          "metal": true
+        },
+        {
+          "frame": 182,
+          "x": 1,
+          "width": 6,
+          "metal": true
+        }
+      ]
+    },
+    {
+      "count": 5,
+      "attacks": [
+        {
+          "frame": 165,
+          "x": 1,
+          "width": 4,
+          "metal": false
+        },
+        {
+          "frame": 174,
+          "x": 1,
+          "width": 6,
+          "metal": true
+        },
+        {
+          "frame": 182,
+          "x": 1,
+          "width": 6,
+          "metal": true
+        },
+        {
+          "frame": 189,
+          "x": 1,
+          "width": 6,
+          "metal": true
+        }
+      ]
+    },
+    {
+      "count": 6,
+      "attacks": [
+        {
+          "frame": 165,
+          "x": 1,
+          "width": 5,
+          "metal": false
+        },
+        {
+          "frame": 174,
+          "x": 1,
+          "width": 6,
+          "metal": true
+        },
+        {
+          "frame": 182,
+          "x": 1,
+          "width": 6,
+          "metal": true
+        },
+        {
+          "frame": 189,
+          "x": 1,
+          "width": 6,
+          "metal": true
+        },
+        {
+          "frame": 195,
+          "x": 1,
+          "width": 6,
+          "metal": true
+        }
+      ]
+    }
+  ],
+  "garbageExtra": {
+    "mixedMaterialsRemainSeparate": true,
+    "previewSetupProducesChainAt": 147
+  },
+  "placement": [
+    {
+      "combo": 4,
+      "arrivals": [
+        {
+          "frame": 491,
+          "x": 1,
+          "width": 3,
+          "metal": false
+        },
+        {
+          "frame": 503,
+          "x": 4,
+          "width": 3,
+          "metal": false
+        },
+        {
+          "frame": 515,
+          "x": 1,
+          "width": 3,
+          "metal": false
+        },
+        {
+          "frame": 526,
+          "x": 4,
+          "width": 3,
+          "metal": false
+        }
+      ],
+      "limit": "Observed cycles, not proof that every placement is nonrandom"
+    },
+    {
+      "combo": 5,
+      "arrivals": [
+        {
+          "frame": 491,
+          "x": 1,
+          "width": 4,
+          "metal": false
+        },
+        {
+          "frame": 503,
+          "x": 2,
+          "width": 4,
+          "metal": false
+        },
+        {
+          "frame": 514,
+          "x": 3,
+          "width": 4,
+          "metal": false
+        },
+        {
+          "frame": 524,
+          "x": 1,
+          "width": 4,
+          "metal": false
+        }
+      ],
+      "limit": "Observed cycles, not proof that every placement is nonrandom"
+    }
+  ],
+  "stageProfiles": [
+    {
+      "stage": "stage-1",
+      "difficulty": 1,
+      "fields": [
+        "handicap",
+        "speedLevel",
+        "flash",
+        "face",
+        "pop",
+        "hover",
+        "speedWord"
+      ],
+      "player": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ],
+      "opponent": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ]
+    },
+    {
+      "stage": "stage-2",
+      "difficulty": 1,
+      "fields": [
+        "handicap",
+        "speedLevel",
+        "flash",
+        "face",
+        "pop",
+        "hover",
+        "speedWord"
+      ],
+      "player": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ],
+      "opponent": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ]
+    },
+    {
+      "stage": "stage-3",
+      "difficulty": 1,
+      "fields": [
+        "handicap",
+        "speedLevel",
+        "flash",
+        "face",
+        "pop",
+        "hover",
+        "speedWord"
+      ],
+      "player": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ],
+      "opponent": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ]
+    },
+    {
+      "stage": "stage-4",
+      "difficulty": 1,
+      "fields": [
+        "handicap",
+        "speedLevel",
+        "flash",
+        "face",
+        "pop",
+        "hover",
+        "speedWord"
+      ],
+      "player": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ],
+      "opponent": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ]
+    },
+    {
+      "stage": "stage-5",
+      "difficulty": 1,
+      "fields": [
+        "handicap",
+        "speedLevel",
+        "flash",
+        "face",
+        "pop",
+        "hover",
+        "speedWord"
+      ],
+      "player": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ],
+      "opponent": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ]
+    },
+    {
+      "stage": "stage-6",
+      "difficulty": 1,
+      "fields": [
+        "handicap",
+        "speedLevel",
+        "flash",
+        "face",
+        "pop",
+        "hover",
+        "speedWord"
+      ],
+      "player": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ],
+      "opponent": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ]
+    },
+    {
+      "stage": "stage-7",
+      "difficulty": 1,
+      "fields": [
+        "handicap",
+        "speedLevel",
+        "flash",
+        "face",
+        "pop",
+        "hover",
+        "speedWord"
+      ],
+      "player": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ],
+      "opponent": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ]
+    },
+    {
+      "stage": "stage-8",
+      "difficulty": 1,
+      "fields": [
+        "handicap",
+        "speedLevel",
+        "flash",
+        "face",
+        "pop",
+        "hover",
+        "speedWord"
+      ],
+      "player": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ],
+      "opponent": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ]
+    },
+    {
+      "stage": "stage-9",
+      "difficulty": 1,
+      "fields": [
+        "handicap",
+        "speedLevel",
+        "flash",
+        "face",
+        "pop",
+        "hover",
+        "speedWord"
+      ],
+      "player": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ],
+      "opponent": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ]
+    },
+    {
+      "stage": "stage-10",
+      "difficulty": 1,
+      "fields": [
+        "handicap",
+        "speedLevel",
+        "flash",
+        "face",
+        "pop",
+        "hover",
+        "speedWord"
+      ],
+      "player": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ],
+      "opponent": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ]
+    },
+    {
+      "stage": "stage-11",
+      "difficulty": 1,
+      "fields": [
+        "handicap",
+        "speedLevel",
+        "flash",
+        "face",
+        "pop",
+        "hover",
+        "speedWord"
+      ],
+      "player": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ],
+      "opponent": [
+        4,
+        13,
+        21,
+        18,
+        7,
+        10,
+        175
+      ]
+    },
+    {
+      "stage": "stage-12",
+      "difficulty": 2,
+      "fields": [
+        "handicap",
+        "speedLevel",
+        "flash",
+        "face",
+        "pop",
+        "hover",
+        "speedWord"
+      ],
+      "player": [
+        6,
+        21,
+        18,
+        16,
+        7,
+        6,
+        296
+      ],
+      "opponent": [
+        6,
+        21,
+        18,
+        16,
+        7,
+        6,
+        296
+      ]
+    }
+  ],
+  "limits": [
+    "Normal route initialized timing registers sampled for all 11 stages; detailed transition tests mainly use stage 1",
+    "Most mechanics fixtures inject RAM and freeze automatic rise",
+    "CPU remains active in story tests; local VS garbage tests have CPU off",
+    "Exact travel/launch scheduling, complete speed/danger tables, simultaneous defeat and all skill-chain variants remain open",
+    "Bowser artwork was reached through a modified difficulty gate, not a complete Hard route"
+  ]
+}

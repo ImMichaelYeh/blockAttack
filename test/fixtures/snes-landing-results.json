@@ -1,0 +1,302 @@
+{
+  "source": "Existing test-results/snes-lab/{chains,input,input-repeat}/*.samples.json; no new emulation.",
+  "normalization": "Exclude frames with an active clear controller but no new processing call, or a positive chain-hover timer with unchanged timers and grid. Do not exclude ordinary idle/fall frames. Ages are zero-based browser steps, starting with initial match registration at 0.",
+  "cascades": [
+    {
+      "name": "story-normal-chain-2",
+      "excludedFrames": [
+        27,
+        47,
+        67,
+        87
+      ],
+      "nativeMatchFrames": [
+        0,
+        97
+      ],
+      "matchFrames": [
+        0,
+        93
+      ],
+      "counts": [
+        3,
+        3
+      ],
+      "removalFrames": [
+        80,
+        173
+      ]
+    },
+    {
+      "name": "story-normal-chain-3",
+      "excludedFrames": [
+        27,
+        47,
+        67,
+        87
+      ],
+      "nativeMatchFrames": [
+        0,
+        97,
+        188
+      ],
+      "matchFrames": [
+        0,
+        93,
+        184
+      ],
+      "counts": [
+        3,
+        3,
+        3
+      ],
+      "removalFrames": [
+        80,
+        173,
+        264
+      ]
+    },
+    {
+      "name": "story-normal-chain-4",
+      "excludedFrames": [
+        27,
+        47,
+        67,
+        87,
+        291
+      ],
+      "nativeMatchFrames": [
+        0,
+        97,
+        188,
+        279
+      ],
+      "matchFrames": [
+        0,
+        93,
+        184,
+        275
+      ],
+      "counts": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "removalFrames": [
+        80,
+        173,
+        264,
+        355
+      ]
+    },
+    {
+      "name": "endless-normal-chain-2",
+      "excludedFrames": [],
+      "nativeMatchFrames": [
+        0,
+        85
+      ],
+      "matchFrames": [
+        0,
+        85
+      ],
+      "counts": [
+        3,
+        3
+      ],
+      "removalFrames": [
+        73,
+        158
+      ]
+    },
+    {
+      "name": "endless-normal-chain-3",
+      "excludedFrames": [],
+      "nativeMatchFrames": [
+        0,
+        85,
+        168
+      ],
+      "matchFrames": [
+        0,
+        85,
+        168
+      ],
+      "counts": [
+        3,
+        3,
+        3
+      ],
+      "removalFrames": [
+        73,
+        158,
+        241
+      ]
+    },
+    {
+      "name": "endless-normal-chain-4",
+      "excludedFrames": [],
+      "nativeMatchFrames": [
+        0,
+        85,
+        168,
+        251
+      ],
+      "matchFrames": [
+        0,
+        85,
+        168,
+        251
+      ],
+      "counts": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "removalFrames": [
+        73,
+        158,
+        241,
+        324
+      ]
+    }
+  ],
+  "skill": {
+    "plan": "snes-input-plan.json",
+    "job": "skill-swap-94",
+    "excludedFrames": [
+      27,
+      47,
+      67,
+      87
+    ],
+    "nativeLandingFrame": 96,
+    "landingFrame": 92,
+    "expiryFrame": 93,
+    "cases": [
+      {
+        "nativePressFrame": 86,
+        "pressFrame": 83,
+        "nativeAccepted": true,
+        "nativeChain": 2,
+        "chain": 2,
+        "matchFrame": 93
+      },
+      {
+        "nativePressFrame": 87,
+        "pressFrame": 83,
+        "nativeAccepted": false,
+        "nativeChain": null,
+        "chain": 2,
+        "matchFrame": 93
+      },
+      {
+        "nativePressFrame": 88,
+        "pressFrame": 84,
+        "nativeAccepted": true,
+        "nativeChain": 2,
+        "chain": 2,
+        "matchFrame": 93
+      },
+      {
+        "nativePressFrame": 89,
+        "pressFrame": 85,
+        "nativeAccepted": true,
+        "nativeChain": 2,
+        "chain": 2,
+        "matchFrame": 93
+      },
+      {
+        "nativePressFrame": 90,
+        "pressFrame": 86,
+        "nativeAccepted": true,
+        "nativeChain": 2,
+        "chain": 2,
+        "matchFrame": 93
+      },
+      {
+        "nativePressFrame": 91,
+        "pressFrame": 87,
+        "nativeAccepted": true,
+        "nativeChain": 2,
+        "chain": 2,
+        "matchFrame": 93
+      },
+      {
+        "nativePressFrame": 92,
+        "pressFrame": 88,
+        "nativeAccepted": true,
+        "nativeChain": 2,
+        "chain": 2,
+        "matchFrame": 93
+      },
+      {
+        "nativePressFrame": 93,
+        "pressFrame": 89,
+        "nativeAccepted": true,
+        "nativeChain": 2,
+        "chain": 2,
+        "matchFrame": 93
+      },
+      {
+        "nativePressFrame": 94,
+        "pressFrame": 90,
+        "nativeAccepted": true,
+        "nativeChain": 2,
+        "chain": 2,
+        "matchFrame": 93
+      },
+      {
+        "nativePressFrame": 95,
+        "pressFrame": 91,
+        "nativeAccepted": true,
+        "nativeChain": 1,
+        "chain": 1,
+        "matchFrame": 94
+      },
+      {
+        "nativePressFrame": 96,
+        "pressFrame": 92,
+        "nativeAccepted": true,
+        "nativeChain": 1,
+        "chain": 1,
+        "matchFrame": 95
+      },
+      {
+        "nativePressFrame": 97,
+        "pressFrame": 93,
+        "nativeAccepted": true,
+        "nativeChain": 1,
+        "chain": 1,
+        "matchFrame": 96
+      },
+      {
+        "nativePressFrame": 98,
+        "pressFrame": 94,
+        "nativeAccepted": true,
+        "nativeChain": 1,
+        "chain": 1,
+        "matchFrame": 97
+      },
+      {
+        "nativePressFrame": 99,
+        "pressFrame": 95,
+        "nativeAccepted": true,
+        "nativeChain": 1,
+        "chain": 1,
+        "matchFrame": 98
+      }
+    ],
+    "held": {
+      "nativePressFrames": [
+        87,
+        88
+      ],
+      "pressFrame": 83,
+      "chain": 2,
+      "matchFrame": 93
+    }
+  }
+}

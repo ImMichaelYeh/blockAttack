@@ -1,0 +1,13 @@
+{
+  "name": "block-attack",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node tools/serve.mjs",
+    "bundle": "node tools/bundle.mjs",
+    "test": "node --test",
+    "build": "node tools/build.mjs"
+  },
+  "engines": { "node": ">=22" }
+}

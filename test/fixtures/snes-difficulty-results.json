@@ -1,0 +1,362 @@
+[
+  {
+    "mode": "story-easy",
+    "registers": {
+      "2AA": 0,
+      "2AC": 2,
+      "2B0": 5,
+      "2CA": 5,
+      "2CE": 22,
+      "2D2": 20,
+      "2D6": 8,
+      "2F2": 12,
+      "2C2": 0,
+      "2C4": 0,
+      "52EF": 0,
+      "52F0": 0,
+      "3DA": 15,
+      "3DC": 15
+    },
+    "hover": 12,
+    "firstFall": 17,
+    "stages": [
+      [
+        5,
+        1
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        52,
+        47
+      ],
+      [
+        74,
+        68
+      ],
+      [
+        94,
+        87
+      ]
+    ],
+    "pops": [
+      [
+        75,
+        69
+      ],
+      [
+        85,
+        78
+      ],
+      [
+        94,
+        87
+      ]
+    ],
+    "finalScore": 0,
+    "flashAfterMatchCalls": 1,
+    "faceAfterMatchCalls": 45
+  },
+  {
+    "mode": "story-normal",
+    "registers": {
+      "2AA": 0,
+      "2AC": 4,
+      "2B0": 13,
+      "2CA": 5,
+      "2CE": 21,
+      "2D2": 18,
+      "2D6": 7,
+      "2F2": 10,
+      "2C2": 0,
+      "2C4": 0,
+      "52EF": 0,
+      "52F0": 0,
+      "3DA": 14,
+      "3DC": 15
+    },
+    "hover": 10,
+    "firstFall": 15,
+    "stages": [
+      [
+        5,
+        1
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        51,
+        45
+      ],
+      [
+        71,
+        64
+      ],
+      [
+        89,
+        81
+      ]
+    ],
+    "pops": [
+      [
+        72,
+        65
+      ],
+      [
+        80,
+        73
+      ],
+      [
+        89,
+        81
+      ]
+    ],
+    "finalScore": 0,
+    "flashAfterMatchCalls": 1,
+    "faceAfterMatchCalls": 43
+  },
+  {
+    "mode": "story-hard",
+    "registers": {
+      "2AA": 0,
+      "2AC": 6,
+      "2B0": 21,
+      "2CA": 5,
+      "2CE": 18,
+      "2D2": 16,
+      "2D6": 7,
+      "2F2": 6,
+      "2C2": 0,
+      "2C4": 0,
+      "52EF": 0,
+      "52F0": 0,
+      "3DA": 12,
+      "3DC": 13
+    },
+    "hover": 6,
+    "firstFall": 11,
+    "stages": [
+      [
+        5,
+        1
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        45,
+        39
+      ],
+      [
+        63,
+        56
+      ],
+      [
+        81,
+        73
+      ]
+    ],
+    "pops": [
+      [
+        64,
+        57
+      ],
+      [
+        72,
+        65
+      ],
+      [
+        81,
+        73
+      ]
+    ],
+    "finalScore": 0,
+    "flashAfterMatchCalls": 1,
+    "faceAfterMatchCalls": 37
+  },
+  {
+    "mode": "endless-easy",
+    "registers": {
+      "2AA": 0,
+      "2AC": 5,
+      "2B0": 1,
+      "2CA": 5,
+      "2CE": 22,
+      "2D2": 22,
+      "2D6": 8,
+      "2F2": 12,
+      "2C2": 0,
+      "2C4": 0,
+      "52EF": 0,
+      "52F0": 0,
+      "3DA": 14,
+      "3DC": 0
+    },
+    "hover": 12,
+    "firstFall": 17,
+    "stages": [
+      [
+        5,
+        1
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        51,
+        47
+      ],
+      [
+        74,
+        70
+      ],
+      [
+        93,
+        89
+      ]
+    ],
+    "pops": [
+      [
+        75,
+        71
+      ],
+      [
+        84,
+        80
+      ],
+      [
+        93,
+        89
+      ]
+    ],
+    "finalScore": 30,
+    "flashAfterMatchCalls": 1,
+    "faceAfterMatchCalls": 45
+  },
+  {
+    "mode": "endless-normal",
+    "registers": {
+      "2AA": 1,
+      "2AC": 5,
+      "2B0": 1,
+      "2CA": 6,
+      "2CE": 18,
+      "2D2": 17,
+      "2D6": 7,
+      "2F2": 9,
+      "2C2": 0,
+      "2C4": 0,
+      "52EF": 0,
+      "52F0": 0,
+      "3DA": 14,
+      "3DC": 0
+    },
+    "hover": 9,
+    "firstFall": 14,
+    "stages": [
+      [
+        5,
+        1
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        43,
+        39
+      ],
+      [
+        61,
+        57
+      ],
+      [
+        78,
+        74
+      ]
+    ],
+    "pops": [
+      [
+        62,
+        58
+      ],
+      [
+        70,
+        66
+      ],
+      [
+        78,
+        74
+      ]
+    ],
+    "finalScore": 30,
+    "flashAfterMatchCalls": 1,
+    "faceAfterMatchCalls": 37
+  },
+  {
+    "mode": "endless-hard",
+    "registers": {
+      "2AA": 2,
+      "2AC": 5,
+      "2B0": 1,
+      "2CA": 6,
+      "2CE": 14,
+      "2D2": 12,
+      "2D6": 6,
+      "2F2": 6,
+      "2C2": 0,
+      "2C4": 0,
+      "52EF": 0,
+      "52F0": 0,
+      "3DA": 14,
+      "3DC": 0
+    },
+    "hover": 6,
+    "firstFall": 11,
+    "stages": [
+      [
+        5,
+        1
+      ],
+      [
+        6,
+        2
+      ],
+      [
+        35,
+        31
+      ],
+      [
+        48,
+        44
+      ],
+      [
+        63,
+        59
+      ]
+    ],
+    "pops": [
+      [
+        49,
+        45
+      ],
+      [
+        56,
+        52
+      ],
+      [
+        63,
+        59
+      ]
+    ],
+    "finalScore": 30,
+    "flashAfterMatchCalls": 1,
+    "faceAfterMatchCalls": 29
+  }
+]

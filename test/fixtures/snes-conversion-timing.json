@@ -1,0 +1,484 @@
+{
+  "source": "Nine saved local-VS conversion traces plus five bounded register/count probes in test-results/s06/native. Ages are player clear-processing calls after registration; post-release descent uses elapsed hover updates.",
+  "cases": [
+    {
+      "name": "combo-4",
+      "flashRegister": 21,
+      "faceRegister": 18,
+      "popRegister": 7,
+      "ordinaryCount": 3,
+      "flashAge": 1,
+      "faceAge": 43,
+      "ordinaryRemovalAge": 80,
+      "floorKinds": [
+        1,
+        1,
+        1,
+        3,
+        2,
+        3
+      ],
+      "stepAges": [
+        104,
+        112,
+        120
+      ],
+      "nativeFirstPreviewFrame": 104,
+      "releaseAge": 121,
+      "nativeReleaseFrame": 121,
+      "hover": 25,
+      "descentAge": 146
+    },
+    {
+      "name": "combo-5",
+      "flashRegister": 21,
+      "faceRegister": 18,
+      "popRegister": 7,
+      "ordinaryCount": 3,
+      "flashAge": 1,
+      "faceAge": 43,
+      "ordinaryRemovalAge": 80,
+      "floorKinds": [
+        1,
+        1,
+        1,
+        3,
+        2,
+        3
+      ],
+      "stepAges": [
+        104,
+        112,
+        120,
+        128
+      ],
+      "nativeFirstPreviewFrame": 104,
+      "releaseAge": 129,
+      "nativeReleaseFrame": 129,
+      "hover": 25,
+      "descentAge": 154
+    },
+    {
+      "name": "combo-6",
+      "flashRegister": 21,
+      "faceRegister": 18,
+      "popRegister": 7,
+      "ordinaryCount": 3,
+      "flashAge": 1,
+      "faceAge": 43,
+      "ordinaryRemovalAge": 80,
+      "floorKinds": [
+        1,
+        1,
+        1,
+        3,
+        2,
+        3
+      ],
+      "stepAges": [
+        104,
+        112,
+        120,
+        128,
+        136
+      ],
+      "nativeFirstPreviewFrame": 104,
+      "releaseAge": 137,
+      "nativeReleaseFrame": 137,
+      "hover": 25,
+      "descentAge": 162
+    },
+    {
+      "name": "combo-7",
+      "flashRegister": 21,
+      "faceRegister": 18,
+      "popRegister": 7,
+      "ordinaryCount": 3,
+      "flashAge": 1,
+      "faceAge": 43,
+      "ordinaryRemovalAge": 80,
+      "floorKinds": [
+        1,
+        1,
+        1,
+        3,
+        2,
+        3
+      ],
+      "stepAges": [
+        104,
+        112,
+        120,
+        128,
+        136,
+        144
+      ],
+      "nativeFirstPreviewFrame": 104,
+      "releaseAge": 145,
+      "nativeReleaseFrame": 145,
+      "hover": 25,
+      "descentAge": 170
+    },
+    {
+      "name": "combo-8",
+      "flashRegister": 21,
+      "faceRegister": 18,
+      "popRegister": 7,
+      "ordinaryCount": 3,
+      "flashAge": 1,
+      "faceAge": 43,
+      "ordinaryRemovalAge": 80,
+      "floorKinds": [
+        1,
+        1,
+        1,
+        3,
+        2,
+        3
+      ],
+      "stepAges": [
+        104,
+        112,
+        120,
+        128,
+        136,
+        144,
+        152
+      ],
+      "nativeFirstPreviewFrame": 104,
+      "releaseAge": 153,
+      "nativeReleaseFrame": 153,
+      "hover": 25,
+      "descentAge": 178
+    },
+    {
+      "name": "chain-2",
+      "flashRegister": 21,
+      "faceRegister": 18,
+      "popRegister": 7,
+      "ordinaryCount": 3,
+      "flashAge": 1,
+      "faceAge": 43,
+      "ordinaryRemovalAge": 80,
+      "floorKinds": [
+        1,
+        1,
+        1,
+        3,
+        2,
+        3
+      ],
+      "stepAges": [
+        104,
+        112,
+        120,
+        128,
+        136,
+        144
+      ],
+      "nativeFirstPreviewFrame": 104,
+      "releaseAge": 145,
+      "nativeReleaseFrame": 145,
+      "hover": 25,
+      "descentAge": 170
+    },
+    {
+      "name": "chain-3",
+      "flashRegister": 21,
+      "faceRegister": 18,
+      "popRegister": 7,
+      "ordinaryCount": 3,
+      "flashAge": 1,
+      "faceAge": 43,
+      "ordinaryRemovalAge": 80,
+      "floorKinds": [
+        1,
+        1,
+        1,
+        3,
+        2,
+        3
+      ],
+      "stepAges": [
+        104,
+        112,
+        120,
+        128,
+        136,
+        144,
+        152,
+        160,
+        168,
+        176,
+        184,
+        192
+      ],
+      "nativeFirstPreviewFrame": 105,
+      "releaseAge": 193,
+      "nativeReleaseFrame": 194,
+      "hover": 25,
+      "descentAge": 218
+    },
+    {
+      "name": "chain-4",
+      "flashRegister": 21,
+      "faceRegister": 18,
+      "popRegister": 7,
+      "ordinaryCount": 3,
+      "flashAge": 1,
+      "faceAge": 43,
+      "ordinaryRemovalAge": 80,
+      "floorKinds": [
+        1,
+        1,
+        1,
+        3,
+        2,
+        3
+      ],
+      "stepAges": [
+        104,
+        112,
+        120,
+        128,
+        136,
+        144,
+        152,
+        160,
+        168,
+        176,
+        184,
+        192,
+        200,
+        208,
+        216,
+        224,
+        232,
+        240
+      ],
+      "nativeFirstPreviewFrame": 105,
+      "releaseAge": 241,
+      "nativeReleaseFrame": 242,
+      "hover": 25,
+      "descentAge": 266
+    },
+    {
+      "name": "metal",
+      "flashRegister": 21,
+      "faceRegister": 18,
+      "popRegister": 7,
+      "ordinaryCount": 3,
+      "flashAge": 1,
+      "faceAge": 43,
+      "ordinaryRemovalAge": 80,
+      "floorKinds": [
+        1,
+        1,
+        1,
+        3,
+        2,
+        3
+      ],
+      "stepAges": [
+        104,
+        112,
+        120,
+        128,
+        136,
+        144
+      ],
+      "nativeFirstPreviewFrame": 104,
+      "releaseAge": 145,
+      "nativeReleaseFrame": 145,
+      "hover": 25,
+      "descentAge": 170
+    },
+    {
+      "name": "pop3",
+      "flashRegister": 21,
+      "faceRegister": 18,
+      "popRegister": 3,
+      "ordinaryCount": 3,
+      "flashAge": 1,
+      "faceAge": 43,
+      "ordinaryRemovalAge": 72,
+      "floorKinds": [
+        1,
+        1,
+        1,
+        3,
+        2,
+        3
+      ],
+      "stepAges": [
+        84,
+        88,
+        92
+      ],
+      "nativeFirstPreviewFrame": 84,
+      "releaseAge": 93,
+      "nativeReleaseFrame": 93,
+      "hover": 25,
+      "descentAge": 118
+    },
+    {
+      "name": "pop10",
+      "flashRegister": 21,
+      "faceRegister": 18,
+      "popRegister": 10,
+      "ordinaryCount": 3,
+      "flashAge": 1,
+      "faceAge": 43,
+      "ordinaryRemovalAge": 86,
+      "floorKinds": [
+        1,
+        1,
+        1,
+        3,
+        2,
+        3
+      ],
+      "stepAges": [
+        119,
+        130,
+        141
+      ],
+      "nativeFirstPreviewFrame": 119,
+      "releaseAge": 142,
+      "nativeReleaseFrame": 142,
+      "hover": 25,
+      "descentAge": 167
+    },
+    {
+      "name": "short-phases",
+      "flashRegister": 10,
+      "faceRegister": 9,
+      "popRegister": 3,
+      "ordinaryCount": 3,
+      "flashAge": 1,
+      "faceAge": 21,
+      "ordinaryRemovalAge": 41,
+      "floorKinds": [
+        1,
+        1,
+        1,
+        3,
+        2,
+        3
+      ],
+      "stepAges": [
+        53,
+        57,
+        61
+      ],
+      "nativeFirstPreviewFrame": 53,
+      "releaseAge": 62,
+      "nativeReleaseFrame": 62,
+      "hover": 25,
+      "descentAge": 87
+    },
+    {
+      "name": "clear4",
+      "flashRegister": 21,
+      "faceRegister": 18,
+      "popRegister": 7,
+      "ordinaryCount": 4,
+      "flashAge": 1,
+      "faceAge": 43,
+      "ordinaryRemovalAge": 88,
+      "floorKinds": [
+        1,
+        1,
+        1,
+        1,
+        2,
+        3
+      ],
+      "stepAges": [
+        112,
+        120,
+        128
+      ],
+      "nativeFirstPreviewFrame": 112,
+      "releaseAge": 129,
+      "nativeReleaseFrame": 129,
+      "hover": 25,
+      "descentAge": 154
+    },
+    {
+      "name": "clear6",
+      "flashRegister": 21,
+      "faceRegister": 18,
+      "popRegister": 7,
+      "ordinaryCount": 6,
+      "flashAge": 1,
+      "faceAge": 43,
+      "ordinaryRemovalAge": 104,
+      "floorKinds": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      "stepAges": [
+        128,
+        136,
+        144
+      ],
+      "nativeFirstPreviewFrame": 128,
+      "releaseAge": 145,
+      "nativeReleaseFrame": 145,
+      "hover": 25,
+      "descentAge": 170
+    }
+  ],
+  "recovery": {
+    "source": "garbage-extra/preview-chain-setup; actions from docs/snes-garbage-extra-plan.json",
+    "setupAge": 123,
+    "releaseAge": 121,
+    "descentAge": 146,
+    "matchAge": 147,
+    "chain": 2
+  },
+  "inputChecks": [
+    {
+      "name": "recovery-supported-swap",
+      "pressFrame": 130,
+      "cellX": 3,
+      "releaseFrame": 129,
+      "swapped": false
+    },
+    {
+      "name": "recovery-air-swap",
+      "pressFrame": 125,
+      "cellX": 1,
+      "releaseFrame": 121,
+      "swapped": false
+    },
+    {
+      "name": "preview-swap",
+      "pressFrame": 110,
+      "cellX": 2,
+      "releaseFrame": 121,
+      "swapped": false
+    },
+    {
+      "name": "late-recovery-supported",
+      "pressFrame": 148,
+      "endFrame": 151,
+      "cellX": 3,
+      "releaseFrame": 129,
+      "swapped": false
+    },
+    {
+      "name": "late-recovery-air",
+      "pressFrame": 140,
+      "endFrame": 143,
+      "cellX": 1,
+      "releaseFrame": 121,
+      "swapped": false
+    }
+  ]
+}

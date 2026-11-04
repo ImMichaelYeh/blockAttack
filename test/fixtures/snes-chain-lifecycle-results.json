@@ -1,0 +1,58 @@
+{
+  "source": "Existing natural-chain results plus three bounded lifecycle probes in test-results/s08/native; arrival timing remains S12.",
+  "chain5": {
+    "name": "chain-5",
+    "excludedFrames": [
+      27,
+      47,
+      67,
+      87,
+      291,
+      372
+    ],
+    "nativeMatchFrames": [
+      0,
+      97,
+      188,
+      279,
+      371
+    ],
+    "matchFrames": [
+      0,
+      93,
+      184,
+      275,
+      366
+    ],
+    "removalFrames": [
+      80,
+      173,
+      264,
+      355,
+      446
+    ],
+    "width": 6,
+    "height": 4,
+    "firstArrivalFrame": 531
+  },
+  "overlaps": [
+    {
+      "name": "parallel-branches",
+      "depth": 2,
+      "width": 6,
+      "height": 1,
+      "firstArrivalFrame": 280
+    },
+    {
+      "name": "overlap-start",
+      "depth": 3,
+      "width": 6,
+      "height": 2,
+      "firstArrivalFrame": 294,
+      "nativeChainLinks": [
+        97,
+        136
+      ]
+    }
+  ]
+}

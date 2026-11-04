@@ -1,0 +1,521 @@
+{
+  "output": "test-results/snes-lab/chains",
+  "jobs": [
+    {
+      "name": "story-normal-chain-2",
+      "statePath": "test-results/snes-lab/modes/story-normal.mss",
+      "frames": 640,
+      "fixture": {
+        "cells": [
+          [
+            1,
+            14,
+            2
+          ],
+          [
+            2,
+            14,
+            2
+          ],
+          [
+            3,
+            14,
+            1
+          ],
+          [
+            3,
+            13,
+            1
+          ],
+          [
+            3,
+            12,
+            1
+          ],
+          [
+            3,
+            11,
+            2
+          ]
+        ],
+        "dirty": true,
+        "writes": [
+          [
+            706,
+            0
+          ],
+          [
+            708,
+            0
+          ]
+        ],
+        "registers": [
+          706,
+          708,
+          21231,
+          21232,
+          1424,
+          1444,
+          1464,
+          972
+        ]
+      }
+    },
+    {
+      "name": "story-normal-chain-3",
+      "statePath": "test-results/snes-lab/modes/story-normal.mss",
+      "frames": 640,
+      "fixture": {
+        "cells": [
+          [
+            1,
+            14,
+            2
+          ],
+          [
+            2,
+            14,
+            2
+          ],
+          [
+            3,
+            14,
+            1
+          ],
+          [
+            3,
+            13,
+            1
+          ],
+          [
+            3,
+            12,
+            1
+          ],
+          [
+            3,
+            11,
+            2
+          ],
+          [
+            3,
+            10,
+            3
+          ],
+          [
+            4,
+            14,
+            3
+          ],
+          [
+            5,
+            14,
+            3
+          ]
+        ],
+        "dirty": true,
+        "writes": [
+          [
+            706,
+            0
+          ],
+          [
+            708,
+            0
+          ]
+        ],
+        "registers": [
+          706,
+          708,
+          21231,
+          21232,
+          1424,
+          1444,
+          1464,
+          972
+        ]
+      }
+    },
+    {
+      "name": "story-normal-chain-4",
+      "statePath": "test-results/snes-lab/modes/story-normal.mss",
+      "frames": 640,
+      "fixture": {
+        "cells": [
+          [
+            1,
+            14,
+            2
+          ],
+          [
+            2,
+            14,
+            2
+          ],
+          [
+            3,
+            14,
+            1
+          ],
+          [
+            3,
+            13,
+            1
+          ],
+          [
+            3,
+            12,
+            1
+          ],
+          [
+            3,
+            11,
+            2
+          ],
+          [
+            3,
+            10,
+            3
+          ],
+          [
+            4,
+            14,
+            3
+          ],
+          [
+            5,
+            14,
+            3
+          ],
+          [
+            3,
+            9,
+            5
+          ],
+          [
+            1,
+            13,
+            5
+          ],
+          [
+            2,
+            13,
+            5
+          ]
+        ],
+        "dirty": true,
+        "writes": [
+          [
+            706,
+            0
+          ],
+          [
+            708,
+            0
+          ]
+        ],
+        "registers": [
+          706,
+          708,
+          21231,
+          21232,
+          1424,
+          1444,
+          1464,
+          972
+        ]
+      }
+    },
+    {
+      "name": "endless-normal-chain-2",
+      "statePath": "test-results/snes-lab/modes/endless-normal.mss",
+      "frames": 640,
+      "fixture": {
+        "cells": [
+          [
+            1,
+            14,
+            2
+          ],
+          [
+            2,
+            14,
+            2
+          ],
+          [
+            3,
+            14,
+            1
+          ],
+          [
+            3,
+            13,
+            1
+          ],
+          [
+            3,
+            12,
+            1
+          ],
+          [
+            3,
+            11,
+            2
+          ]
+        ],
+        "dirty": true,
+        "writes": [
+          [
+            706,
+            0
+          ],
+          [
+            708,
+            0
+          ]
+        ],
+        "registers": [
+          706,
+          708,
+          21231,
+          21232,
+          1424,
+          1444,
+          1464,
+          972
+        ]
+      }
+    },
+    {
+      "name": "endless-normal-chain-3",
+      "statePath": "test-results/snes-lab/modes/endless-normal.mss",
+      "frames": 640,
+      "fixture": {
+        "cells": [
+          [
+            1,
+            14,
+            2
+          ],
+          [
+            2,
+            14,
+            2
+          ],
+          [
+            3,
+            14,
+            1
+          ],
+          [
+            3,
+            13,
+            1
+          ],
+          [
+            3,
+            12,
+            1
+          ],
+          [
+            3,
+            11,
+            2
+          ],
+          [
+            3,
+            10,
+            3
+          ],
+          [
+            4,
+            14,
+            3
+          ],
+          [
+            5,
+            14,
+            3
+          ]
+        ],
+        "dirty": true,
+        "writes": [
+          [
+            706,
+            0
+          ],
+          [
+            708,
+            0
+          ]
+        ],
+        "registers": [
+          706,
+          708,
+          21231,
+          21232,
+          1424,
+          1444,
+          1464,
+          972
+        ]
+      }
+    },
+    {
+      "name": "endless-normal-chain-4",
+      "statePath": "test-results/snes-lab/modes/endless-normal.mss",
+      "frames": 640,
+      "fixture": {
+        "cells": [
+          [
+            1,
+            14,
+            2
+          ],
+          [
+            2,
+            14,
+            2
+          ],
+          [
+            3,
+            14,
+            1
+          ],
+          [
+            3,
+            13,
+            1
+          ],
+          [
+            3,
+            12,
+            1
+          ],
+          [
+            3,
+            11,
+            2
+          ],
+          [
+            3,
+            10,
+            3
+          ],
+          [
+            4,
+            14,
+            3
+          ],
+          [
+            5,
+            14,
+            3
+          ],
+          [
+            3,
+            9,
+            5
+          ],
+          [
+            1,
+            13,
+            5
+          ],
+          [
+            2,
+            13,
+            5
+          ]
+        ],
+        "dirty": true,
+        "writes": [
+          [
+            706,
+            0
+          ],
+          [
+            708,
+            0
+          ]
+        ],
+        "registers": [
+          706,
+          708,
+          21231,
+          21232,
+          1424,
+          1444,
+          1464,
+          972
+        ]
+      }
+    },
+    {
+      "name": "cursor-held-up",
+      "statePath": "test-results/snes-lab/modes/story-normal.mss",
+      "frames": 120,
+      "inputs": [
+        "0:up@2-100"
+      ],
+      "fixture": {
+        "cells": [
+          [
+            1,
+            14,
+            1
+          ]
+        ],
+        "cursor": [
+          3,
+          14
+        ],
+        "registers": [
+          932,
+          936
+        ]
+      }
+    },
+    {
+      "name": "stop-cancel-raise",
+      "statePath": "test-results/snes-lab/modes/endless-normal.mss",
+      "frames": 180,
+      "inputs": [
+        "0:l@100-100"
+      ],
+      "fixture": {
+        "cells": [
+          [
+            1,
+            14,
+            1
+          ],
+          [
+            2,
+            14,
+            1
+          ],
+          [
+            3,
+            14,
+            1
+          ],
+          [
+            4,
+            14,
+            1
+          ]
+        ],
+        "dirty": true,
+        "freezeRise": false,
+        "registers": [
+          21231,
+          21232,
+          804,
+          734,
+          706
+        ]
+      }
+    }
+  ]
+}
