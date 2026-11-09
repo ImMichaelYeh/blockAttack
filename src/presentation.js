@@ -3,6 +3,10 @@ export const RESULT_TICKS = 150;
 export const SCENE_WIDTH = 256;
 export const SCENE_HEIGHT = 224;
 
+export function boardInDanger(board) {
+  return board.occupiedHeight(false) >= 10;
+}
+
 export function sceneScale(width, height) {
   return Math.max(1, Math.floor(Math.min((width - 40) / SCENE_WIDTH, (height - 124) / SCENE_HEIGHT)));
 }
@@ -53,7 +57,7 @@ export function victoryStarSlots(session, result) {
   return Array.from({ length: local ? 4 : 2 }, (_, index) => {
     const player = index % 2, slot = Math.floor(index / 2);
     return {
-      player, slot, x: 112 + player * 24, y: local ? 189 + slot * 24 : 207,
+      player, slot, x: 110 + player * 20, y: 188 + slot * 18,
       filled: local ? slot < session.stars[player] : winner === player,
       awarded: winner === player && (!local || slot === session.stars[player] - 1),
     };

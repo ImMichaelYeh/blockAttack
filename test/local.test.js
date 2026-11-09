@@ -54,12 +54,18 @@ test('best of three ends at two stars, awards once, and resets for a new set', (
       session.match.result=result;expected[result==='win'?0:1]++;
       session.recordResult();session.recordResult();
       assert.deepEqual(session.stars,expected,'Repeated finish/render must not award another star');
+      assert.deepEqual(session.points,expected,'Running points award each win only once');
       assert.equal(session.complete,index===results.length-1);
       if(index<results.length-1){assert.equal(session.setWinner,null);session.continue(53);assert.equal(session.round,index+2);assert.deepEqual(session.stars,expected);}
     });
     assert.equal(session.setWinner,results.at(-1)==='win'?0:1);
     session.continue(54);
     assert.deepEqual(session.stars,[0,0]);assert.equal(session.round,1);assert.equal(session.match.result,null);assert.equal(session.match.cpu,null);
+    assert.deepEqual(session.points,expected,'New sets preserve running POINT totals');
+    session.match.result='draw';session.recordResult();session.continue(55);
+    assert.deepEqual(session.points,expected,'Draws do not change running totals');
+    session.match.result='win';session.recordResult();
+    assert.deepEqual(session.points,[expected[0]+1,expected[1]]);
   }
 });
 
@@ -72,9 +78,9 @@ test('draws replay the same round and never award or erase stars', () => {
   assert.equal(session.round,2);assert.deepEqual(session.stars,[1,0]);assert.equal(session.complete,false);
 });
 
-test('the original star sprite bounces on integer pixels then settles; reduced effects stays still', () => {
+test('the five-point victory star uses a native-size pixel grid and integer bounce', () => {
   const rows=VICTORY_STAR.split('/');
-  assert.equal(rows.length,9);assert.ok(rows.every(row=>row.length===9&&/^[01]+$/.test(row)));
+  assert.equal(rows.length,16);assert.ok(rows.every(row=>row.length===16&&/^[01]+$/.test(row)));
   assert.equal(victoryStarOffset(0,false),0);
   assert.ok(victoryStarOffset(36,false)<victoryStarOffset(72,false));
   assert.ok(victoryStarOffset(72,false)<victoryStarOffset(108,false));

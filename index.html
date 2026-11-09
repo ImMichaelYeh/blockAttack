@@ -38,7 +38,7 @@
             <fieldset><legend>CHOOSE YOUR GAME</legend><div class="format-options"><label><input id="mode-single" type="radio" name="mode" value="single" checked><span><strong>SINGLE MATCH</strong><small>One cheerful showdown.</small></span></label><label><input id="mode-series" type="radio" name="mode" value="series"><span><strong>CPU SERIES</strong><small>A stronger rival each level!</small></span></label></div></fieldset>
             <div class="setup-row">
               <fieldset id="difficulty-field" hidden><legend>DIFFICULTY</legend><button id="difficulty-easy" type="button" aria-pressed="false">EASY</button><button id="difficulty-normal" type="button" aria-pressed="true">NORMAL</button><button id="difficulty-hard" type="button" aria-pressed="false">HARD</button><input id="difficulty" type="hidden" value="normal"></fieldset>
-              <div id="level-field"><label class="field-label" for="level">LEVEL</label><button id="level-down" type="button" aria-label="Decrease CPU level">−</button><input id="level" type="number" min="1" max="20" step="1" value="1" required><button id="level-up" type="button" aria-label="Increase CPU level">+</button></div>
+              <div id="level-field"><label class="field-label" for="level">LEVEL</label><button id="level-down" type="button" aria-label="Decrease CPU level">−</button><input id="level" type="number" min="1" max="10" step="1" value="1" required><button id="level-up" type="button" aria-label="Increase CPU level">+</button></div>
             </div>
             <p class="matchup"><span class="red-dot"></span> YOU ARE RED <span class="matchup-line"></span> CPU IS BLUE <span class="blue-dot"></span></p>
             <button id="play-button" class="primary start" type="submit">START GAME <span aria-hidden="true">▶</span></button>
@@ -49,7 +49,7 @@
       </section>
 
       <section id="game" class="sr-only" hidden aria-label="CPU versus arena">
-        <h2 id="match-title">Single match</h2><span id="difficulty-label">Normal</span><span id="clock">00:00</span>
+        <h2 id="match-title">Single match</h2><span id="difficulty-label">Normal</span><span id="clock">00:00</span><p id="match-points"></p>
         <canvas id="red-board" width="96" height="192" tabindex="0" aria-label="Your board: WASD moves, Enter swaps, Left Shift raises, Escape pauses"></canvas>
         <canvas id="blue-board" width="96" height="192" aria-label="CPU board"></canvas>
         <canvas id="red-mascot" width="24" height="32" aria-hidden="true"></canvas><canvas id="blue-mascot" width="24" height="32" aria-hidden="true"></canvas>
@@ -63,7 +63,7 @@
     </main>
     <div class="frame-bottom" aria-hidden="true"><span>● ●</span><span>A LITTLE COLOR. A BIG COMEBACK.</span><span>▤ ▤</span></div>
     </div>
-    <footer class="page-footer"><span>P1 · WASD + ENTER</span><span>P2 · IJKL + RIGHT SHIFT</span></footer>
+    <footer class="page-footer"><span>P1 · WASD + ENTER</span><a href="./assets/music/CREDITS.txt" target="_blank" rel="noopener">Music credits</a><span>P2 · IJKL + RIGHT SHIFT</span></footer>
 
   <dialog id="help-dialog"><div class="dialog-top"><p class="eyebrow">THE QUICK GUIDE</p><button class="quiet" data-close="help-dialog" aria-label="Close instructions">✕</button></div><h2>Small swaps.<br>Big trouble.</h2><ol class="instructions"><li><strong>Move & swap.</strong> Move the two-block cursor and swap neighbors. Match 3 or more in a row or column.</li><li><strong>Keep it low.</strong> Your stack rises over time. Raise it yourself when you need fresh blocks. Reach the ceiling for too long and you're out.</li><li><strong>Send some pressure.</strong> Clear 4+ blocks for a combo. Set up falling blocks to match again for a chain. Both send garbage to Blue.</li><li><strong>Turn it around.</strong> Match beside garbage to convert it into blocks. Match special ! blocks to send metal garbage.</li></ol><p id="help-controls" class="help-controls"></p><button class="primary" data-close="help-dialog">Got it. Let's stack.</button></dialog>
   <dialog id="settings-dialog"><div class="dialog-top"><p class="eyebrow">MAKE IT YOURS</p><button class="quiet" data-close="settings-dialog" aria-label="Close settings">✕</button></div><h2>Settings</h2><label class="settings-line">Sound <input id="sound-setting" type="checkbox" checked></label><label class="settings-line">Volume <input id="volume" type="range" min="0" max="100" value="40"></label><label class="settings-line">Reduced effects <input id="reduced" type="checkbox"></label><p class="micro settings-caption">PLAYER 1 · CLICK A KEY TO REBIND</p><div id="bindings"></div><p id="binding-message" class="muted" role="status">Arrow keys also move. Escape always pauses.</p><button id="reset-controls" class="quiet">Reset controls</button><p id="p2-controls" class="help-controls"></p><p id="storage-message" class="error" role="status"></p><button class="primary" data-close="settings-dialog">Done</button></dialog>

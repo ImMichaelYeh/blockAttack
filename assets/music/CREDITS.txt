@@ -1,0 +1,18 @@
+BLOCK ATTACK - MUSIC CREDITS
+
+Menu: "Puzzle Menu" by caret7
+Source: https://opengameart.org/content/puzzle-menu
+License: Creative Commons Attribution 4.0 International
+https://creativecommons.org/licenses/by/4.0/
+
+Gameplay: "Long Summer Nights" by David KBD
+From: Pixel Paradise Grooves, Summer-chiptune Music Pack
+Source: https://davidkbd.itch.io/pixel-paradise-grooves-summer-chiptune-music-pack
+License: Creative Commons Attribution 4.0 International
+https://creativecommons.org/licenses/by/4.0/
+
+Playback adaptations: tracks loop and have individual volume trims. Critical
+gameplay uses 1.4x playback speed with browser pitch preservation enabled and a
+quiet synthesized heartbeat accent.
+Music volume briefly dips during character attack calls.
+The supplied audio files have not been edited.

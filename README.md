@@ -3,14 +3,15 @@
 An original rising-panel puzzle duel. In CPU mode, Red is you and Blue is the CPU.
 Local two-player lets two humans play Red versus Blue, first to two victory stars.
 The game starts directly at a SELECT menu inside an SNES-style console frame, with original
-Red/Blue square trash-block mascots, original pixel scenery, and newly composed synthesized music.
-Battle, menus, help, settings, pause, and results all render into one **256 × 224** bitmap.
+Red/Blue square trash-block mascots, original pixel scenery, licensed music, and synthesized sound effects.
+Battle, menus, help, settings, pause, and result buttons render into one **256 × 224** bitmap.
+Round result messages use smooth HTML lettering above the original pixel buttons for legibility.
 
 ## Run
 
-**Double-click `index.html`** to play. Keep `game.js` and `style.css` beside it.
+**Double-click `index.html`** to play. Keep `game.js`, `style.css`, and the `assets/music/` folder beside it.
 The classic script bundle works without ES-module requests, including direct local-file opening.
-Audio unlocks after Play; blocked local-file storage simply leaves settings in memory.
+Menu audio unlocks after the first click or keypress; blocked local-file storage leaves settings in memory.
 
 For an optional HTTP preview, use Node.js 22 or newer. No dependencies need installation.
 
@@ -23,14 +24,17 @@ The preview binds only to this computer. Set `PORT` if 4173 is occupied.
 
 ## Play
 
-- **Single match:** use −/+ to choose level 1–20, covering every distinct CPU configuration.
-  Profiles are ordered by reaction interval, chain planning, then raising threshold.
+- **Single match:** use −/+ to choose one of 10 custom CPU levels.
+  Level 1 makes simple clears at a relaxed pace. Level 10 plans up to three swaps ahead,
+  favors combos/cascades, and caps cursor moves/swaps at six actions per second.
 - **CPU series:** choose EASY (10 levels), NORMAL (11), or HARD (12).
-  Each level uses the corresponding story encounter's CPU profile and route timing/speed.
+  Route timing/speed stays unchanged; CPU strength progresses through custom levels
+  1–4 on Easy, 3–7 on Normal, and 6–10 on Hard.
   A win advances; a loss retries; a draw replays. The final win completes the series.
 - **2 Player Game:** starts a local best-of-three set. Each round winner earns one star;
   first to two wins the set. Draws award no stars and replay the same round. Choose
   **Next round** to continue or **Play another set** after a set winner to reset both star counts.
+  The 2P POINT row keeps running win totals across sets until returning to the main menu.
   Both players use the same board rules; neither board is controlled by a CPU.
 - **Menu:** W/S or arrows select; Enter confirms; Escape goes back from CPU setup.
 - **Player 1 controls:** WASD or arrows move, **Enter** swaps, **Left Shift** raises, **Escape** pauses.
@@ -55,12 +59,13 @@ The preview binds only to this computer. Set `PORT` if 4173 is occupied.
 - One fixed NTSC-sized **256 × 224** scene scales by whole-number steps (1×, 2×, 3×, etc.) to fit
   the window. The display preserves 8:7 geometry and disables image smoothing.
 - Two 96 × 192 playfields use 16 × 16 panels at `(8, 24)` and `(152, 24)`, with a 48-pixel center
-  column for the characters, round, difficulty, time, and victory stars. The bottom R/B chain panel is removed.
+  column for the characters and a 48-pixel-wide HUD: POINT (2P) or STAGE (1P), LEVEL, TIME,
+  and 16-pixel victory stars. Single player has one star row; local play has a 2×2 grid.
   Scores and incoming trash sit at the top.
 - Saturated red-heart, yellow-star, green-circle, cyan-triangle, purple-diamond, and gray-! panels
-  use newly drawn pixel masks and beveled edges. Original bitmap lettering replaces browser-rendered fonts
-  inside the game. Menus use the clone's compact SELECT arrangement; battles use a shaded forest backdrop.
-- Visible screen pixels come from Canvas. Transparent native HTML controls supply mouse hit areas,
+  use newly drawn pixel masks and beveled edges. Original bitmap lettering is used throughout the canvas.
+  Menus use the clone's compact SELECT arrangement; battles use a shaded forest backdrop.
+- The scene comes from Canvas, with smooth HTML result messages overlaid for legibility. Native HTML controls supply mouse hit areas,
   keyboard focus, form validation, and accessible labels for the bitmap menus. Pause/settings/menu
   utility buttons remain outside the game frame, along with the sound toggle.
 - Combo/chain cards appear beside the panels that cleared and float upward from that spot.
@@ -71,7 +76,7 @@ The preview binds only to this computer. Set `PORT` if 4173 is occupied.
   board names, scores, and the CPU VS / 1 MATCH header are omitted. Admitted trash replaces its icon.
   Attack trails fly between boards. Heavy landings shake the stack and throw up a brief impact burst.
 - Red and Blue sit together in the center with idle, attack, hit, win, and loss reactions.
-- Original eight-point gold star characters with eyes, cheeks, smiles, and a blink jump three times after a round win,
+- Compact five-point yellow stars with narrow eyes, simple smiles, and a blink jump three times after a round win,
   accompanied by a new sparkle cue. Local mode shows two star slots per player and keeps earned stars
   between rounds. CPU wins also show the new celebration without changing CPU match/series rules.
   Reduced effects displays a stationary star with open eyes.
@@ -80,7 +85,15 @@ The preview binds only to this computer. Set `PORT` if 4173 is occupied.
   Results freeze simulation while loss columns fall away, winner panels clear, and a celebration plays;
   the retry/next-level menu follows after 2.5 seconds. Presentation never alters the stored board state.
 - Newly synthesized movement, conversion, incoming, impact, danger, start, and result cues complement
-  the existing music. No extracted sound effects or recordings are loaded.
+  the recorded music. Sound effects use no extracted game recordings.
+  Red has a warm, bold attack call; Blue has a playful two-syllable call. Voices briefly lower the
+  backing music, take turns during simultaneous attacks, and share a soft arcade instrument palette.
+  Quiet interaction cues and duplicate-event limits keep busy battles from becoming a wall of sound.
+- Menu music is **Puzzle Menu** by caret7; gameplay is **Long Summer Nights** by David KBD.
+  Critical play uses the same track at 1.4x speed with pitch preservation and a restrained heartbeat.
+  It follows the shaking threshold of ten settled rows on either board in all modes,
+  returning to normal below that height. Music pauses/resumes with the game and dips during attack calls.
+  Both tracks are CC BY 4.0; full attribution is available from the **Music credits** footer link.
 - Reduced effects keeps timing and indicators while removing shakes, trails, flashing, confetti, and cascades.
 
 ## Check and build

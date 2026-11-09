@@ -687,7 +687,7 @@ export class Cpu {
 }
 
 export class Match {
-  constructor(seed = Date.now(), difficulty = 'normal', encounter = 1, { cpu = true } = {}) {
+  constructor(seed = Date.now(), difficulty = 'normal', encounter = 1, { cpu = true, opponent = null } = {}) {
     const timingDifficulty = difficulty === 'relaxed' ? 'easy' : difficulty;
     const rowState = { alternate: 0 };
     this.boards = [new Board(seed, { starter: cpu, difficulty: timingDifficulty, rowState }),
@@ -695,7 +695,7 @@ export class Match {
     // Independent encounter tuning, not a reconstruction of the native AI tables.
     const profile = CPU_PROFILES[this.boards[1].difficulty];
     const stage = Math.max(1, Math.min(profile.intervals.length, Math.trunc(encounter) || 1));
-    this.cpu = cpu ? new Cpu(profile.intervals[stage - 1], { chains: stage >= profile.chainsFrom, raiseBelow: profile.raiseBelow[stage < 4 ? 0 : stage < 9 ? 1 : 2] }) : null;
+    this.cpu = cpu ? opponent || new Cpu(profile.intervals[stage - 1], { chains: stage >= profile.chainsFrom, raiseBelow: profile.raiseBelow[stage < 4 ? 0 : stage < 9 ? 1 : 2] }) : null;
     this.tick = 0;
     this.attacks = [];
     this.result = null;

@@ -2,7 +2,7 @@ import { TICK_RATE } from './engine.js';
 import { Session, SINGLE_LEVELS } from './session.js';
 import { Controls, DEFAULT_BINDINGS, PLAYER_TWO_BINDINGS, LABELS, bindable, restoreBindings, keyLabel, normalizeKey } from './controls.js';
 import { BoardRenderer, SceneRenderer, drawMascot, drawBattleEffects } from './render.js';
-import { INTRO_TICKS, RESULT_TICKS, incomingPackets, sceneScale } from './presentation.js';
+import { INTRO_TICKS, RESULT_TICKS, incomingPackets, sceneScale, boardInDanger } from './presentation.js';
 import { AudioPlayer } from './audio.js';
 
 const $ = id => document.getElementById(id);
@@ -40,7 +40,7 @@ function fitScene() {
   const scale = sceneScale(window.innerWidth || 1024, window.innerHeight || 900);
   $('scene-viewport').setAttribute('style', `--scale:${scale}`);
   const bounds = $('scene-viewport').getBoundingClientRect?.();
-  if (bounds) for (const id of ['match-dialog','help-dialog','settings-dialog']) $(id).setAttribute('style', `left:${bounds.left}px;top:${bounds.top}px;width:${bounds.width}px;height:${bounds.height}px`);
+  if (bounds) for (const id of ['match-dialog','help-dialog','settings-dialog']) $(id).setAttribute('style', `--scale:${scale};left:${bounds.left}px;top:${bounds.top}px;width:${bounds.width}px;height:${bounds.height}px`);
 }
 
 function selectMenu(index, focus = false) {
@@ -93,9 +93,12 @@ function refreshBindings() {
 }
 
 async function startAudio(ready = false) {
-  if (!settings.sound) return;
+  if (!settings.sound || document.hidden) return;
+  const intendedMatch = session?.match;
   await audio.unlock();
-  if (active() && !session.match.result) { audio.start(); if (ready) audio.cue('ready'); }
+  if (!settings.sound || document.hidden || intendedMatch !== session?.match) return;
+  if (active() && !session.match.result) { audio.start('game', ready); if (ready) audio.cue('ready'); }
+  else if (!session) audio.start('menu');
 }
 
 function startRound() {
@@ -114,6 +117,7 @@ function startRound() {
 }
 
 function setOverlay(kicker, title, copy, action) {
+  $('match-dialog').setAttribute('data-result', String(resultShown));
   $('overlay-kicker').textContent = kicker; $('overlay-title').textContent = title;
   $('overlay-copy').textContent = copy; $('continue').textContent = action;
   fitScene();
@@ -139,13 +143,14 @@ function mainMenu() {
   $('menu').hidden = false; $('game').hidden = true;
   $('game-tools').hidden = true;
   showMenuPanel(false);
+  void startAudio();
 }
 
 function finish() {
   audio.stop(); clearInputs();
   resultAge = 0;
   session.recordResult();
-  audio.cue(session.match.result);
+  audio.cue(session.match.result === 'draw' ? 'draw' : session.match.result === 'win' ? 'red-win' : 'blue-win');
   $('battle-announcement').textContent = session.match.result === 'draw' ? 'Draw!' : session.match.result === 'win' ? 'Red wins!' : 'Blue wins!';
   if (session.mode === 'local') $('battle-announcement').textContent += ` Red ${session.stars[0]} stars, Blue ${session.stars[1]} stars.`;
 }
@@ -174,8 +179,8 @@ function handleEvents(events) {
     if (event.type === 'swap') audio.cue('swap');
     if (event.type === 'move') audio.cue('move');
     if (event.type === 'convert') audio.cue('convert', event.index);
-    if (event.type === 'clear' && (event.count > 3 || event.chain > 1)) {
-      audio.cue(event.chain > 1 ? 'chain' : 'attack');
+    if (event.type === 'clear' && (event.count > 3 || event.chain > 1 || event.shocks >= 3)) {
+      audio.cue(event.chain > 1 ? 'chain' : 'attack', event.chain > 1 ? event.chain : event.count, event.player);
       lastFeed = `${event.player === 0 ? 'RED' : 'BLUE'} · ${event.chain > 1 ? `CHAIN ×${event.chain}` : `${event.count} COMBO`}`;
       feedUntil = session.match.tick + 150;
     }
@@ -186,8 +191,9 @@ function handleEvents(events) {
 function draw() {
   if (!session) return;
   const match = session.match;
+  $('match-points').textContent = session.mode === 'local' ? `Total rounds won: Red ${session.points[0]}, Blue ${session.points[1]}.` : '';
   for (const [index, color] of ['red', 'blue'].entries()) {
-    const board = match.boards[index], danger = board.occupiedHeight() >= 10;
+    const board = match.boards[index], danger = boardInDanger(board);
     renderers[index].draw(board, match, settings.reduced, { visualTick, resultAge: resultAge ?? 0 });
     const packets = incomingPackets(match, index);
     $(color + '-incoming').hidden = packets.length === 0;
@@ -204,12 +210,12 @@ function draw() {
   $('clock').textContent = `${String(Math.floor(seconds / 60)).padStart(2, '0')}:${String(seconds % 60).padStart(2, '0')}`;
   const feed = match.tick < feedUntil ? lastFeed : 'Build a chain.';
   if ($('attack-feed').textContent !== feed) $('attack-feed').textContent = feed;
-  const danger = match.boards.some(board => board.occupiedHeight() >= 10);
+  const danger = !match.result && match.boards.some(boardInDanger);
   if (danger && !lastDanger && !match.result) audio.cue('danger');
   audio.danger = lastDanger = danger;
   drawBattleEffects($('battle-effects'), match, { introAge, resultAge, visualTick, reduced: settings.reduced });
   scene.drawBattle(match, sceneBuffers, { session, effects: $('battle-effects'), visualTick, reduced: settings.reduced, resultAge: resultAge ?? 0 });
-  if ($('match-dialog').open) scene.drawDialog({ kicker: $('overlay-kicker').textContent, title: $('overlay-title').textContent, copy: $('overlay-copy').textContent, action: $('continue').textContent, focus: document.activeElement?.id || 'continue' });
+  if ($('match-dialog').open) scene.drawDialog({ kicker: $('overlay-kicker').textContent, title: $('overlay-title').textContent, copy: $('overlay-copy').textContent, action: $('continue').textContent, focus: document.activeElement?.id || 'continue', result: resultShown });
 }
 
 function frame(now) {
@@ -254,6 +260,7 @@ function frame(now) {
   const focus = document.activeElement?.id;
   if ($('settings-dialog').open) scene.drawSettings({ sound: settings.sound, volume: settings.volume, reduced: settings.reduced, rows: Object.entries(LABELS).map(([action,label])=>({action,label,key:keyLabel(settings.bindings[action])})), capture, message: storageFailed ? 'Settings cannot be saved in this browser.' : capture ? 'Press a key. Esc or Tab cancels.' : $('binding-message').textContent, focus });
   else if ($('help-dialog').open) scene.drawHelp({ move: ['up','left','down','right'].map(action=>keyLabel(settings.bindings[action])).join(''), swap: keyLabel(settings.bindings.swap), raise: keyLabel(settings.bindings.raise), focus });
+  audio.updateMusic();
   requestAnimationFrame(frame);
 }
 
@@ -354,8 +361,15 @@ window.addEventListener('keydown', event => {
 });
 window.addEventListener('keyup', event => { const code = normalizeKey(event.code); controls.up(code); playerTwo.up(code); });
 window.addEventListener('resize', fitScene);
-window.addEventListener('blur', () => { clearInputs(); pauseGame(); });
-document.addEventListener('visibilitychange', () => { if (document.hidden) { clearInputs(); pauseGame(); } });
+const unlockMenuAudio = () => { if (!session) void startAudio(); };
+window.addEventListener('pointerdown', unlockMenuAudio);
+window.addEventListener('keydown', unlockMenuAudio);
+window.addEventListener('focus', unlockMenuAudio);
+window.addEventListener('blur', () => { clearInputs(); pauseGame(); audio.stop(); });
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { clearInputs(); pauseGame(); audio.stop(); }
+  else unlockMenuAudio();
+});
 updateSettings();
 showMenuPanel(false);
 fitScene();

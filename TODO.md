@@ -9,3 +9,7 @@
 - I want UI to look closer to original. Original doesn't need RED or BLUE text above play area. It also does not keep track of score. No "CPU VS 1 Match" text either. Text should look similar to the original game. 
 
 - Reuse as much of the game mechanics like difficult and speed that we discovered from C:\1TB\Workspaces\Websites\tetrisAttack in this version to make sure it plays like the original game.
+- Current accuracy backlog: [SNES parity gaps](docs/SNES_PARITY_GAPS.md).
+- Custom CPU: ten levels replace the old level 20 bot. Automated calibration and AI limits
+  are recorded in the backlog; human testing should check beginner accessibility and level 10 fairness.
+

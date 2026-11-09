@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { Match } from '../src/engine.js';
 import { Session } from '../src/session.js';
+import { AudioPlayer } from '../src/audio.js';
 import { runInNewContext } from 'node:vm';
 import { bundle } from '../tools/bundle.mjs';
 
@@ -13,7 +14,7 @@ class Element {
   fire(type, props = {}) { const event = { preventDefault() {}, ...props }; for (const callback of this.listeners[type] || []) callback(event); }
   click() { this.fire('click'); }
   focus() {}
-  setAttribute() {}
+  setAttribute(name, value) { (this.attributes ||= {})[name] = String(value); }
   replaceChildren() { this.children = []; }
   append(...children) { this.children.push(...children); }
   showModal() { this.open = true; }
@@ -28,6 +29,8 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
   const get = id => { assert.ok(elements.has(id), `Missing element ${id}`); return elements.get(id); };
   const browserWindow = new Element('window'), documentEvents = new Element('document');
   let now = 0, nextFrame, mode = 'single', outcome = null, observedMatch;
+  const emitted = [], cueCalls = [], musicStarts = [];
+  let observedAudio;
   const stored = new Map();
   const names = ['document', 'window', 'localStorage', 'matchMedia', 'requestAnimationFrame', 'FormData', 'performance'];
   const originals = Object.fromEntries(names.map(name => [name, Object.getOwnPropertyDescriptor(globalThis, name)]));
@@ -42,11 +45,15 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
   get('difficulty').value = 'easy'; get('level').value = '1'; get('game').hidden = true;
   const originalStep = Match.prototype.step;
   const originalStart = Session.prototype.start;
+  const originalCue = AudioPlayer.prototype.cue, cues = [];
+  const originalMusicStart = AudioPlayer.prototype.start;
+  AudioPlayer.prototype.start = function(track,restart) { musicStarts.push([track,restart]); return originalMusicStart.call(this,track,restart); };
+  AudioPlayer.prototype.cue = function(type, ...args) { observedAudio = this; cues.push(type); cueCalls.push([type, ...args]); return originalCue.call(this, type, ...args); };
   Session.prototype.start = function(...args) { observedMatch = originalStart.apply(this, args); return observedMatch; };
   Match.prototype.step = function(input, opponentInput) {
     observedMatch = this;
     if (outcome) { this.result = outcome; outcome = null; return []; }
-    return originalStep.call(this, input, opponentInput);
+    return originalStep.call(this, input, opponentInput).concat(emitted.splice(0));
   };
   const frameWith = milliseconds => { now += milliseconds; nextFrame(now); };
   const frame = () => frameWith(17);
@@ -58,7 +65,11 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
     assert.equal(get('cpu-setup').hidden, true);
     browserWindow.fire('keydown', { code: 'NumpadEnter' });
     assert.equal(get('cpu-setup').hidden, false);
+    await Promise.resolve();
+    assert.equal(musicStarts.at(-1)[0],'menu');
     get('setup').fire('submit'); frame();
+    await Promise.resolve();
+    assert.deepEqual(musicStarts.at(-1),['game',true]);
     assert.equal(get('game').hidden, false);
     assert.equal(get('match-title').textContent, 'Single match');
     assert.equal(get('battle-announcement').textContent, 'Ready?');
@@ -74,10 +85,30 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
     for (const code of ['KeyW', 'Enter', 'ShiftLeft']) browserWindow.fire('keyup', { code });
     for (let tap = 0; tap < 2; tap++) { browserWindow.fire('keydown', { code: 'KeyS' }); frame(); browserWindow.fire('keyup', { code: 'KeyS' }); frame(); }
     advance(75);
+    emitted.push({type:'clear',player:0,count:4,chain:1}, {type:'clear',player:1,count:3,chain:2}, {type:'clear',player:1,count:3,chain:1,shocks:3});
+    frame();
+    assert.ok(cueCalls.some(call => call[0] === 'attack' && call[1] === 4 && call[2] === 0), 'Red attacks use Red voice');
+    assert.ok(cueCalls.some(call => call[0] === 'chain' && call[1] === 2 && call[2] === 1), 'Blue chains use Blue voice');
+    assert.ok(cueCalls.some(call => call[0] === 'attack' && call[1] === 3 && call[2] === 1), 'Metal attacks also use the attacker voice');
     browserWindow.fire('keydown', { code: 'NumpadEnter' }); frame();
     browserWindow.fire('keyup', { code: 'NumpadEnter' });
     for (let i = 0; i < 100; i++) frame();
     assert.ok(observedMatch.boards[0].score > 0, 'The opening swap actually clears panels');
+    for (const board of observedMatch.boards) {
+      let height = 9;
+      board.occupiedHeight = () => height;
+      frame();
+      assert.equal(observedAudio.danger, false, 'Music stays normal below the shaking threshold');
+      height = 10; frame();
+      assert.equal(observedAudio.danger, true, 'Either board selects critical music in CPU matches');
+      height = 9; frame();
+      assert.equal(observedAudio.danger, false, 'Music returns to normal when shaking stops');
+      height = 8; frame();
+      assert.equal(observedAudio.danger, false, 'Music returns to normal with safe headroom');
+      delete board.occupiedHeight;
+      frame();
+      assert.equal(observedAudio.danger, false, 'Music returns to normal after the stack drops');
+    }
     for (const rate of [30, 144]) {
       const tick=observedMatch.tick;
       for(let frame=0;frame<rate;frame++)frameWith(1000/rate);
@@ -85,6 +116,7 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
     }
     browserWindow.fire('blur');
     assert.equal(get('overlay-title').textContent, 'Paused.');
+    assert.equal(get('match-dialog').attributes['data-result'], 'false');
     const clock = get('clock').textContent;
     for (let i = 0; i < 100; i++) frame();
     assert.equal(get('clock').textContent, clock);
@@ -97,12 +129,14 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
     outcome = 'loss'; frame();
     assert.equal(get('match-dialog').open, false, 'The loss animation precedes the menu');
     assert.equal(get('battle-announcement').textContent, 'Blue wins!');
+    assert.ok(cues.includes('blue-win'));
     get('pause').click(); advance(30);
     assert.equal(get('overlay-title').textContent, 'Paused.');
     get('continue').click();
     assert.equal(get('battle-announcement').textContent, 'Blue wins!', 'Resuming presentation does not start another round');
     advance(155);
     assert.equal(get('overlay-title').textContent, 'Blue takes it.');
+    assert.equal(get('match-dialog').attributes['data-result'], 'true');
     let blockedRepeat = false;
     browserWindow.fire('keydown', { code: 'Enter', repeat: true, preventDefault() { blockedRepeat = true; } });
     assert.ok(blockedRepeat, 'Held confirm cannot skip the result menu');
@@ -113,9 +147,9 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
     assert.equal(get('menu').hidden, false);
     assert.equal(get('cpu-setup').hidden, true);
     get('menu-one-player').click();
-    for (let index = 0; index < 25; index++) get('level-up').click();
-    assert.equal(Number(get('level').value), 20);
-    for (let index = 0; index < 25; index++) get('level-down').click();
+    for (let index = 0; index < 15; index++) get('level-up').click();
+    assert.equal(Number(get('level').value), 10);
+    for (let index = 0; index < 15; index++) get('level-down').click();
     assert.equal(Number(get('level').value), 1);
     mode = 'series'; get('setup').fire('change');
     assert.equal(get('level').disabled, true);
@@ -123,6 +157,7 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
     get('setup').fire('submit');
     advance(75);
     outcome = 'win'; frame();
+    assert.ok(cues.includes('red-win'));
     advance(155);
     assert.equal(get('continue').textContent, 'Next level');
     get('continue').click();
@@ -141,6 +176,12 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
     get('pause').click(); get('overlay-menu').click();
     get('menu-two-player').click(); advance(75);
     assert.equal(observedMatch.cpu,null);
+    for(const board of observedMatch.boards) {
+      board.occupiedHeight=()=>10;frame();
+      assert.equal(observedAudio.danger,true,'Either human board selects critical music in local play');
+      delete board.occupiedHeight;frame();
+      assert.equal(observedAudio.danger,false);
+    }
     assert.match(get('match-title').textContent,/Local versus.*Round 1/);
     const redX=observedMatch.boards[0].cursor.x,blueY=observedMatch.boards[1].cursor.y;
     browserWindow.fire('keydown',{code:'KeyD'});browserWindow.fire('keydown',{code:'KeyI'});frame();
@@ -149,6 +190,7 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
     assert.equal(observedMatch.boards[1].cursor.y,blueY+1);
     outcome='win';frame();advance(155);
     assert.equal(get('overlay-title').textContent,'Red earns a star!');
+    assert.match(get('match-points').textContent,/Red 1, Blue 0/);
     assert.match(get('overlay-copy').textContent,/Red 1 - Blue 0/);
     get('continue').click();advance(75);
     outcome='draw';frame();advance(155);
@@ -165,6 +207,7 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
     assert.equal(get('continue').textContent,'Play another set');
     get('continue').click();advance(75);
     assert.match(get('match-title').textContent,/Round 1/);
+    assert.match(get('match-points').textContent,/Red 2, Blue 1/,'New sets retain the running win totals');
     get('pause').click();get('overlay-menu').click();
     get('bindings').children[4].children[1].click();
     browserWindow.fire('keydown', { code: 'KeyW' });
@@ -177,8 +220,11 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
     assert.match(get('binding-message').textContent,/overlap/);
     assert.equal(get('game').hidden,true);
   } finally {
+    await Promise.resolve();
     Match.prototype.step = originalStep;
     Session.prototype.start = originalStart;
+    AudioPlayer.prototype.cue = originalCue;
+    AudioPlayer.prototype.start = originalMusicStart;
     for (const name of names) { if (originals[name]) Object.defineProperty(globalThis, name, originals[name]); else delete globalThis[name]; }
   }
 });

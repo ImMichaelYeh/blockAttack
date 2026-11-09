@@ -1,25 +1,23 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Session, SERIES_LENGTHS, SINGLE_LEVELS } from '../src/session.js';
-import { CPU_PROFILES, chooseMove, Match } from '../src/engine.js';
+import { chooseMove, Match } from '../src/engine.js';
+import { CPU_LEVELS, ComputerPlayer } from '../src/cpu.js';
 
-test('single CPU levels span the reference encounters and retain their level on rematch', () => {
-  assert.deepEqual(SINGLE_LEVELS[0], { difficulty: 'easy', stage: 1 });
-  assert.equal(SINGLE_LEVELS.length, 20);
-  assert.deepEqual(SINGLE_LEVELS[19], { difficulty: 'hard', stage: 12 });
-  const cpuKey = match => JSON.stringify([match.cpu.interval, match.cpu.chains, match.cpu.raiseBelow]);
-  const expected = new Set(Object.entries(SERIES_LENGTHS).flatMap(([difficulty, length]) =>
-    Array.from({ length }, (_, index) => cpuKey(new Match(123, difficulty, index + 1)))));
-  const actual = SINGLE_LEVELS.map(({ difficulty, stage }) => cpuKey(new Match(123, difficulty, stage)));
-  assert.equal(new Set(actual).size, 20);
-  assert.deepEqual(new Set(actual), expected);
+test('single CPU levels use all custom profiles and retain their level on rematch', () => {
+  assert.equal(SINGLE_LEVELS[0].difficulty, 'easy');
+  assert.equal(SINGLE_LEVELS.length, 10);
+  assert.equal(SINGLE_LEVELS[9].difficulty, 'hard');
+  assert.equal(new Set(SINGLE_LEVELS.map(profile => JSON.stringify(profile))).size, 10);
   let previousInterval = Infinity;
-  for (let level = 1; level <= 20; level++) {
-    const { difficulty, stage } = SINGLE_LEVELS[level - 1];
+  for (let level = 1; level <= 10; level++) {
+    const { difficulty } = SINGLE_LEVELS[level - 1];
     const session = new Session({ level });
     const match = session.start(123);
     assert.equal(session.length, 1);
-    assert.equal(match.cpu.interval, CPU_PROFILES[difficulty].intervals[stage - 1]);
+    assert.ok(match.cpu instanceof ComputerPlayer);
+    assert.equal(match.cpu.level, level);
+    assert.equal(match.cpu.profile, CPU_LEVELS[level - 1]);
     assert.ok(match.cpu.interval <= previousInterval);
     previousInterval = match.cpu.interval;
     assert.ok(match.boards.every(board => board.difficulty === difficulty));
@@ -32,7 +30,7 @@ test('single CPU levels span the reference encounters and retain their level on 
   }
 });
 
-test('reference series routes progress, retry and complete without decreasing CPU strength', () => {
+test('series routes progress through custom CPU levels while retaining route board timing', () => {
   for (const difficulty of ['easy', 'normal', 'hard']) {
     const length = SERIES_LENGTHS[difficulty];
     const session = new Session({ mode: 'series', difficulty });
@@ -42,7 +40,11 @@ test('reference series routes progress, retry and complete without decreasing CP
     for (let level = 1; level <= length; level++) {
       assert.equal(session.level, level);
       const reference = new Match(42, difficulty, level);
-      assert.deepEqual(session.match.cpu, reference.cpu);
+      assert.ok(session.match.cpu instanceof ComputerPlayer);
+      const [first, last] = { easy: [1, 4], normal: [3, 7], hard: [6, 10] }[difficulty];
+      assert.ok(session.match.cpu.level >= first && session.match.cpu.level <= last);
+      if (level === 1) assert.equal(session.match.cpu.level, first);
+      if (level === length) assert.equal(session.match.cpu.level, last);
       assert.equal(session.match.boards[0].speedLevel, reference.boards[0].speedLevel);
       assert.ok(session.match.cpu.interval <= previousInterval);
       previousInterval = session.match.cpu.interval;
@@ -57,7 +59,7 @@ test('reference series routes progress, retry and complete without decreasing CP
       assert.equal(session.complete, level === length);
       if (level < length) session.continue();
     }
-    assert.equal(session.profileStage, length === 1 ? 1 : CPU_PROFILES[difficulty].intervals.length);
+    assert.equal(session.profileStage, length);
     session.continue();
     assert.equal(session.level, 1);
     assert.equal(session.match.result, null);
@@ -66,7 +68,7 @@ test('reference series routes progress, retry and complete without decreasing CP
 });
 
 test('series rejects invalid settings at the boundary', () => {
-  for (const level of [0, 21, -1, 2.5, NaN, Infinity, '5', null]) assert.throws(() => new Session({ level }));
+  for (const level of [0, 11, 20, -1, 2.5, NaN, Infinity, '5', null]) assert.throws(() => new Session({ level }));
   for (const difficulty of ['extreme', '__proto__', '', null]) assert.throws(() => new Session({ difficulty }));
   assert.throws(() => new Session({ mode: 'lan' }));
 });

@@ -3,6 +3,9 @@
 Reference: the local `../tetrisAttack` implementation, inspected November 3, 2026.
 This comparison targets that browser game's behavior, including its existing approximations.
 
+Track outstanding native verification separately in [SNES parity gaps](SNES_PARITY_GAPS.md),
+starting with CPU decision-making and the level 20 player report.
+
 ## Differences corrected
 
 - Cursor repeat was immediate / 12-tick delay / every fourth tick. Restored immediate movement,
@@ -21,9 +24,9 @@ This comparison targets that browser game's behavior, including its existing app
 
 ## Confirmed unchanged
 
-The engine comparison found no changes to `Board`, seeded generation, CPU planning, or the timing,
+The engine comparison found no changes to `Board`, seeded generation, or the timing,
 speed, stop-time, combo/chain, garbage, conversion, danger, and defeat constants/algorithms.
-The `Match` differences enable optional human control of board 2; default CPU behavior remains equivalent.
+The `Match` differences enable optional human control of board 2 and a custom CPU opponent.
 Human-versus-human boards omit the Red-only tutorial opening so both use the same generation rules.
 
 This includes falling/hover/landing timing, four-tick swaps, legal hover reversal and locked falling
@@ -36,7 +39,7 @@ clear/pop ordering, active chains, garbage scheduling/conversion, and simultaneo
 its actual `cursorMove` function, without loading original art/audio. It records the source engine
 SHA-256, a cursor-input trace, and ten seeded replays across Easy/Normal/Hard and early/late CPU stages.
 
-`test/mechanics-parity.test.js` runs those replays against this engine and checks internal-state
+`test/mechanics-parity.test.js` runs those replays with the retained historical CPU against this engine and checks internal-state
 checkpoint hashes, the complete event-stream hash, event counts, outcomes, scores, and chains.
 The captured runs include 1,016 clears, 3,138 pops, 55 completed chains, 683 conversion steps,
 and 747 garbage landings. The fixtures run without the sibling repo or a ROM present.
@@ -45,12 +48,17 @@ Additional controller/input checks cover READY, Numpad Enter, buffered swaps/rai
 priority, repeat changes, local P2 timing, pause/reset behavior, and differing render frame rates.
 The retained mechanics suites continue to check the original measured timing fixtures.
 
-CPU series now uses Easy10 / Normal11 / Hard12 and passes each encounter number directly to the
-reference CPU profile. Single levels 1–20 cover every distinct CPU configuration once,
-ordered by reaction interval, chain planning, then raising threshold.
-The selected route also supplies board speed, clear timing, stop time, and ceiling grace.
-Board generation and CPU planning were compared again on November 8, 2026 and remain identical.
+CPU series retains Easy10 / Normal11 / Hard12 encounters and route board timing/speed.
+On November 8, 2026 the user approved independently designed AI instead of native CPU reconstruction.
+Single Match now uses ten custom profiles, with slower reaction intervals (30 down to 10 ticks),
+one- to three-swap planning, combo/cascade evaluation, and bounded search breadth.
+The CPU commits to plans, discards them when the field changes, and waits for fresh blocks instead
+of shuffling without a reachable clear. Easy series maps to AI levels 1–4, Normal 3–7, Hard 6–10.
+Single board profiles progress Easy (1–3), Normal (4–7), Hard (8–10), without changing board physics.
+The old `Cpu`/`chooseMove` remain to run the recorded engine-parity fixtures; live sessions explicitly
+provide `ComputerPlayer`. Those historical replays do not test the new AI.
 
-Art, audio, menu/presentation timing, single-level ordering, and two-player set rules are intentional
-differences. The reference CPU remains independently tuned, rather than reconstructed native AI.
+Art, audio, menu/presentation timing, custom CPU behavior, and two-player set rules are intentional
+differences. New CPU tests cover purposeful setup sequences, target commitment, no-move waiting,
+determinism, level bounds, route mapping, and seeded strength comparisons.
 Live physical keyboard feel still requires a browser playtest.

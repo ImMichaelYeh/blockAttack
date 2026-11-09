@@ -3,15 +3,17 @@ import { readFile, stat } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import './bundle.mjs';
+import { MUSIC_TRACKS } from '../src/audio.js';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const port = Number(process.env.PORT || 4173);
-const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml' };
+const mime = { '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.ogg': 'audio/ogg', '.txt': 'text/plain; charset=utf-8' };
+const publicFiles = ['index.html', 'style.css', 'game.js', 'assets/music/CREDITS.txt', ...Object.values(MUSIC_TRACKS).map(track => track.src.slice(2))];
 export function publicPath(url) {
   const pathname = decodeURIComponent(new URL(url, 'http://localhost').pathname);
   const local = pathname.startsWith('/blockAttack/') ? pathname.slice('/blockAttack'.length) : pathname;
   const name = local === '/' ? 'index.html' : local.slice(1);
-  if (!['index.html', 'style.css', 'game.js'].includes(name) && !/^src\/[a-z-]+\.js$/.test(name)) return null;
+  if (!publicFiles.includes(name) && !/^src\/[a-z-]+\.js$/.test(name)) return null;
   return path.join(root, name);
 }
 

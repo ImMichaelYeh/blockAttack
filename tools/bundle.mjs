@@ -3,7 +3,7 @@ import { Script } from 'node:vm';
 
 // shortcut: these modules only use named imports/exports; use a bundler if that changes.
 export async function bundle() {
-  const names = ['engine', 'session', 'controls', 'presentation', 'pixels', 'render', 'audio', 'main'];
+  const names = ['engine', 'cpu', 'session', 'controls', 'presentation', 'pixels', 'render', 'audio', 'main'];
   const sources = await Promise.all(names.map(name => readFile(new URL(`../src/${name}.js`, import.meta.url), 'utf8')));
   const body = sources.map((source, index) => `// src/${names[index]}.js\n${source
     .replace(/^import \{[^\n]+\} from ['"]\.\/[a-z-]+\.js['"];?\r?\n/gm, '')
