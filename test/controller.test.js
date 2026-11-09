@@ -39,7 +39,7 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
   install('requestAnimationFrame', callback => { nextFrame = callback; });
   install('FormData', class { get() { return mode; } });
   install('performance', { now: () => now });
-  get('difficulty').value = 'easy'; get('length').value = '5'; get('game').hidden = true;
+  get('difficulty').value = 'easy'; get('level').value = '1'; get('game').hidden = true;
   const originalStep = Match.prototype.step;
   const originalStart = Session.prototype.start;
   Session.prototype.start = function(...args) { observedMatch = originalStart.apply(this, args); return observedMatch; };
@@ -77,7 +77,7 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
     browserWindow.fire('keydown', { code: 'NumpadEnter' }); frame();
     browserWindow.fire('keyup', { code: 'NumpadEnter' });
     for (let i = 0; i < 100; i++) frame();
-    assert.ok(Number(get('red-score').textContent.replaceAll(',', '')) > 0, 'The opening swap actually clears panels');
+    assert.ok(observedMatch.boards[0].score > 0, 'The opening swap actually clears panels');
     for (const rate of [30, 144]) {
       const tick=observedMatch.tick;
       for(let frame=0;frame<rate;frame++)frameWith(1000/rate);
@@ -107,29 +107,37 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
     browserWindow.fire('keydown', { code: 'Enter', repeat: true, preventDefault() { blockedRepeat = true; } });
     assert.ok(blockedRepeat, 'Held confirm cannot skip the result menu');
     get('continue').click();
-    assert.equal(get('red-score').textContent, '0');
+    assert.equal(observedMatch.boards[0].score, 0);
     get('leave').click(); assert.equal(get('overlay-title').textContent, 'Back to menu?');
     get('overlay-menu').click();
     assert.equal(get('menu').hidden, false);
     assert.equal(get('cpu-setup').hidden, true);
     get('menu-one-player').click();
-    mode = 'series'; get('length').value = '2'; get('setup').fire('change');
-    assert.equal(get('length').disabled, false);
+    for (let index = 0; index < 25; index++) get('level-up').click();
+    assert.equal(Number(get('level').value), 20);
+    for (let index = 0; index < 25; index++) get('level-down').click();
+    assert.equal(Number(get('level').value), 1);
+    mode = 'series'; get('setup').fire('change');
+    assert.equal(get('level').disabled, true);
+    get('difficulty-easy').click();
     get('setup').fire('submit');
     advance(75);
     outcome = 'win'; frame();
     advance(155);
     assert.equal(get('continue').textContent, 'Next level');
     get('continue').click();
-    assert.equal(get('match-title').textContent, 'CPU series · Level 2 / 2');
+    assert.equal(get('match-title').textContent, 'CPU series · Level 2 / 10');
     advance(75);
     outcome = 'draw'; frame(); advance(155); get('continue').click();
-    assert.equal(get('match-title').textContent, 'CPU series · Level 2 / 2');
+    assert.equal(get('match-title').textContent, 'CPU series · Level 2 / 10');
     advance(75);
-    outcome = 'win'; frame(); advance(155);
+    for (let level = 2; level <= 10; level++) {
+      outcome = 'win'; frame(); advance(155);
+      if (level < 10) { get('continue').click(); advance(75); }
+    }
     assert.equal(get('overlay-title').textContent, 'Series cleared.');
     get('continue').click();
-    assert.equal(get('match-title').textContent, 'CPU series · Level 1 / 2');
+    assert.equal(get('match-title').textContent, 'CPU series · Level 1 / 10');
     get('pause').click(); get('overlay-menu').click();
     get('menu-two-player').click(); advance(75);
     assert.equal(observedMatch.cpu,null);
@@ -192,8 +200,8 @@ test('direct-file classic bundle starts a single match and Enter clears the open
     performance: { now: () => now }, requestAnimationFrame: callback => { nextFrame = callback; },
     FormData: class { get() { return 'single'; } }, setInterval, clearInterval,
   };
-  get('difficulty').value = 'normal'; get('length').value = '5'; get('game').hidden = true;
-  runInNewContext(script, context, { timeout: 2000, filename: 'game.js' });
+  get('difficulty').value = 'normal'; get('level').value = '1'; get('game').hidden = true;
+  runInNewContext(script.replace('this.match = new Match(seed,', 'globalThis.observedMatch = this.match = new Match(seed,'), context, { timeout: 2000, filename: 'game.js' });
   assert.equal(get('cpu-setup').hidden, true);
   get('menu-one-player').click(); get('setup').fire('submit');
   assert.equal(get('game').hidden, false);
@@ -201,7 +209,7 @@ test('direct-file classic bundle starts a single match and Enter clears the open
   for (let frame = 0; frame < 75; frame++) { now += 17; nextFrame(now); }
   win.fire('keydown', { code: 'Enter' }); win.fire('keyup', { code: 'Enter' });
   for (let frame = 0; frame < 110; frame++) { now += 17; nextFrame(now); }
-  assert.ok(Number(get('red-score').textContent.replaceAll(',', '')) > 0);
+  assert.ok(context.observedMatch.boards[0].score > 0);
   assert.match(get('storage-message').textContent, /cannot be saved/);
   assert.equal(context.Match, undefined, 'Bundling does not expose engine globals');
   win.fire('keydown', { code: 'Escape' });

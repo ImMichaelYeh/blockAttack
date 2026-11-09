@@ -23,10 +23,11 @@ The preview binds only to this computer. Set `PORT` if 4173 is occupied.
 
 ## Play
 
-- **Single match:** select Easy, Normal, or Hard and play one CPU battle.
-- **CPU series:** select difficulty and 1–10 levels (default 5). CPU reaction and strategy progress
-  across the existing difficulty profiles. A win advances; a loss retries; a draw replays.
-  The final win completes the series. Scores/boards reset each match.
+- **Single match:** use −/+ to choose level 1–20, covering every distinct CPU configuration.
+  Profiles are ordered by reaction interval, chain planning, then raising threshold.
+- **CPU series:** choose EASY (10 levels), NORMAL (11), or HARD (12).
+  Each level uses the corresponding story encounter's CPU profile and route timing/speed.
+  A win advances; a loss retries; a draw replays. The final win completes the series.
 - **2 Player Game:** starts a local best-of-three set. Each round winner earns one star;
   first to two wins the set. Draws award no stars and replay the same round. Choose
   **Next round** to continue or **Play another set** after a set winner to reset both star counts.
@@ -66,8 +67,8 @@ The preview binds only to this computer. Set `PORT` if 4173 is occupied.
   They follow stack rise, stay within the board, and remain stationary with reduced effects.
 - Original small, wide/tall, and metal trash icons appear above each board after the attack flight arrives,
   including packets waiting for space to spawn. Small attacks show groups of miniature blocks; tall attacks
-  show a height multiplier; long queues show an overflow count. The icon strip temporarily replaces that
-  board's name/score header, which returns when the preview clears. Admitted trash replaces its icon.
+  show a height multiplier; long queues show an overflow count. The strip stays clear between attacks;
+  board names, scores, and the CPU VS / 1 MATCH header are omitted. Admitted trash replaces its icon.
   Attack trails fly between boards. Heavy landings shake the stack and throw up a brief impact burst.
 - Red and Blue sit together in the center with idle, attack, hit, win, and loss reactions.
 - Original eight-point gold star characters with eyes, cheeks, smiles, and a blink jump three times after a round win,

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#382752">
-  <meta name="description" content="A rising-panel puzzle duel. Swap, chain, and send the stack back. Original Red versus Blue arcade action.">
+  <meta name="description" content="A rising-block puzzle duel. Swap, chain, and send the stack back. Original Red versus Blue arcade action.">
   <title>Block Attack · A colorful little rivalry</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23d9fb72'/%3E%3Cpath d='M8 8h10v5h6v11H8z' fill='%23121619'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="./style.css">
@@ -36,7 +36,10 @@
           <h2>1 PLAYER GAME</h2><p class="setup-intro">A friendly little CPU rivalry!</p>
           <form id="setup">
             <fieldset><legend>CHOOSE YOUR GAME</legend><div class="format-options"><label><input id="mode-single" type="radio" name="mode" value="single" checked><span><strong>SINGLE MATCH</strong><small>One cheerful showdown.</small></span></label><label><input id="mode-series" type="radio" name="mode" value="series"><span><strong>CPU SERIES</strong><small>A stronger rival each level!</small></span></label></div></fieldset>
-            <div class="setup-row"><label class="field-label" for="difficulty">DIFFICULTY<select id="difficulty"><option value="easy">Easy — find your rhythm</option><option value="normal" selected>Normal — bring your A-game</option><option value="hard">Hard — keep up</option></select></label><label id="length-field" class="field-label" for="length" hidden>LEVELS<input id="length" type="number" min="1" max="10" step="1" value="5" required disabled></label></div>
+            <div class="setup-row">
+              <fieldset id="difficulty-field" hidden><legend>DIFFICULTY</legend><button id="difficulty-easy" type="button" aria-pressed="false">EASY</button><button id="difficulty-normal" type="button" aria-pressed="true">NORMAL</button><button id="difficulty-hard" type="button" aria-pressed="false">HARD</button><input id="difficulty" type="hidden" value="normal"></fieldset>
+              <div id="level-field"><label class="field-label" for="level">LEVEL</label><button id="level-down" type="button" aria-label="Decrease CPU level">−</button><input id="level" type="number" min="1" max="20" step="1" value="1" required><button id="level-up" type="button" aria-label="Increase CPU level">+</button></div>
+            </div>
             <p class="matchup"><span class="red-dot"></span> YOU ARE RED <span class="matchup-line"></span> CPU IS BLUE <span class="blue-dot"></span></p>
             <button id="play-button" class="primary start" type="submit">START GAME <span aria-hidden="true">▶</span></button>
             <p id="setup-error" class="error" role="alert"></p>
@@ -51,7 +54,7 @@
         <canvas id="blue-board" width="96" height="192" aria-label="CPU board"></canvas>
         <canvas id="red-mascot" width="24" height="32" aria-hidden="true"></canvas><canvas id="blue-mascot" width="24" height="32" aria-hidden="true"></canvas>
         <canvas id="red-incoming" width="96" height="24" role="img" aria-label="Incoming trash for Red: none" hidden></canvas><canvas id="blue-incoming" width="96" height="24" role="img" aria-label="Incoming trash for Blue: none" hidden></canvas>
-        <p id="red-status"></p><p id="blue-status"></p><span id="red-score">0</span><span id="blue-score">0</span><span id="red-chain">0</span><span id="blue-chain">0</span>
+        <p id="red-status"></p><p id="blue-status"></p><span id="red-chain">0</span><span id="blue-chain">0</span>
         <p id="red-danger" hidden>Red stack critical</p><p id="blue-danger" hidden>Blue stack critical</p>
         <div id="control-hints"></div><div id="attack-feed" role="status" aria-live="polite"></div>
         <canvas id="battle-effects" width="256" height="224" aria-hidden="true"></canvas>
@@ -62,7 +65,7 @@
     </div>
     <footer class="page-footer"><span>P1 · WASD + ENTER</span><span>P2 · IJKL + RIGHT SHIFT</span></footer>
 
-  <dialog id="help-dialog"><div class="dialog-top"><p class="eyebrow">THE QUICK GUIDE</p><button class="quiet" data-close="help-dialog" aria-label="Close instructions">✕</button></div><h2>Small swaps.<br>Big trouble.</h2><ol class="instructions"><li><strong>Move & swap.</strong> Move the two-panel cursor and swap neighbors. Match 3 or more in a row or column.</li><li><strong>Keep it low.</strong> Your stack rises over time. Raise it yourself when you need fresh panels. Reach the ceiling for too long and you're out.</li><li><strong>Send some pressure.</strong> Clear 4+ panels for a combo. Set up falling panels to match again for a chain. Both send garbage to Blue.</li><li><strong>Turn it around.</strong> Match beside garbage to convert it into panels. Match special ! panels to send metal garbage.</li></ol><p id="help-controls" class="help-controls"></p><button class="primary" data-close="help-dialog">Got it. Let's stack.</button></dialog>
+  <dialog id="help-dialog"><div class="dialog-top"><p class="eyebrow">THE QUICK GUIDE</p><button class="quiet" data-close="help-dialog" aria-label="Close instructions">✕</button></div><h2>Small swaps.<br>Big trouble.</h2><ol class="instructions"><li><strong>Move & swap.</strong> Move the two-block cursor and swap neighbors. Match 3 or more in a row or column.</li><li><strong>Keep it low.</strong> Your stack rises over time. Raise it yourself when you need fresh blocks. Reach the ceiling for too long and you're out.</li><li><strong>Send some pressure.</strong> Clear 4+ blocks for a combo. Set up falling blocks to match again for a chain. Both send garbage to Blue.</li><li><strong>Turn it around.</strong> Match beside garbage to convert it into blocks. Match special ! blocks to send metal garbage.</li></ol><p id="help-controls" class="help-controls"></p><button class="primary" data-close="help-dialog">Got it. Let's stack.</button></dialog>
   <dialog id="settings-dialog"><div class="dialog-top"><p class="eyebrow">MAKE IT YOURS</p><button class="quiet" data-close="settings-dialog" aria-label="Close settings">✕</button></div><h2>Settings</h2><label class="settings-line">Sound <input id="sound-setting" type="checkbox" checked></label><label class="settings-line">Volume <input id="volume" type="range" min="0" max="100" value="40"></label><label class="settings-line">Reduced effects <input id="reduced" type="checkbox"></label><p class="micro settings-caption">PLAYER 1 · CLICK A KEY TO REBIND</p><div id="bindings"></div><p id="binding-message" class="muted" role="status">Arrow keys also move. Escape always pauses.</p><button id="reset-controls" class="quiet">Reset controls</button><p id="p2-controls" class="help-controls"></p><p id="storage-message" class="error" role="status"></p><button class="primary" data-close="settings-dialog">Done</button></dialog>
   <dialog id="match-dialog" aria-labelledby="overlay-title"><p id="overlay-kicker" class="eyebrow">TAKE A BREATHER</p><h2 id="overlay-title">Paused.</h2><p id="overlay-copy">The stack can wait.</p><button id="continue" class="primary">Resume</button><button id="overlay-menu" class="quiet full-width">Main menu</button></dialog>
   <noscript><p class="noscript">Enable JavaScript to play Block Attack.</p></noscript>

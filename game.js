@@ -774,14 +774,23 @@ class Match {
 
 // src/session.js
 
+const SERIES_LENGTHS = Object.freeze({ easy: 10, normal: 11, hard: 12 });
+// One encounter per distinct CPU configuration, ordered by reaction interval, chains, then raising.
+const SINGLE_LEVELS = Object.freeze([
+  ...Array.from({ length: 8 }, (_, index) => ['easy', index + 1]),
+  ['normal', 1], ['easy', 9], ['normal', 2], ['easy', 10],
+  ['normal', 4], ['normal', 5], ['normal', 7], ['hard', 4],
+  ['normal', 9], ['normal', 11], ['hard', 9], ['hard', 12],
+].map(([difficulty, stage]) => Object.freeze({ difficulty, stage })));
+
 class Session {
-  constructor({ mode = 'single', difficulty = 'normal', length = 5 } = {}) {
+  constructor({ mode = 'single', difficulty = 'normal', level = 1 } = {}) {
     if (!['single', 'series', 'local'].includes(mode) || !Object.hasOwn(CPU_PROFILES, difficulty)) throw new Error('Choose a valid mode and difficulty.');
-    if (mode === 'series' && (!Number.isInteger(length) || length < 1 || length > 10)) throw new Error('Choose a whole number of levels from 1 to 10.');
+    if (mode === 'single' && (!Number.isInteger(level) || level < 1 || level > SINGLE_LEVELS.length)) throw new Error('Choose a whole number of levels from 1 to 20.');
     this.mode = mode;
-    this.difficulty = difficulty;
-    this.length = mode === 'series' ? length : 1;
-    this.level = 1;
+    this.difficulty = mode === 'single' ? SINGLE_LEVELS[level - 1].difficulty : difficulty;
+    this.length = mode === 'series' ? SERIES_LENGTHS[difficulty] : 1;
+    this.level = mode === 'single' ? level : 1;
     this.match = null;
     this.stars = [0, 0];
     this.round = 1;
@@ -789,12 +798,11 @@ class Session {
   }
 
   get profileStage() {
-    const count = CPU_PROFILES[this.difficulty].intervals.length;
-    return this.length === 1 ? 1 : 1 + Math.round((this.level - 1) * (count - 1) / (this.length - 1));
+    return this.mode === 'single' ? SINGLE_LEVELS[this.level - 1].stage : this.level;
   }
 
   get setWinner() { return this.stars[0] >= 2 ? 0 : this.stars[1] >= 2 ? 1 : null; }
-  get complete() { return this.mode === 'local' ? this.setWinner !== null : this.level === this.length && this.match?.result === 'win'; }
+  get complete() { return this.mode === 'local' ? this.setWinner !== null : (this.mode === 'single' || this.level === this.length) && this.match?.result === 'win'; }
 
   start(seed = Date.now()) {
     this.match = new Match(seed, this.difficulty, this.profileStage, { cpu: this.mode !== 'local' });
@@ -818,7 +826,7 @@ class Session {
       return this.start(seed);
     }
     if (this.match.result === 'win' && this.mode === 'series' && !this.complete) this.level++;
-    else if (this.complete) this.level = 1;
+    else if (this.complete && this.mode === 'series') this.level = 1;
     return this.start(seed);
   }
 }
@@ -1218,18 +1226,13 @@ class SceneRenderer {
     ctx.drawImage(buffers.boards[0],8,24);ctx.drawImage(buffers.boards[1],152,24);
     for(let player=0;player<2;player++) {
       const left=player?152:8;
-      if(!incomingPreview(match,player,reduced).length) {
-        pixelText(ctx,player?'BLUE':'RED',left,12,'#fff8e8');
-        pixelText(ctx,String(match.boards[player].score).padStart(5,'0').slice(-6),left+34,12,'#f8f800');
-      }
       ctx.drawImage(buffers.incoming[player],left,0);
     }
     const local=session.mode==='local';
-    pixelText(ctx,local?'2P VS':'CPU VS',128,5,'#fff8b0',{small:true,center:true});pixelText(ctx,local?'BEST OF 3':session.mode==='series'?`${session.level}/${session.length}`:'1 MATCH',128,15,'#fff8b0',{small:true,center:true});
     pixelText(ctx,'P1',116,42,'#ffb8c8',{small:true,center:true});pixelText(ctx,local?'P2':'CPU',140,42,'#b8e8ff',{small:true,center:true});
     ctx.drawImage(buffers.mascots[0],104,50);ctx.drawImage(buffers.mascots[1],128,50);
     pixelText(ctx,'VS',128,84,'#f8f800',{center:true});
-    pixelWindow(ctx,108,99,40,25);pixelText(ctx,'ROUND',128,105,'#383080',{small:true,center:true,shadow:false});pixelText(ctx,local?session.round:session.level,128,114,'#a01878',{center:true,shadow:false});
+    pixelWindow(ctx,108,99,40,25);pixelText(ctx,local?'ROUND':'LEVEL',128,105,'#383080',{small:true,center:true,shadow:false});pixelText(ctx,local?session.round:session.mode==='series'?`${session.level}/${session.length}`:session.level,128,114,'#a01878',{center:true,shadow:false});
     pixelWindow(ctx,108,128,40,14,true);pixelText(ctx,session.difficulty,128,133,'#383080',{small:true,center:true,shadow:false});
     pixelWindow(ctx,108,147,40,32,true);pixelText(ctx,'TIME',128,153,'#383080',{small:true,center:true,shadow:false});
     const seconds=Math.floor(match.tick/60),time=`${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;
@@ -1240,7 +1243,7 @@ class SceneRenderer {
     }
     ctx.drawImage(effects,0,0);
   }
-  drawMenu({setup,index,mode,difficulty,length,mascots,focus}) {
+  drawMenu({setup,index,mode,difficulty,level=1,mascots,focus}) {
     const ctx=this.ctx;rect(ctx,0,0,256,224,'#6363d6');
     for(let y=0;y<224;y+=24)for(let x=0;x<256;x+=24){pixelMask(ctx,'00100/01010/10001/01010/00100',x+5,y+5,'#7373de');pixelMask(ctx,'11/11',x+18,y+17,'#5353bc');}
     pixelWindow(ctx,18,16,100,24,true);rect(ctx,22,20,92,16,'#214a8c');pixelText(ctx,'SELECT',68,21,'#fff',{scale:2,center:true});
@@ -1258,8 +1261,20 @@ class SceneRenderer {
       for(const [row,label,value] of [[0,'SINGLE MATCH','single'],[1,'CPU SERIES','series']]) {
         const y=77+row*16;rect(ctx,42,y,7,7,'#214a8c');rect(ctx,43,y+1,5,5,'#fff');if(mode===value)rect(ctx,44,y+2,3,3,'#a83088');pixelText(ctx,label,55,y,'#202048',{shadow:false});if(focus===`mode-${value}`)pixelText(ctx,'>',33,y,'#a83088',{shadow:false});
       }
-      pixelText(ctx,'DIFFICULTY',42,114,'#202048',{small:true,shadow:false});pixelWindow(ctx,108,108,102,16,focus==='difficulty');pixelText(ctx,`${difficulty} >`,159,113,'#214a8c',{small:true,center:true,shadow:false});
-      if(mode==='series'){pixelText(ctx,'LEVELS',42,134,'#202048',{small:true,shadow:false});pixelWindow(ctx,159,128,51,16,focus==='length');pixelText(ctx,length,184,133,'#214a8c',{small:true,center:true,shadow:false});}
+      if(mode==='series') {
+        pixelText(ctx,'DIFFICULTY',42,108,'#202048',{small:true,shadow:false});
+        ['easy','normal','hard'].forEach((value,index)=>{
+          const x=42+index*58,selected=value===difficulty;
+          rect(ctx,x,119,56,16,focus===`difficulty-${value}`?'#703878':selected?'#a83088':'#214a8c');
+          pixelText(ctx,value,x+28,124,'#fff',{small:true,center:true});
+        });
+        pixelText(ctx,`${SERIES_LENGTHS[difficulty]} LEVELS`,128,139,'#214a8c',{small:true,center:true,shadow:false});
+      } else {
+        pixelText(ctx,'LEVEL',42,114,'#202048',{small:true,shadow:false});
+        for(const [id,label,x,width] of [['level-down','-',108,24],['level',String(level),134,50],['level-up','+',186,24]]) {
+          pixelWindow(ctx,x,108,width,20,focus===id);pixelText(ctx,label,x+width/2,114,'#214a8c',{center:true,shadow:false});
+        }
+      }
       for(const [id,label,y] of [['play-button','START GAME',152],['setup-back','< BACK',174]]) {
         rect(ctx,42,y,172,13,focus===id?'#703878':'#214a8c');rect(ctx,43,y+1,170,1,'#63d6ff');pixelText(ctx,label,128,y+3,'#fff',{center:true});
       }
@@ -1279,8 +1294,8 @@ class SceneRenderer {
     const lessons=[
       ['1. SWAP TWO NEIGHBORS',['Match three colors in a row or column.','An empty space can be swapped, too.']],
       ['2. BUILD A BIGGER CLEAR',['Clear four or more to send trash.','Falling matches make powerful chains!']],
-      ['3. TURN TRASH INTO PANELS',['Match beside trash to break it down.','Gray ! panels send metal blocks.']],
-      ['4. KEEP YOUR STACK LOW',['The stack rises. Top out and you lose!','Raise it yourself for fresh panels.']],
+      ['3. TURN TRASH INTO BLOCKS',['Match beside trash to break it down.','Gray ! blocks send metal trash.']],
+      ['4. KEEP YOUR STACK LOW',['The stack rises. Top out and you lose!','Raise it yourself for fresh blocks.']],
     ];
     lessons.forEach(([title,lines],index)=>{const y=40+index*34;pixelText(ctx,title,20,y,'#703878',{shadow:false});lines.forEach((line,row)=>pixelText(ctx,line,20,y+12+row*7,'#202048',{small:true,shadow:false}));});
     pixelText(ctx,`${move} MOVE  ${swap} SWAP`,128,181,'#214a8c',{small:true,center:true,shadow:false});pixelText(ctx,`${raise} RAISE  ESC PAUSE`,128,190,'#214a8c',{small:true,center:true,shadow:false});
@@ -1428,7 +1443,7 @@ function selectMenu(index, focus = false) {
 function showMenuPanel(setup) {
   $('menu-home').hidden = setup; $('cpu-setup').hidden = !setup;
   $('setup-error').textContent = '';
-  if (setup) $('difficulty').focus(); else selectMenu(0, true);
+  if (setup) (new FormData($('setup')).get('mode') === 'series' ? $('difficulty-' + $('difficulty').value) : $('level')).focus(); else selectMenu(0, true);
 }
 
 function save() {
@@ -1566,11 +1581,10 @@ function draw() {
     const packets = incomingPackets(match, index);
     $(color + '-incoming').hidden = packets.length === 0;
     if (incomingCounts[index] !== packets.length) {
-      $(color + '-incoming').setAttribute('aria-label', `Incoming trash for ${color}: ${packets.length} blocks, ${packets.reduce((cells, packet) => cells + packet.width * packet.height, 0)} panels.`);
+      $(color + '-incoming').setAttribute('aria-label', `Incoming trash for ${color}: ${packets.length} blocks, ${packets.reduce((cells, packet) => cells + packet.width * packet.height, 0)} blocks.`);
       if (packets.length > incomingCounts[index] && !match.result) audio.cue('incoming');
       incomingCounts[index] = packets.length;
     }
-    $(color + '-score').textContent = board.score.toLocaleString();
     $(color + '-chain').textContent = board.bestChain > 1 ? `×${board.bestChain}` : '—';
     $(color + '-danger').hidden = !danger || !!match.result;
     $(color + '-status').textContent = match.result ? (match.result === 'draw' ? 'Draw.' : (match.result === 'win') === (index === 0) ? 'Round won.' : 'Next round is yours.') : danger ? 'Keep it below the line!' : board.stop ? 'Chain time. Keep building.' : index === 0 ? 'Make your move.' : 'Ready to rally.';
@@ -1624,7 +1638,7 @@ function frame(now) {
     frameTick += elapsed * TICK_RATE;
     drawMascot($('menu-red'), 0, frameTick, 'idle', settings.reduced);
     drawMascot($('menu-blue'), 1, frameTick + 25, 'idle', settings.reduced);
-    scene.drawMenu({ setup: !$('cpu-setup').hidden, index: menuIndex, mode: new FormData($('setup')).get('mode'), difficulty: $('difficulty').value, length: $('length').value, mascots: [$('menu-red'), $('menu-blue')], focus: document.activeElement?.id });
+    scene.drawMenu({ setup: !$('cpu-setup').hidden, index: menuIndex, mode: new FormData($('setup')).get('mode'), difficulty: $('difficulty').value, level: $('level').value, mascots: [$('menu-red'), $('menu-blue')], focus: document.activeElement?.id });
   }
   const focus = document.activeElement?.id;
   if ($('settings-dialog').open) scene.drawSettings({ sound: settings.sound, volume: settings.volume, reduced: settings.reduced, rows: Object.entries(LABELS).map(([action,label])=>({action,label,key:keyLabel(settings.bindings[action])})), capture, message: storageFailed ? 'Settings cannot be saved in this browser.' : capture ? 'Press a key. Esc or Tab cancels.' : $('binding-message').textContent, focus });
@@ -1647,12 +1661,21 @@ menuIds.forEach((id, index) => {
 });
 $('setup').addEventListener('change', () => {
   const single = new FormData($('setup')).get('mode') !== 'series';
-  $('length-field').hidden = single; $('length').disabled = single;
+  $('difficulty-field').hidden = single; $('level-field').hidden = !single; $('level').disabled = !single;
+});
+for (const difficulty of ['easy', 'normal', 'hard']) $('difficulty-' + difficulty).addEventListener('click', () => {
+  $('difficulty').value = difficulty;
+  for (const value of ['easy', 'normal', 'hard']) $('difficulty-' + value).setAttribute('aria-pressed', String(value === difficulty));
+  audio.cue('menu');
+});
+for (const [id, step] of [['level-down', -1], ['level-up', 1]]) $(id).addEventListener('click', () => {
+  $('level').value = Math.max(1, Math.min(SINGLE_LEVELS.length, (Number($('level').value) || 1) + step));
+  audio.cue('menu');
 });
 $('setup').addEventListener('submit', event => {
   event.preventDefault();
   try {
-    session = new Session({ mode: new FormData($('setup')).get('mode'), difficulty: $('difficulty').value, length: Number($('length').value) });
+    session = new Session({ mode: new FormData($('setup')).get('mode'), difficulty: $('difficulty').value, level: Number($('level').value) });
     session.start(); $('setup-error').textContent = ''; startRound();
   } catch (error) { $('setup-error').textContent = error.message; }
 });

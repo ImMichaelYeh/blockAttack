@@ -1,5 +1,5 @@
 import { TICK_RATE } from './engine.js';
-import { Session } from './session.js';
+import { Session, SINGLE_LEVELS } from './session.js';
 import { Controls, DEFAULT_BINDINGS, PLAYER_TWO_BINDINGS, LABELS, bindable, restoreBindings, keyLabel, normalizeKey } from './controls.js';
 import { BoardRenderer, SceneRenderer, drawMascot, drawBattleEffects } from './render.js';
 import { INTRO_TICKS, RESULT_TICKS, incomingPackets, sceneScale } from './presentation.js';
@@ -54,7 +54,7 @@ function selectMenu(index, focus = false) {
 function showMenuPanel(setup) {
   $('menu-home').hidden = setup; $('cpu-setup').hidden = !setup;
   $('setup-error').textContent = '';
-  if (setup) $('difficulty').focus(); else selectMenu(0, true);
+  if (setup) (new FormData($('setup')).get('mode') === 'series' ? $('difficulty-' + $('difficulty').value) : $('level')).focus(); else selectMenu(0, true);
 }
 
 function save() {
@@ -192,11 +192,10 @@ function draw() {
     const packets = incomingPackets(match, index);
     $(color + '-incoming').hidden = packets.length === 0;
     if (incomingCounts[index] !== packets.length) {
-      $(color + '-incoming').setAttribute('aria-label', `Incoming trash for ${color}: ${packets.length} blocks, ${packets.reduce((cells, packet) => cells + packet.width * packet.height, 0)} panels.`);
+      $(color + '-incoming').setAttribute('aria-label', `Incoming trash for ${color}: ${packets.length} blocks, ${packets.reduce((cells, packet) => cells + packet.width * packet.height, 0)} blocks.`);
       if (packets.length > incomingCounts[index] && !match.result) audio.cue('incoming');
       incomingCounts[index] = packets.length;
     }
-    $(color + '-score').textContent = board.score.toLocaleString();
     $(color + '-chain').textContent = board.bestChain > 1 ? `×${board.bestChain}` : '—';
     $(color + '-danger').hidden = !danger || !!match.result;
     $(color + '-status').textContent = match.result ? (match.result === 'draw' ? 'Draw.' : (match.result === 'win') === (index === 0) ? 'Round won.' : 'Next round is yours.') : danger ? 'Keep it below the line!' : board.stop ? 'Chain time. Keep building.' : index === 0 ? 'Make your move.' : 'Ready to rally.';
@@ -250,7 +249,7 @@ function frame(now) {
     frameTick += elapsed * TICK_RATE;
     drawMascot($('menu-red'), 0, frameTick, 'idle', settings.reduced);
     drawMascot($('menu-blue'), 1, frameTick + 25, 'idle', settings.reduced);
-    scene.drawMenu({ setup: !$('cpu-setup').hidden, index: menuIndex, mode: new FormData($('setup')).get('mode'), difficulty: $('difficulty').value, length: $('length').value, mascots: [$('menu-red'), $('menu-blue')], focus: document.activeElement?.id });
+    scene.drawMenu({ setup: !$('cpu-setup').hidden, index: menuIndex, mode: new FormData($('setup')).get('mode'), difficulty: $('difficulty').value, level: $('level').value, mascots: [$('menu-red'), $('menu-blue')], focus: document.activeElement?.id });
   }
   const focus = document.activeElement?.id;
   if ($('settings-dialog').open) scene.drawSettings({ sound: settings.sound, volume: settings.volume, reduced: settings.reduced, rows: Object.entries(LABELS).map(([action,label])=>({action,label,key:keyLabel(settings.bindings[action])})), capture, message: storageFailed ? 'Settings cannot be saved in this browser.' : capture ? 'Press a key. Esc or Tab cancels.' : $('binding-message').textContent, focus });
@@ -273,12 +272,21 @@ menuIds.forEach((id, index) => {
 });
 $('setup').addEventListener('change', () => {
   const single = new FormData($('setup')).get('mode') !== 'series';
-  $('length-field').hidden = single; $('length').disabled = single;
+  $('difficulty-field').hidden = single; $('level-field').hidden = !single; $('level').disabled = !single;
+});
+for (const difficulty of ['easy', 'normal', 'hard']) $('difficulty-' + difficulty).addEventListener('click', () => {
+  $('difficulty').value = difficulty;
+  for (const value of ['easy', 'normal', 'hard']) $('difficulty-' + value).setAttribute('aria-pressed', String(value === difficulty));
+  audio.cue('menu');
+});
+for (const [id, step] of [['level-down', -1], ['level-up', 1]]) $(id).addEventListener('click', () => {
+  $('level').value = Math.max(1, Math.min(SINGLE_LEVELS.length, (Number($('level').value) || 1) + step));
+  audio.cue('menu');
 });
 $('setup').addEventListener('submit', event => {
   event.preventDefault();
   try {
-    session = new Session({ mode: new FormData($('setup')).get('mode'), difficulty: $('difficulty').value, length: Number($('length').value) });
+    session = new Session({ mode: new FormData($('setup')).get('mode'), difficulty: $('difficulty').value, level: Number($('level').value) });
     session.start(); $('setup-error').textContent = ''; startRound();
   } catch (error) { $('setup-error').textContent = error.message; }
 });

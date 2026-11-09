@@ -45,5 +45,12 @@ Additional controller/input checks cover READY, Numpad Enter, buffered swaps/rai
 priority, repeat changes, local P2 timing, pause/reset behavior, and differing render frame rates.
 The retained mechanics suites continue to check the original measured timing fixtures.
 
-Art, audio, menu/presentation timing, CPU-series length/profile mapping, and two-player set rules are
-intentional differences. Live physical keyboard feel still requires a browser playtest.
+CPU series now uses Easy10 / Normal11 / Hard12 and passes each encounter number directly to the
+reference CPU profile. Single levels 1–20 cover every distinct CPU configuration once,
+ordered by reaction interval, chain planning, then raising threshold.
+The selected route also supplies board speed, clear timing, stop time, and ceiling grace.
+Board generation and CPU planning were compared again on November 8, 2026 and remain identical.
+
+Art, audio, menu/presentation timing, single-level ordering, and two-player set rules are intentional
+differences. The reference CPU remains independently tuned, rather than reconstructed native AI.
+Live physical keyboard feel still requires a browser playtest.
