@@ -107,6 +107,25 @@ for (const [difficulty, profile] of Object.entries(measured.profiles)) {
   });
 }
 
+test('both match boards get their measured time to recover at the ceiling', () => {
+  for (const levels of [null, [9, 9]]) {
+    const match = new Match(42, 'hard', 1, { cpu: false, levels });
+    for (const board of match.boards) {
+      board.grid = Array.from({ length: HEIGHT }, () => Array(COLS).fill(null));
+      column(board, 12);
+    }
+    match.step();
+    const grace = match.boards[0].graceTicks;
+    assert.ok(grace > 0);
+    for (let tick = 1; tick < grace; tick++) match.step();
+    assert.equal(match.result, null);
+    match.boards[0].grid[11][5] = null;
+    match.step();
+    assert.equal(match.result, 'win');
+    assert.equal(match.boards[0].lost, false);
+  }
+});
+
 test('danger flags scan paired columns on simulation ticks and ignore clearing cells', () => {
   const board = empty();
   column(board, 11);

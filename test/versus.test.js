@@ -15,7 +15,7 @@ const empty=level=>{
 for(const reference of native.records)test(`two-player level ${reference.level} matches native speed, timing, colors, stop and grace`,()=>{
   const board=empty(reference.level),profile=VERSUS_LEVELS[reference.level-1];
   assert.equal(board.speedLevel,reference.speedLevel);assert.equal(board.speedWord,reference.speedWord);
-  assert.equal(board.colorCount,reference.colors);assert.equal(board.graceTicks,reference.grace);
+  assert.equal(board.colorCount,reference.colors);assert.equal(profile.grace,reference.grace);assert.equal(board.graceTicks,reference.grace);
   assert.equal(board.shockQuota,reference.shockQuota);assert.equal(board.rowMode,reference.rowMode);
   assert.deepEqual(board.timing,{hover:reference.hover,flash:reference.flash*2,face:reference.face+3,pop:reference.pop+1});
   assert.equal(profile.speedLevel,reference.speedLevel);
