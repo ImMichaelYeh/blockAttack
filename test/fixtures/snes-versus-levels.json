@@ -1,0 +1,632 @@
+{
+  "romSha1": "2dc56eab3e70c0910ae47119d8b69f494e6000df",
+  "source": "Verified US ROM parameter tables, ten fresh two-player VS initializations, ten combined clear/hover probes, four forced speed progression probes and two speed-cap probes (5870 frames). Raw flash/face/pop registers are normalized to browser processing steps in src/versus.js.",
+  "records": [
+    {
+      "level": 1,
+      "speedLevel": 1,
+      "colors": 5,
+      "flash": 22,
+      "face": 22,
+      "pop": 8,
+      "hover": 12,
+      "grace": 120,
+      "shockQuota": 12,
+      "rowMode": 0,
+      "speedWord": 71,
+      "speedInterval": 900,
+      "combo": [
+        0,
+        60,
+        80,
+        100,
+        120,
+        140,
+        160,
+        180,
+        200,
+        220
+      ],
+      "chain": [
+        120,
+        140,
+        160
+      ],
+      "dangerCombo": [
+        0,
+        120,
+        120,
+        120,
+        120,
+        120,
+        140,
+        140,
+        160,
+        160
+      ],
+      "dangerChain": [
+        180,
+        200,
+        220
+      ],
+      "measured": {
+        "firstFallStep": 17,
+        "popsAfterMatchCalls": [
+          70,
+          79,
+          88,
+          97
+        ],
+        "fourClearStop": 60
+      }
+    },
+    {
+      "level": 2,
+      "speedLevel": 5,
+      "colors": 5,
+      "flash": 22,
+      "face": 20,
+      "pop": 8,
+      "hover": 12,
+      "grace": 100,
+      "shockQuota": 14,
+      "rowMode": 0,
+      "speedWord": 89,
+      "speedInterval": 900,
+      "combo": [
+        0,
+        56,
+        74,
+        92,
+        110,
+        128,
+        146,
+        164,
+        182,
+        200
+      ],
+      "chain": [
+        113,
+        131,
+        149
+      ],
+      "dangerCombo": [
+        0,
+        113,
+        113,
+        113,
+        113,
+        113,
+        131,
+        131,
+        149,
+        149
+      ],
+      "dangerChain": [
+        170,
+        188,
+        206
+      ],
+      "measured": {
+        "firstFallStep": 17,
+        "popsAfterMatchCalls": [
+          68,
+          77,
+          86,
+          95
+        ],
+        "fourClearStop": 56
+      }
+    },
+    {
+      "level": 3,
+      "speedLevel": 9,
+      "colors": 5,
+      "flash": 21,
+      "face": 19,
+      "pop": 7,
+      "hover": 11,
+      "grace": 80,
+      "shockQuota": 16,
+      "rowMode": 0,
+      "speedWord": 119,
+      "speedInterval": 900,
+      "combo": [
+        0,
+        52,
+        68,
+        84,
+        100,
+        116,
+        132,
+        148,
+        164,
+        180
+      ],
+      "chain": [
+        106,
+        122,
+        138
+      ],
+      "dangerCombo": [
+        0,
+        106,
+        106,
+        106,
+        106,
+        106,
+        122,
+        122,
+        138,
+        138
+      ],
+      "dangerChain": [
+        160,
+        176,
+        192
+      ],
+      "measured": {
+        "firstFallStep": 16,
+        "popsAfterMatchCalls": [
+          65,
+          73,
+          81,
+          89
+        ],
+        "fourClearStop": 52
+      }
+    },
+    {
+      "level": 4,
+      "speedLevel": 13,
+      "colors": 5,
+      "flash": 21,
+      "face": 18,
+      "pop": 7,
+      "hover": 10,
+      "grace": 65,
+      "shockQuota": 19,
+      "rowMode": 0,
+      "speedWord": 175,
+      "speedInterval": 900,
+      "combo": [
+        0,
+        48,
+        62,
+        76,
+        90,
+        104,
+        118,
+        132,
+        146,
+        160
+      ],
+      "chain": [
+        99,
+        113,
+        127
+      ],
+      "dangerCombo": [
+        0,
+        99,
+        99,
+        99,
+        99,
+        99,
+        113,
+        113,
+        127,
+        127
+      ],
+      "dangerChain": [
+        150,
+        164,
+        178
+      ],
+      "measured": {
+        "firstFallStep": 15,
+        "popsAfterMatchCalls": [
+          64,
+          72,
+          80,
+          88
+        ],
+        "fourClearStop": 48
+      }
+    },
+    {
+      "level": 5,
+      "speedLevel": 17,
+      "colors": 5,
+      "flash": 19,
+      "face": 17,
+      "pop": 7,
+      "hover": 9,
+      "grace": 50,
+      "shockQuota": 23,
+      "rowMode": 1,
+      "speedWord": 228,
+      "speedInterval": 900,
+      "combo": [
+        0,
+        45,
+        57,
+        69,
+        81,
+        93,
+        105,
+        117,
+        129,
+        141
+      ],
+      "chain": [
+        92,
+        104,
+        116
+      ],
+      "dangerCombo": [
+        0,
+        92,
+        92,
+        92,
+        92,
+        92,
+        104,
+        104,
+        116,
+        116
+      ],
+      "dangerChain": [
+        140,
+        152,
+        164
+      ],
+      "measured": {
+        "firstFallStep": 14,
+        "popsAfterMatchCalls": [
+          59,
+          67,
+          75,
+          83
+        ],
+        "fourClearStop": 45
+      }
+    },
+    {
+      "level": 6,
+      "speedLevel": 21,
+      "colors": 5,
+      "flash": 18,
+      "face": 16,
+      "pop": 7,
+      "hover": 6,
+      "grace": 40,
+      "shockQuota": 26,
+      "rowMode": 1,
+      "speedWord": 296,
+      "speedInterval": 900,
+      "combo": [
+        0,
+        42,
+        52,
+        62,
+        72,
+        82,
+        92,
+        102,
+        112,
+        122
+      ],
+      "chain": [
+        85,
+        95,
+        105
+      ],
+      "dangerCombo": [
+        0,
+        85,
+        85,
+        85,
+        85,
+        85,
+        95,
+        95,
+        105,
+        105
+      ],
+      "dangerChain": [
+        130,
+        140,
+        150
+      ],
+      "measured": {
+        "firstFallStep": 11,
+        "popsAfterMatchCalls": [
+          56,
+          64,
+          72,
+          80
+        ],
+        "fourClearStop": 42
+      }
+    },
+    {
+      "level": 7,
+      "speedLevel": 25,
+      "colors": 5,
+      "flash": 17,
+      "face": 15,
+      "pop": 7,
+      "hover": 5,
+      "grace": 30,
+      "shockQuota": 29,
+      "rowMode": 1,
+      "speedWord": 385,
+      "speedInterval": 900,
+      "combo": [
+        0,
+        39,
+        47,
+        55,
+        63,
+        71,
+        79,
+        87,
+        95,
+        103
+      ],
+      "chain": [
+        78,
+        86,
+        94
+      ],
+      "dangerCombo": [
+        0,
+        78,
+        78,
+        78,
+        78,
+        78,
+        86,
+        86,
+        94,
+        94
+      ],
+      "dangerChain": [
+        120,
+        128,
+        136
+      ],
+      "measured": {
+        "firstFallStep": 10,
+        "popsAfterMatchCalls": [
+          53,
+          61,
+          69,
+          77
+        ],
+        "fourClearStop": 39
+      }
+    },
+    {
+      "level": 8,
+      "speedLevel": 29,
+      "colors": 5,
+      "flash": 16,
+      "face": 14,
+      "pop": 6,
+      "hover": 4,
+      "grace": 20,
+      "shockQuota": 33,
+      "rowMode": 2,
+      "speedWord": 508,
+      "speedInterval": 900,
+      "combo": [
+        0,
+        36,
+        42,
+        48,
+        54,
+        60,
+        66,
+        72,
+        78,
+        84
+      ],
+      "chain": [
+        72,
+        78,
+        84
+      ],
+      "dangerCombo": [
+        0,
+        72,
+        72,
+        72,
+        72,
+        72,
+        78,
+        78,
+        84,
+        84
+      ],
+      "dangerChain": [
+        110,
+        116,
+        122
+      ],
+      "measured": {
+        "firstFallStep": 9,
+        "popsAfterMatchCalls": [
+          50,
+          57,
+          64,
+          71
+        ],
+        "fourClearStop": 36
+      }
+    },
+    {
+      "level": 9,
+      "speedLevel": 27,
+      "colors": 6,
+      "flash": 15,
+      "face": 13,
+      "pop": 6,
+      "hover": 3,
+      "grace": 10,
+      "shockQuota": 37,
+      "rowMode": 2,
+      "speedWord": 439,
+      "speedInterval": 900,
+      "combo": [
+        0,
+        33,
+        37,
+        41,
+        45,
+        49,
+        53,
+        57,
+        61,
+        65
+      ],
+      "chain": [
+        66,
+        70,
+        74
+      ],
+      "dangerCombo": [
+        0,
+        66,
+        66,
+        66,
+        66,
+        66,
+        70,
+        70,
+        74,
+        74
+      ],
+      "dangerChain": [
+        100,
+        104,
+        108
+      ],
+      "measured": {
+        "firstFallStep": 8,
+        "popsAfterMatchCalls": [
+          47,
+          54,
+          61,
+          68
+        ],
+        "fourClearStop": 33
+      }
+    },
+    {
+      "level": 10,
+      "speedLevel": 32,
+      "colors": 6,
+      "flash": 14,
+      "face": 12,
+      "pop": 6,
+      "hover": 6,
+      "grace": 0,
+      "shockQuota": 41,
+      "rowMode": 2,
+      "speedWord": 648,
+      "speedInterval": 900,
+      "combo": [
+        0,
+        30,
+        32,
+        34,
+        36,
+        38,
+        40,
+        42,
+        44,
+        46
+      ],
+      "chain": [
+        60,
+        62,
+        64
+      ],
+      "dangerCombo": [
+        0,
+        60,
+        60,
+        60,
+        60,
+        60,
+        62,
+        62,
+        64,
+        64
+      ],
+      "dangerChain": [
+        90,
+        92,
+        94
+      ],
+      "measured": {
+        "firstFallStep": 11,
+        "popsAfterMatchCalls": [
+          44,
+          51,
+          58,
+          65
+        ],
+        "fourClearStop": 30
+      }
+    }
+  ],
+  "progression": [
+    {
+      "fromStage": 1,
+      "toStage": 2,
+      "fromSpeed": 13,
+      "toSpeed": 14,
+      "nextInterval": 900,
+      "speedWord": 187
+    },
+    {
+      "fromStage": 4,
+      "toStage": 5,
+      "fromSpeed": 13,
+      "toSpeed": 14,
+      "nextInterval": 600,
+      "speedWord": 187
+    },
+    {
+      "fromStage": 20,
+      "toStage": 21,
+      "fromSpeed": 13,
+      "toSpeed": 14,
+      "nextInterval": 420,
+      "speedWord": 187
+    },
+    {
+      "fromStage": 49,
+      "toStage": 50,
+      "fromSpeed": 13,
+      "toSpeed": 14,
+      "nextInterval": 300,
+      "speedWord": 187
+    }
+  ],
+  "caps": [
+    {
+      "fromSpeed": 49,
+      "toSpeed": 50,
+      "speedWord": 2340
+    },
+    {
+      "fromSpeed": 50,
+      "toSpeed": 50,
+      "speedWord": 2340
+    }
+  ]
+}

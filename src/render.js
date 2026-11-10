@@ -11,6 +11,7 @@ export const PANEL_STYLES = Object.freeze([
   { color:'#00f8f8', light:'#a8ffff', shade:'#087098', symbol:'triangle' },
   { color:'#c018f8', light:'#f0a0ff', shade:'#681098', symbol:'diamond' },
   { color:'#c0c0c0', light:'#ffffff', shade:'#585878', symbol:'special' },
+  { color:'#2838b8', light:'#8898ff', shade:'#101858', symbol:'down-triangle' },
 ]);
 const dimColor = color => '#' + color.slice(1).match(/../g).map(channel => (parseInt(channel,16) >> 1).toString(16).padStart(2,'0')).join('');
 const PREVIEW_STYLES = PANEL_STYLES.map(style => ({ ...style, color: dimColor(style.color), light: dimColor(style.light), shade: dimColor(style.shade) }));
@@ -21,6 +22,7 @@ const SYMBOL_MASKS = [
   '000010000/000111000/000111000/001111100/001111100/011111110/011111110/111111111',
   '000010000/000111000/001111100/011111110/111111111/011111110/001111100/000111000/000010000',
   '000111000/000111000/000111000/000111000/000111000/000111000/000000000/000111000/000111000',
+  '111111111/111111111/011111110/011111110/001111100/001111100/000111000/000010000',
 ];
 // Reference pose cadence; animate our symbols inside fixed block frames.
 const DANGER_FRAMES = [1,1,1,2,2,2,3,3,3,2,2,2,1,1,1,4,4,4];
@@ -295,14 +297,14 @@ export class SceneRenderer {
     rect(ctx,106,22,44,196,'#181038');rect(ctx,106,22,44,1,'#f0d078');
     rect(ctx,149,23,1,195,'#585038');
     for(const y of [98,129,159,187])rect(ctx,108,y,40,1,'#585038');
-    pixelText(ctx,'P1',116,42,'#ffb8c8',{small:true,center:true});pixelText(ctx,local?'P2':'CPU',local?140:138,42,'#b8e8ff',{small:true,center:true});
+    pixelText(ctx,session.networkPlayer===0?'YOU':'P1',116,42,'#ffb8c8',{small:true,center:true});pixelText(ctx,session.networkPlayer===1?'YOU':local?'P2':'CPU',local?140:138,42,'#b8e8ff',{small:true,center:true});
     ctx.drawImage(buffers.mascots[0],104,50);ctx.drawImage(buffers.mascots[1],128,50);
     pixelText(ctx,'VS',128,84,'#f0d078',{center:true});
     pixelText(ctx,local?'POINT':'STAGE',128,104,'#f0d078',{center:true});
     if(local) for(let player=0;player<2;player++) pixelText(ctx,session.points?.[player]??0,118+player*20,115,player?'#b8e8ff':'#ffb8c8',{small:true,scale:(session.points?.[player]??0)<100?2:1,center:true});
     else pixelText(ctx,session.mode==='series'?session.level:1,128,115,'#fff0c0',{small:true,scale:2,center:true});
     pixelText(ctx,'LEVEL',128,134,'#f0d078',{center:true});
-    if(local) for(let player=0;player<2;player++) pixelText(ctx,({easy:3,normal:5,hard:7}[match.boards[player].difficulty]),118+player*20,145,player?'#b8e8ff':'#ffb8c8',{small:true,scale:2,center:true});
+    if(local) for(let player=0;player<2;player++) pixelText(ctx,match.boards[player].versusLevel??({easy:3,normal:5,hard:7}[match.boards[player].difficulty]),118+player*20,145,player?'#b8e8ff':'#ffb8c8',{small:true,scale:2,center:true});
     else pixelText(ctx,session.cpuLevel??session.level,128,145,'#fff0c0',{small:true,scale:2,center:true});
     pixelText(ctx,'TIME',128,164,'#f0d078',{center:true});
     const seconds=Math.floor(match.tick/60),time=`${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;
@@ -312,16 +314,30 @@ export class SceneRenderer {
     }
     ctx.drawImage(effects,0,0);
   }
-  drawMenu({setup,index,mode,difficulty,level=1,mascots,focus}) {
+  drawMenu({setup,multiplayer=false,redLevel=4,blueLevel=4,error='',index,mode,difficulty,level=1,mascots,focus}) {
     const ctx=this.ctx;rect(ctx,0,0,256,224,'#6363d6');
     for(let y=0;y<224;y+=24)for(let x=0;x<256;x+=24){pixelMask(ctx,'00100/01010/10001/01010/00100',x+5,y+5,'#7373de');pixelMask(ctx,'11/11',x+18,y+17,'#5353bc');}
     pixelWindow(ctx,18,16,100,24,true);rect(ctx,22,20,92,16,'#214a8c');pixelText(ctx,'SELECT',68,21,'#fff',{scale:2,center:true});
     pixelText(ctx,'BLOCK',199,16,'#f8f800',{center:true});pixelText(ctx,'ATTACK!',199,26,'#f7a5f7',{center:true});
-    if(!setup) {
+    if(multiplayer) {
+      pixelWindow(ctx,26,49,204,153);
+      pixelText(ctx,'2 PLAYER GAME',128,58,'#214a8c',{center:true,shadow:false});
+      pixelText(ctx,'LOCAL LEVELS',128,74,'#703878',{small:true,center:true,shadow:false});
+      for(const [id,label,value,y]of [['local-red-level','RED',redLevel,88],['local-blue-level','BLUE',blueLevel,112]]) {
+        pixelText(ctx,label,42,y+6,label==='RED'?'#a83058':'#214a8c',{shadow:false});
+        for(const [suffix,text,x,width]of [['-down','-',118,24],['',String(value),144,36],['-up','+',182,24]]) {
+          pixelWindow(ctx,x,y,width,20,focus===id+suffix);pixelText(ctx,text,x+width/2,y+6,'#214a8c',{center:true,shadow:false});
+        }
+      }
+      for(const [id,label,y]of [['multiplayer-local','START LOCAL',138],['multiplayer-lan','LAN GAME',158],['multiplayer-close','< BACK',180]]) {
+        rect(ctx,42,y,172,14,focus===id?'#703878':'#214a8c');rect(ctx,43,y+1,170,1,'#63d6ff');pixelText(ctx,label,128,y+4,'#fff',{center:true});
+      }
+      if(error)pixelText(ctx,error.slice(0,54),128,209,'#fff',{small:true,center:true});
+    } else if(!setup) {
       pixelWindow(ctx,34,55,126,102);
       const entries=['1 PLAYER GAME','2 PLAYER GAME','HOW TO PLAY','SETTINGS'];
       entries.forEach((text,row)=>{const y=65+row*22;if(row===index){rect(ctx,40,y-3,113,15,'#f8e8f8');pixelMask(ctx,'1000/1100/1110/1111/1110/1100/1000',42,y,'#a83088');}pixelText(ctx,text,51,y,['#214a8c','#a83058','#887810','#188848'][row],{shadow:false});});
-      pixelWindow(ctx,170,52,80,35,true);pixelText(ctx,['READY TO','LOCAL DUEL','MAKE SOME','YOUR KEYS'][index],210,60,'#a01878',{small:true,center:true,shadow:false});pixelText(ctx,['MAKE A CHAIN?','FIRST TO 2!','BIG COMEBACKS!','YOUR SOUND!'][index],210,72,'#a01878',{small:true,center:true,shadow:false});
+      pixelWindow(ctx,170,52,80,35,true);pixelText(ctx,['READY TO','LOCAL / LAN','MAKE SOME','YOUR KEYS'][index],210,60,'#a01878',{small:true,center:true,shadow:false});pixelText(ctx,['MAKE A CHAIN?','FIRST TO 2!','BIG COMEBACKS!','YOUR SOUND!'][index],210,72,'#a01878',{small:true,center:true,shadow:false});
       ctx.drawImage(mascots[0],170,121,48,64);ctx.drawImage(mascots[1],222,158);
     } else {
       pixelWindow(ctx,26,49,204,145);

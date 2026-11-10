@@ -1,7 +1,7 @@
 # Block Attack
 
 An original rising-panel puzzle duel. In CPU mode, Red is you and Blue is the CPU.
-Local two-player lets two humans play Red versus Blue, first to two victory stars.
+Local and browser-to-browser LAN two-player let two humans play Red versus Blue, first to two victory stars.
 The game starts directly at a SELECT menu inside an SNES-style console frame, with original
 Red/Blue square trash-block mascots, original pixel scenery, licensed music, and synthesized sound effects.
 Battle, menus, help, pause, and results render into one **256 × 224** bitmap.
@@ -33,11 +33,35 @@ The preview binds only to this computer. Set `PORT` if 4173 is occupied.
   Route timing/speed stays unchanged; CPU strength progresses through custom levels
   1–4 on Easy, 3–7 on Normal, and 6–10 on Hard.
   A win advances; a loss retries; a draw replays. The final win completes the series.
-- **2 Player Game:** starts a local best-of-three set. Each round winner earns one star;
+- **2 Player Game:** opens an in-frame setup screen, like 1 Player, with **Local** (one computer)
+  or **LAN** (two browsers). Back/Escape returns to the previous menu; LAN pairing scrolls within the frame.
+  Local setup has separate Red/Blue levels from **1–10**, adjustable with −/+.
+  LAN players each choose their own level before creating an invitation or answer.
+  Native two-player settings control rise speed, hover/clear timing, stop/grace and row generation;
+  levels **9–10** include a sixth ordinary block: a dark blue inverted triangle. Gray **!** blocks
+  stay separate. The LEVEL row shows each player's selected level, retained across rounds and sets.
+  See [verified two-player settings](docs/VERSUS_LEVELS.md) for exact values and verification limits.
+  Each round winner earns one star;
   first to two wins the set. Draws award no stars and replay the same round. Choose
   **Next round** to continue or **Play another set** after a set winner to reset both star counts.
   The 2P POINT row keeps running win totals across sets until returning to the main menu.
   Both players use the same board rules; neither board is controlled by a CPU.
+- **LAN:** both players open this version of the game on the same network. Choose **2 Player Game → LAN**.
+  The host chooses **Host game**, selects/copies the invitation code and sends it to the joining player.
+  The joiner chooses **Join game**, pastes that invitation and chooses **Create answer**.
+  They send the resulting answer code back; the host pastes it and chooses **Connect**.
+  The countdown starts on both computers. Host is Red, joiner is Blue, and each uses their own
+  Player 1 controls. “YOU” marks your character. The host starts subsequent rounds and sets.
+  Either player can pause; each player who paused must resume before play continues.
+  Closing/leaving a game or losing the connection ends that LAN session; create new codes to reconnect.
+  Codes are for one connection and must be copied in full. Current browsers compress them locally
+  into shorter `BA2Z.` codes. Full `BA2.` codes are still accepted; wrapped/pasted line breaks are
+  ignored. Both players still exchange an invitation and an answer. Compression does not provide
+  four-character room lookup. No Node game server, accounts, public signaling service, STUN/TURN
+  service or external runtime requests are required. Both browsers run
+  the same simulation with ordered inputs and a three-tick input buffer; periodic checks stop a
+  session if states diverge. Guest Wi-Fi/client isolation, VPNs or firewalls can prevent a direct link.
+  Older invitation/answer codes are incompatible with the new level-aware protocol; generate fresh codes.
 - **Menu:** W/S or arrows select; Enter confirms; Escape goes back from CPU setup.
 - **Player 1 controls:** WASD or arrows move, **Enter** swaps, **Left Shift** raises, **Escape** pauses.
   Settings lets you rebind the six gameplay actions. Arrows and Escape remain available.
@@ -120,17 +144,21 @@ block's hover delay or carry it sideways during that delay. Four captured SNES t
 Automated checks cover retained engine mechanics, seeded play, legal CPU battles, series lengths 1–10,
 retry/draw/completion, input repeat/rebinding, controller navigation/pause/results, audio cleanup,
 local dual input/attacks, 2–0 and 2–1 sets, duplicate-result protection, draws, set resets, victory stars,
+LAN invitation validation, ordered inputs, delayed delivery, shared pauses, state checks and disconnects,
 preview-server file restrictions, native dimensions, integer pixel drawing/scaling, presentation isolation,
 incoming attacks, effect cleanup,
 and executing the exact direct-file classic bundle with storage blocked.
 In-memory controller checks do not substitute for browser QA.
 Native-resolution and 3× offline raster previews were generated from the scene renderer and visually inspected.
-Live browser verification remains blocked because the browser access host is unavailable;
-mouse hit areas, audible balance, and physical keyboard play still need a browser playtest.
+`node tools/verify-lan.mjs` runs two game documents in isolated headless Chrome with a real WebRTC
+connection: pairing, bad codes, synchronized play, pause/resume, results, next round and disconnect.
+Add `--file` to exercise direct-file game documents through the same real WebRTC flow.
+Set `CHROME` to the browser executable if needed. This checks two documents on one computer;
+two physical LAN devices, audible balance, and physical keyboard feel still need a playtest.
 
 ## Scope and source
 
-CPU and local two-player modes are implemented. LAN multiplayer remains planned.
+CPU, local two-player and browser-to-browser LAN modes are implemented.
 See [PLAN.md](PLAN.md) for the full roadmap and [ASSETS.md](ASSETS.md) for provenance.
 
 The sibling `../tetrisAttack` repository was used read-only for engine code and mechanics regression tests.

@@ -2,7 +2,13 @@
 
 Status: CPU and local two-player implementations are present. Direct menu, original presentation/audio,
 single CPU matches, 1–10-level CPU series, best-of-three local sets with jumping victory stars,
-settings, controls, and automated checks are implemented. LAN remains a future milestone.
+settings, controls, and automated checks are implemented. Browser-to-browser WebRTC LAN is now implemented
+with manual invitation/answer exchange, deterministic input lockstep, pause and disconnect handling.
+The earlier Node/WebSocket LAN architecture below is superseded by the user's November 9 browser-to-browser
+request. README and src/lan.js describe the shipped implementation; no ws dependency or npm run lan is needed.
+Two-document real-WebRTC Chrome QA passes; the different-physical-devices gate remains unverified.
+Local/LAN now offer independent native levels 1–10, including the sixth ordinary dark blue block
+at 9–10. See docs/VERSUS_LEVELS.md for the 5,870-frame parameter/timing verification and limits.
 See README.md for run instructions and current verification limits.
 Presentation now uses one fixed 256 × 224 scene with integer nearest-neighbor scaling, native-size
 96 × 192 boards and 16 × 16 panels, bitmap lettering, a compact SELECT menu/HUD, original pixel scenery,

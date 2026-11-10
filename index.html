@@ -25,7 +25,7 @@
         <h1 id="menu-title" class="pixel-heading">SELECT</h1>
         <div id="menu-home" class="select-options pixel-window" aria-label="Main menu">
           <button id="menu-one-player" class="menu-option" aria-current="true">1 PLAYER GAME</button>
-          <button id="menu-two-player" class="menu-option">2 PLAYER GAME<small>LOCAL · FIRST TO TWO STARS</small></button>
+          <button id="menu-two-player" class="menu-option">2 PLAYER GAME<small>LOCAL OR LAN · FIRST TO TWO STARS</small></button>
           <button id="help-open" class="menu-option">HOW TO PLAY</button>
           <button id="settings-open" class="menu-option">SETTINGS</button>
         </div>
@@ -60,6 +60,33 @@
         <canvas id="battle-effects" width="256" height="224" aria-hidden="true"></canvas>
         <p id="battle-announcement" class="sr-only" role="status" aria-live="polite"></p>
       </section>
+  <section id="multiplayer-screen" hidden data-lan="false" aria-labelledby="multiplayer-title">
+    <div class="dialog-top"><p class="eyebrow">TWO PLAYERS · FIRST TO TWO STARS</p><button id="multiplayer-close" class="quiet" aria-label="Back to previous menu">Back</button></div>
+    <h2 id="multiplayer-title">Play together</h2>
+    <div id="multiplayer-choice">
+      <p>Choose a level for each player. Levels 9–10 add dark blue triangle blocks.</p>
+      <div class="versus-level-row"><label for="local-red-level">Red level</label><div class="versus-stepper"><button id="local-red-level-down" class="quiet" aria-label="Decrease Red level">−</button><input id="local-red-level" type="number" min="1" max="10" step="1" value="4"><button id="local-red-level-up" class="quiet" aria-label="Increase Red level">+</button></div></div>
+      <div class="versus-level-row"><label for="local-blue-level">Blue level</label><div class="versus-stepper"><button id="local-blue-level-down" class="quiet" aria-label="Decrease Blue level">−</button><input id="local-blue-level" type="number" min="1" max="10" step="1" value="4"><button id="local-blue-level-up" class="quiet" aria-label="Increase Blue level">+</button></div></div>
+      <p id="local-level-error" class="error" role="alert"></p>
+      <button id="multiplayer-local" class="primary">Local — same computer</button>
+      <p>Two players, one screen. P1 uses WASD / Enter / Left Shift. P2 uses IJKL / Right Shift / Space.</p>
+      <button id="multiplayer-lan" class="primary">LAN — two computers</button>
+      <p>Host or join from a browser on the same network. Each player uses their own Player 1 controls.</p>
+    </div>
+    <section id="lan-lobby" hidden aria-label="LAN connection">
+      <p>Host is Red. Joining player is Blue. Both computers need this version of Block Attack open.</p>
+      <div class="versus-level-row"><label for="lan-level">Your level</label><div class="versus-stepper"><button id="lan-level-down" class="quiet" aria-label="Decrease your level">−</button><input id="lan-level" type="number" min="1" max="10" step="1" value="4"><button id="lan-level-up" class="quiet" aria-label="Increase your level">+</button></div></div>
+      <p>Choose your level before hosting or joining. Levels 9–10 add dark blue triangle blocks.</p>
+      <div class="lan-actions"><button id="lan-host" class="primary">Host game</button><button id="lan-join" class="primary">Join game</button></div>
+      <div id="lan-setup" hidden>
+        <div id="lan-outgoing-area" hidden><label id="lan-outgoing-label" for="lan-outgoing">Your connection code</label><textarea id="lan-outgoing" rows="3" readonly spellcheck="false" aria-describedby="lan-code-help"></textarea><button id="lan-select-code" class="quiet">Select code</button><p id="lan-code-help">Select the code, copy it, and send it to the other player.</p></div>
+        <div id="lan-incoming-area"><label id="lan-incoming-label" for="lan-incoming">Paste the other player’s code</label><textarea id="lan-incoming" rows="3" maxlength="65536" spellcheck="false" autocomplete="off"></textarea><button id="lan-connect" class="primary">Connect</button></div>
+      </div>
+      <p id="lan-status" role="status" aria-live="polite"></p>
+      <p class="micro">The host starts the next round. Either player can pause; both must resume. Guest Wi-Fi may block direct connections.</p>
+      <button id="lan-back" class="quiet full-width">Back</button>
+    </section>
+  </section>
     </main>
     <div class="frame-bottom" aria-hidden="true"><span>● ●</span><span>A LITTLE COLOR. A BIG COMEBACK.</span><span>▤ ▤</span></div>
     </div>

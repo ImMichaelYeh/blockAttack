@@ -17,7 +17,7 @@ function canvas(width = 576, height = 1152) {
 }
 
 test('panel identities follow the reference color/symbol mapping with newly drawn shapes', () => {
-  assert.deepEqual(PANEL_STYLES.map(panel => panel.symbol), ['heart', 'star', 'circle', 'triangle', 'diamond', 'special']);
+  assert.deepEqual(PANEL_STYLES.map(panel => panel.symbol), ['heart', 'star', 'circle', 'triangle', 'diamond', 'special', 'down-triangle']);
   assert.equal(PANEL_STYLES[0].color, '#f81010');
   assert.equal(PANEL_STYLES[1].color, '#f8f800');
 });
@@ -50,6 +50,7 @@ test('one 256x224 bitmap composes native boards and HUD using integer pixels', (
   for(const x of [4,104,148])assert.ok(screen.calls.some(call=>call.method==='fillRect'&&call.color==='#382818'&&call.args[0]===x&&call.args[1]===20&&call.args[3]===200),'All three frames share top and bottom edges');
   for(const y of [98,129,159,187])assert.ok(screen.calls.some(call=>call.method==='fillRect'&&call.color==='#585038'&&call.args.join(',')===`108,${y},40,1`),'Sections use matching inset dividers');
   for(const setup of [false,true]) scene.drawMenu({setup,index:0,mode:'series',difficulty:'hard',length:10,mascots,focus:'play-button'});
+  scene.drawMenu({multiplayer:true,redLevel:1,blueLevel:10,index:1,mascots,focus:'multiplayer-local'});
   scene.drawDialog({kicker:'Round complete',title:'Red wins!',copy:'Ready for the next round?',action:'Next level',focus:'continue'});
   scene.drawHelp({move:'WASD',swap:'Enter',raise:'Left Shift',focus:'help-done'});
   for(const call of [...screen.calls,...boards.flatMap(board=>board.calls)]) {

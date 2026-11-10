@@ -1,3 +1,5 @@
+import { VERSUS_LEVELS } from './versus.js';
+
 export const COLS = 6;
 export const ROWS = 12;
 export const HEIGHT = 24;
@@ -87,13 +89,16 @@ export function findMatches(grid) {
 }
 
 export class Board {
-  constructor(seed = 1, { autoRise = true, speedLevel, starter = false, mode = 'story', difficulty = 'normal', rowState = { alternate: 0 } } = {}) {
-    this.timing = TIMING_PROFILES[mode]?.[difficulty] || TIMING_PROFILES.story.normal;
-    this.mode = mode === 'endless' ? 'endless' : 'story';
-    this.difficulty = TIMING_PROFILES[this.mode][difficulty] ? difficulty : 'normal';
-    this.stopTiming = STORY_STOP_PROFILES[this.difficulty];
-    this.graceTicks = this.mode === 'story' ? this.stopTiming.grace : TIMING.danger;
-    const initialSpeed = this.mode === 'endless' ? 1 : ({ easy: 5, normal: 13, hard: 21 }[difficulty] || 13);
+  constructor(seed = 1, { autoRise = true, speedLevel, starter = false, mode = 'story', difficulty = 'normal', versusLevel = 4, rowState = { alternate: 0 } } = {}) {
+    const versus = mode === 'versus' ? VERSUS_LEVELS[versusLevel - 1] : null;
+    if (mode === 'versus' && (!Number.isInteger(versusLevel) || !versus)) throw new Error('Choose a two-player level from 1 to 10.');
+    this.timing = versus?.timing || TIMING_PROFILES[mode]?.[difficulty] || TIMING_PROFILES.story.normal;
+    this.mode = ['endless','versus'].includes(mode) ? mode : 'story';
+    this.difficulty = TIMING_PROFILES.story[difficulty] ? difficulty : 'normal';
+    this.stopTiming = versus?.stopTiming || STORY_STOP_PROFILES[this.difficulty];
+    this.graceTicks = versus ? versus.grace : this.mode === 'story' ? this.stopTiming.grace : TIMING.danger;
+    if (versus) { this.versusLevel = versusLevel; this.colorCount = versus.colors; this.rowMode = versus.rowMode; }
+    const initialSpeed = versus ? versus.speedLevel : this.mode === 'endless' ? 1 : ({ easy: 5, normal: 13, hard: 21 }[difficulty] || 13);
     this.speedLevel = Number.isFinite(speedLevel) ? Math.max(1, Math.min(50, Math.trunc(speedLevel))) : initialSpeed;
     this.displaySpeedLevel = this.speedLevel;
     this.speedWord = SPEED_WORDS[this.speedLevel - 1];
@@ -104,7 +109,7 @@ export class Board {
     this.autoRise = autoRise;
     this.random = randomGenerator(seed);
     this.rowState = rowState;
-    this.shockQuota = this.mode === 'story' ? ({ easy: 14, normal: 19, hard: 26 }[this.difficulty]) : 0;
+    this.shockQuota = versus ? versus.shockQuota : this.mode === 'story' ? ({ easy: 14, normal: 19, hard: 26 }[this.difficulty]) : 0;
     this.shockRemaining = this.shockQuota;
     this.shockCredits = 0;
     this.shocksEarned = 0;
@@ -145,7 +150,8 @@ export class Board {
         }
         let kind;
         do {
-          kind = Math.floor(this.random() * 5);
+          kind = Math.floor(this.random() * (this.colorCount || 5));
+          if (kind === 5) kind = 6;
         } while ((x > 1 && this.grid[y][x - 1]?.kind === kind && this.grid[y][x - 2]?.kind === kind) ||
           (y > 1 && this.grid[y - 1][x]?.kind === kind && this.grid[y - 2][x]?.kind === kind));
         this.grid[y][x] = panel(kind);
@@ -160,13 +166,14 @@ export class Board {
 
   makeRow() {
     const row = [];
-    const mode = this.mode === 'story' ? (this.difficulty === 'hard' ? 1 : 0) : ({ easy: 0, normal: 1, hard: 2 }[this.difficulty]);
+    const mode = this.mode === 'versus' ? this.rowMode : this.mode === 'story' ? (this.difficulty === 'hard' ? 1 : 0) : ({ easy: 0, normal: 1, hard: 2 }[this.difficulty]);
     const distance = mode === 2 || (mode === 1 && this.rowState.alternate) ? 1 : 2;
     for (let x = 0; x < COLS; x++) {
       let kind;
       do {
-        // shortcut: sixth-color Endless presentation remains S23; Story uses five ordinary colors.
-        kind = Math.floor(this.random() * 5);
+        // Kind 5 stays reserved for shock blocks; the sixth ordinary color is kind 6.
+        kind = Math.floor(this.random() * (this.colorCount || 5));
+        if (kind === 5) kind = 6;
       } while ((isPanel(this.grid[0][x]) && this.grid[0][x].kind === kind) || (x >= distance && row[x - distance].kind === kind));
       row.push(panel(kind));
     }
@@ -361,7 +368,7 @@ export class Board {
     }
     if (this.mode === 'endless') return Math.max(count >= 4 ? 30 * (count - 1) : 0, chain > 1 ? 60 * chain + 105 : 0);
     const high = this.dangerFlags.some(Boolean);
-    const combo = count < 4 ? 0 : high ? this.stopTiming.chain[count <= 8 ? 0 : count <= 10 ? 1 : 2] : this.stopTiming.combo[count - 3];
+    const combo = count < 4 ? 0 : high ? this.stopTiming.dangerCombo?.[count - 3] ?? this.stopTiming.chain[count <= 8 ? 0 : count <= 10 ? 1 : 2] : this.stopTiming.combo[count - 3];
     const chained = chain > 1 ? (high ? this.stopTiming.dangerChain : this.stopTiming.chain)[chain - 2] : 0;
     return Math.max(combo, chained);
   }
@@ -376,7 +383,7 @@ export class Board {
       this.stop = Math.max(this.stop, this.stopGrant(this.stopRequest));
       this.stopRequest = null;
     }
-    if (this.mode === 'story') {
+    if (this.mode === 'story' || this.mode === 'versus') {
       if (this.speedProgress >= STORY_SPEED_FRAMES[this.speedStage]) {
         this.speedProgress = 0;
         this.speedStage = Math.min(STORY_SPEED_FRAMES.length - 1, this.speedStage + 1);
@@ -564,7 +571,7 @@ export class Board {
         }
       }
     }
-    if (this.mode === 'story') {
+    if (this.mode === 'story' || this.mode === 'versus') {
       if (!resolving && !this.stop) {
         if (!this.atCeiling()) this.graceUsed = false;
         else if (this.graceUsed) this.lost = true;
@@ -687,11 +694,12 @@ export class Cpu {
 }
 
 export class Match {
-  constructor(seed = Date.now(), difficulty = 'normal', encounter = 1, { cpu = true, opponent = null } = {}) {
+  constructor(seed = Date.now(), difficulty = 'normal', encounter = 1, { cpu = true, opponent = null, levels = null } = {}) {
     const timingDifficulty = difficulty === 'relaxed' ? 'easy' : difficulty;
     const rowState = { alternate: 0 };
-    this.boards = [new Board(seed, { starter: cpu, difficulty: timingDifficulty, rowState }),
-      new Board(seed ^ 0x9e3779b9, { difficulty: timingDifficulty, rowState })];
+    if (levels && (cpu || !Array.isArray(levels) || levels.length !== 2 || levels.some(level => !Number.isInteger(level) || level < 1 || level > 10))) throw new Error('Choose two player levels from 1 to 10.');
+    this.boards = [new Board(seed, { starter: cpu, difficulty: timingDifficulty, rowState, ...(levels ? { mode: 'versus', versusLevel: levels[0] } : {}) }),
+      new Board(seed ^ 0x9e3779b9, { difficulty: timingDifficulty, rowState, ...(levels ? { mode: 'versus', versusLevel: levels[1] } : {}) })];
     // Independent encounter tuning, not a reconstruction of the native AI tables.
     const profile = CPU_PROFILES[this.boards[1].difficulty];
     const stage = Math.max(1, Math.min(profile.intervals.length, Math.trunc(encounter) || 1));

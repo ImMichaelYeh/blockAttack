@@ -83,6 +83,15 @@ the board, cursor, swaps, raises, clears, and gameplay-processing steps together
 Keep any browser AI improvement labeled as an improvement until native traces
 support it. Do not infer stronger strategy merely from a shorter action interval.
 
+## Verified two-player level settings — November 9, 2026
+
+Local and LAN now use independently selected native levels 1–10, including the sixth ordinary color
+at levels 9–10. Numeric parameters were checked against the US ROM and 26 focused native runs
+(5,870 frames). Tests retain every level's measured four-clear pop ages and first post-swap descent,
+the full ordinary/danger stop tables, initialization registers, speed-stage transitions and speed cap.
+See [two-player verification](VERSUS_LEVELS.md) for the exact table and remaining scope limits.
+This is separate from the independently designed CPU AI.
+
 ## Other mechanics to verify
 
 - **Attack travel and ordering:** only sampled Normal anchors have calibrated

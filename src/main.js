@@ -4,6 +4,7 @@ import { Controls, DEFAULT_BINDINGS, PLAYER_TWO_BINDINGS, LABELS, bindable, rest
 import { BoardRenderer, SceneRenderer, drawMascot, drawBattleEffects } from './render.js';
 import { INTRO_TICKS, RESULT_TICKS, incomingPackets, sceneScale, boardInDanger } from './presentation.js';
 import { AudioPlayer } from './audio.js';
+import { LanPeer } from './lan.js';
 
 const $ = id => document.getElementById(id);
 const STORAGE_KEY = 'blockAttack.original.settings.v1';
@@ -27,11 +28,12 @@ const renderers = [new BoardRenderer($('red-board'), $('red-mascot'), 0, $('red-
 const scene = new SceneRenderer($('scene'));
 const sceneBuffers = { boards: [$('red-board'), $('blue-board')], mascots: [$('red-mascot'), $('blue-mascot')], incoming: [$('red-incoming'), $('blue-incoming')] };
 let session = null, paused = false, capture = null, accumulator = 0, previous = performance.now(), frameTick = 0;
+let lan = null;
 let introAge = INTRO_TICKS, resultAge = null, resultShown = false, visualTick = 0, lastDanger = false;
 let incomingCounts = [0, 0];
 let lastFeed = '', feedUntil = 0;
 const menuIds = ['menu-one-player', 'menu-two-player', 'help-open', 'settings-open'];
-const menuDescriptions = ['Let\'s make a chain! Red vs. Blue. Ready?', 'Local two-player. First to two victory stars wins!', 'A few little tips for some big comebacks!', 'Your keys. Your sound. Your kind of fun!'];
+const menuDescriptions = ['Let\'s make a chain! Red vs. Blue. Ready?', 'Two players: local or LAN. First to two stars wins!', 'A few little tips for some big comebacks!', 'Your keys. Your sound. Your kind of fun!'];
 let menuIndex = 0;
 const active = () => session?.match && !paused && !$('game').hidden;
 const running = () => active() && !session.match.result && introAge >= INTRO_TICKS;
@@ -52,6 +54,7 @@ function selectMenu(index, focus = false) {
 }
 
 function showMenuPanel(setup) {
+  $('multiplayer-screen').hidden = true;
   $('menu-home').hidden = setup; $('cpu-setup').hidden = !setup;
   $('setup-error').textContent = '';
   if (setup) (new FormData($('setup')).get('mode') === 'series' ? $('difficulty-' + $('difficulty').value) : $('level')).focus(); else selectMenu(0, true);
@@ -90,7 +93,7 @@ function refreshBindings() {
   $('control-hints').innerHTML = `<span>MOVE <kbd>${moveKeys}</kbd> / <kbd>↑ ← ↓ →</kbd></span><span>SWAP <kbd>${keyLabel(settings.bindings.swap)}</kbd></span><span>RAISE <kbd>${keyLabel(settings.bindings.raise)}</kbd></span><span>PAUSE <kbd>Esc</kbd></span>`;
   $('help-controls').textContent = `Move: ${moveKeys} or arrows. Swap: ${keyLabel(settings.bindings.swap)}. Raise: ${keyLabel(settings.bindings.raise)}. Pause: Escape.`;
   $('red-board').setAttribute('aria-label', `Your board. ${$('help-controls').textContent}`);
-  $('p2-controls').textContent = `Local Player 2: ${['up', 'left', 'down', 'right'].map(action => keyLabel(PLAYER_TWO_BINDINGS[action])).join(' ')} to move, ${keyLabel(PLAYER_TWO_BINDINGS.swap)} to swap, ${keyLabel(PLAYER_TWO_BINDINGS.raise)} to raise. LAN is coming later.`;
+  $('p2-controls').textContent = lan ? 'LAN: both players use their own Player 1 bindings. Host is Red; joining player is Blue.' : `Local Player 2: ${['up', 'left', 'down', 'right'].map(action => keyLabel(PLAYER_TWO_BINDINGS[action])).join(' ')} to move, ${keyLabel(PLAYER_TWO_BINDINGS.swap)} to swap, ${keyLabel(PLAYER_TWO_BINDINGS.raise)} to raise.`;
 }
 
 async function startAudio(ready = false) {
@@ -107,11 +110,12 @@ function startRound() {
   introAge = 0; resultAge = null; resultShown = false; visualTick = 0; lastDanger = false; incomingCounts = [0, 0];
   for (const renderer of renderers) renderer.reset();
   $('menu').hidden = true; $('game').hidden = false;
+  $('multiplayer-screen').hidden = true;
   $('game-tools').hidden = false;
   if ($('match-dialog').open) $('match-dialog').close();
-  $('match-title').textContent = session.mode === 'local' ? `Local versus · Round ${session.round} · First to 2 stars` : session.mode === 'series' ? `CPU series · Level ${session.level} / ${session.length}` : 'Single match';
-  $('blue-board').setAttribute('aria-label', session.mode === 'local' ? 'Player 2 board. IJKL move, Right Shift swaps, Space raises, Escape pauses.' : 'CPU board');
-  $('difficulty-label').textContent = session.difficulty.toUpperCase();
+  $('match-title').textContent = lan ? `LAN versus · Round ${session.round} · You are ${lan.host ? 'Red' : 'Blue'} · First to 2 stars` : session.mode === 'local' ? `Local versus · Round ${session.round} · First to 2 stars` : session.mode === 'series' ? `CPU series · Level ${session.level} / ${session.length}` : 'Single match';
+  $('blue-board').setAttribute('aria-label', lan ? 'Blue board. Joining player uses their own Player 1 controls.' : session.mode === 'local' ? 'Player 2 board. IJKL move, Right Shift swaps, Space raises, Escape pauses.' : 'CPU board');
+  $('difficulty-label').textContent = session.mode === 'local' ? `Levels ${session.levels.join(' / ')}` : session.difficulty.toUpperCase();
   lastFeed = 'Your move.'; feedUntil = 120; $('attack-feed').textContent = lastFeed;
   $('battle-announcement').textContent = 'Ready?';
   draw(); $('red-board').focus(); void startAudio(true);
@@ -126,22 +130,26 @@ function setOverlay(kicker, title, copy, action) {
 }
 
 function pauseGame() {
+  if (lan && session && !resultShown) { lan.setPaused(true); return; }
   if (!active() || resultShown) return;
   paused = true; clearInputs(); accumulator = 0; audio.stop();
   setOverlay('TAKE A BREATHER', 'Paused.', 'The stack can wait. Resume when you are ready.', 'Resume');
 }
 
-function resume() {
+function resume(network = false) {
   if (!session || resultShown) return;
+  if (lan && !network) { lan.setPaused(false); return; }
   paused = false; clearInputs(); accumulator = 0; previous = performance.now();
   $('match-dialog').close(); $('red-board').focus(); void startAudio();
 }
 
 function mainMenu() {
+  closeLan();
   audio.stop(); clearInputs(); session = null; paused = false; accumulator = 0;
   for (const dialog of document.querySelectorAll('dialog[open]')) dialog.close();
   $('menu').hidden = false; $('game').hidden = true;
   $('game-tools').hidden = true;
+  refreshBindings();
   showMenuPanel(false);
   void startAudio();
 }
@@ -163,6 +171,7 @@ function showResult() {
     const title = result === 'draw' ? 'A perfect tie.' : session.complete ? `${winner} wins the set!` : `${winner} earns a star!`;
     const copy = result === 'draw' ? 'No stars awarded. Replay this round.' : `Red ${session.stars[0]} - Blue ${session.stars[1]}. ${session.complete ? 'Two stars wins. Play another set?' : 'First to two stars wins the set.'}`;
     draw(); setOverlay('BEST OF THREE', title, copy, result === 'draw' ? 'Replay round' : session.complete ? 'Play another set' : 'Next round');
+    if (lan && !lan.host) $('continue').textContent = 'Wait for host';
     return;
   }
   const series = session.mode === 'series', completed = session.complete;
@@ -222,7 +231,27 @@ function frame(now) {
   const delta = Math.max(0, Math.min(now - previous, 100)), elapsed = delta / 1000; previous = now;
   if (active()) {
     if (!resultShown) visualTick += elapsed * TICK_RATE;
-    if (introAge < INTRO_TICKS) {
+    if (lan && (introAge < INTRO_TICKS || running())) {
+      const peer = lan;
+      accumulator = Math.min(accumulator + delta, 100);
+      while (accumulator >= 1000 / TICK_RATE && active() && !session.match.result) {
+        if (peer.needsInput) peer.queueInput(controls.sample());
+        const inputs = peer.takeInput();
+        if (!inputs) break;
+        accumulator -= 1000 / TICK_RATE;
+        if (introAge < INTRO_TICKS) {
+          inputs.forEach((input, player) => { if (input.move && session.match.boards[player].move(...input.move)) audio.cue('move'); });
+          introAge++;
+          if (introAge === 48) { audio.cue('go'); $('battle-announcement').textContent = 'Go!'; }
+          if (introAge === INTRO_TICKS) $('battle-announcement').textContent = '';
+        } else {
+          handleEvents(session.match.step(...inputs));
+          if (session.match.result) finish();
+        }
+        peer.verify({ match: session.match, stars: session.stars, points: session.points, introAge });
+      }
+      if (!session) { requestAnimationFrame(frame); return; }
+    } else if (introAge < INTRO_TICKS) {
       accumulator += delta;
       while (accumulator >= 1000 / TICK_RATE && introAge < INTRO_TICKS) {
         for (const [player, input] of (session.mode === 'local' ? [controls, playerTwo] : [controls]).entries()) {
@@ -255,7 +284,7 @@ function frame(now) {
     frameTick += elapsed * TICK_RATE;
     drawMascot($('menu-red'), 0, frameTick, 'idle', settings.reduced);
     drawMascot($('menu-blue'), 1, frameTick + 25, 'idle', settings.reduced);
-    scene.drawMenu({ setup: !$('cpu-setup').hidden, index: menuIndex, mode: new FormData($('setup')).get('mode'), difficulty: $('difficulty').value, level: $('level').value, mascots: [$('menu-red'), $('menu-blue')], focus: document.activeElement?.id });
+    scene.drawMenu({ setup: !$('cpu-setup').hidden, multiplayer: !$('multiplayer-screen').hidden, redLevel: $('local-red-level').value, blueLevel: $('local-blue-level').value, error: $('local-level-error').textContent, index: menuIndex, mode: new FormData($('setup')).get('mode'), difficulty: $('difficulty').value, level: $('level').value, mascots: [$('menu-red'), $('menu-blue')], focus: document.activeElement?.id });
   }
   const focus = document.activeElement?.id;
   if ($('help-dialog').open && !$('settings-dialog').open) scene.drawHelp({ move: ['up','left','down','right'].map(action=>keyLabel(settings.bindings[action])).join(''), swap: keyLabel(settings.bindings.swap), raise: keyLabel(settings.bindings.raise), focus });
@@ -263,14 +292,141 @@ function frame(now) {
   requestAnimationFrame(frame);
 }
 
+function closeLan() {
+  const peer = lan; lan = null; peer?.close();
+}
+
+function showLanLobby() {
+  $('multiplayer-screen').hidden = false; $('multiplayer-screen').setAttribute('data-lan','true');
+  $('menu-home').hidden = $('cpu-setup').hidden = true;
+  $('multiplayer-title').textContent = 'LAN game';
+  $('multiplayer-choice').hidden = true; $('lan-lobby').hidden = false;
+  $('lan-setup').hidden = true; $('lan-status').textContent = '';
+  $('lan-host').disabled = $('lan-join').disabled = false;
+  for (const id of ['lan-level','lan-level-down','lan-level-up']) $(id).disabled = false;
+}
+
+function readVersusLevel(id) {
+  const level = Number($(id).value);
+  if (!Number.isInteger(level) || level < 1 || level > 10) throw new Error('Choose a player level from 1 to 10.');
+  return level;
+}
+
+function createLan(host) {
+  const level = readVersusLevel('lan-level');
+  closeLan();
+  const peer = new LanPeer(host, {
+    level,
+    onready: () => {
+      if (lan !== peer) return;
+      if (host) peer.startRound(Date.now() >>> 0);
+      else $('lan-status').textContent = 'Connected. Waiting for the host to start…';
+    },
+    onstart: (seed, levels) => {
+      if (lan !== peer) return;
+      if (session) session.continue(seed);
+      else { session = new Session({ mode: 'local', levels }); session.start(seed); }
+      session.networkPlayer = host ? 0 : 1;
+      refreshBindings(); startRound();
+    },
+    onpause: waiting => {
+      if (lan !== peer || !session || resultShown) return;
+      if (waiting) {
+        paused = true; clearInputs(); accumulator = 0; audio.stop();
+        setOverlay('LAN GAME', 'Paused.', peer.localPaused ? 'Resume when you are ready. Both players must be ready.' : 'The other player paused. Waiting for them to resume.', 'Resume');
+      } else resume(true);
+    },
+    onerror: message => {
+      if (lan !== peer) return;
+      mainMenu(); showLanLobby(); $('lan-status').textContent = message;
+    },
+  });
+  lan = peer;
+  $('lan-host').disabled = $('lan-join').disabled = true;
+  for (const id of ['lan-level','lan-level-down','lan-level-up']) $(id).disabled = true;
+  $('lan-setup').hidden = false; $('lan-outgoing-area').hidden = true;
+  $('lan-incoming-area').hidden = false;
+  $('lan-incoming').value = $('lan-outgoing').value = '';
+  $('lan-incoming-label').textContent = host ? '2. Paste the joining player’s answer' : '1. Paste the host’s invitation';
+  $('lan-connect').textContent = host ? 'Connect' : 'Create answer';
+  $('lan-connect').disabled = host;
+  $('lan-status').textContent = host ? 'Creating your invitation…' : 'Paste the invitation from the host, then choose Create answer.';
+  return peer;
+}
+
+$('multiplayer-lan').addEventListener('click', showLanLobby);
+$('lan-host').addEventListener('click', async () => {
+  let peer;
+  try {
+    peer = createLan(true);
+    const code = await peer.invite();
+    if (lan !== peer) return;
+    $('lan-outgoing').value = code; $('lan-outgoing-area').hidden = false;
+    $('lan-outgoing-label').textContent = '1. Send this invitation to the joining player';
+    $('lan-connect').disabled = false;
+    $('lan-status').textContent = 'Send the entire invitation code. Paste their answer below and choose Connect.';
+  } catch (error) {
+    if (peer && lan !== peer) return;
+    closeLan(); showLanLobby(); $('lan-status').textContent = error.message;
+  }
+});
+$('lan-join').addEventListener('click', () => {
+  try { createLan(false); }
+  catch (error) { showLanLobby(); $('lan-status').textContent = error.message; }
+});
+$('lan-connect').addEventListener('click', async () => {
+  const peer = lan;
+  if (!peer) return;
+  $('lan-connect').disabled = true;
+  try {
+    if (peer.host) {
+      await peer.accept($('lan-incoming').value);
+      if (lan === peer && !session) $('lan-status').textContent = 'Connecting directly to the other browser…';
+    } else {
+      const code = await peer.answer($('lan-incoming').value);
+      if (lan !== peer) return;
+      $('lan-outgoing').value = code; $('lan-outgoing-area').hidden = false;
+      $('lan-outgoing-label').textContent = '2. Send this answer back to the host';
+      $('lan-status').textContent = 'Send the entire answer code to the host. The match starts when they connect.';
+    }
+  } catch (error) {
+    if (lan !== peer) return;
+    $('lan-status').textContent = error.message; $('lan-connect').disabled = false;
+  }
+});
+$('lan-select-code').addEventListener('click', () => { $('lan-outgoing').focus(); $('lan-outgoing').select(); });
+function showMultiplayer() {
+  closeLan();
+  $('menu-home').hidden = $('cpu-setup').hidden = true;
+  $('multiplayer-screen').hidden = false; $('multiplayer-screen').setAttribute('data-lan','false');
+  $('multiplayer-title').textContent = '2 Player Game';
+  $('multiplayer-choice').hidden = false; $('lan-lobby').hidden = true;
+  $('local-level-error').textContent = '';
+  $('multiplayer-local').focus();
+}
+$('lan-back').addEventListener('click', showMultiplayer);
+$('multiplayer-close').addEventListener('click', () => {
+  if (!$('lan-lobby').hidden) showMultiplayer(); else { closeLan(); showMenuPanel(false); }
+});
+
 $('menu-one-player').addEventListener('click', () => showMenuPanel(true));
-$('menu-two-player').addEventListener('click', () => {
+$('menu-two-player').addEventListener('click', showMultiplayer);
+$('multiplayer-local').addEventListener('click', () => {
+  let levels;
+  try { levels = [readVersusLevel('local-red-level'), readVersusLevel('local-blue-level')]; }
+  catch (error) { $('local-level-error').textContent = error.message; return; }
   if (Object.values(settings.bindings).some(code => Object.values(PLAYER_TWO_BINDINGS).includes(code))) {
     $('binding-message').textContent = 'P1 / P2 keys overlap. Rebind or reset P1 keys.';
     fitScene(); $('settings-dialog').showModal(); return;
   }
-  session = new Session({ mode: 'local' }); session.start(); startRound();
+  session = new Session({ mode: 'local', levels }); session.start(); startRound();
 });
+for (const id of ['local-red-level','local-blue-level','lan-level']) for (const [suffix, step] of [['down',-1],['up',1]]) {
+  $(id+'-'+suffix).addEventListener('click', () => {
+    $(id).value = Math.max(1, Math.min(10, (Number($(id).value) || 4) + step));
+    audio.cue('menu');
+  });
+}
 $('setup-back').addEventListener('click', () => showMenuPanel(false));
 menuIds.forEach((id, index) => {
   $(id).addEventListener('focus', () => selectMenu(index));
@@ -299,7 +455,8 @@ $('setup').addEventListener('submit', event => {
 $('pause').addEventListener('click', pauseGame);
 $('leave').addEventListener('click', () => { pauseGame(); if (paused) setOverlay('LEAVE THIS ROUND?', 'Back to menu?', 'This round and any set or series progress will end.', 'Keep playing'); });
 $('continue').addEventListener('click', () => {
-  if (resultShown) { session.continue(); startRound(); }
+  if (resultShown && lan) { if (lan.host) lan.startRound(Date.now() >>> 0); }
+  else if (resultShown) { session.continue(); startRound(); }
   else resume();
 });
 $('overlay-menu').addEventListener('click', mainMenu);
@@ -336,7 +493,7 @@ window.addEventListener('keydown', event => {
     event.preventDefault();
     if (['Escape', 'Tab'].includes(code)) { capture = null; refreshBindings(); $('binding-message').textContent = 'Binding cancelled.'; return; }
     if (!bindable(code)) { $('binding-message').textContent = 'Use a letter, number, Space, Enter, or Shift.'; return; }
-    if (session?.mode === 'local' && Object.values(PLAYER_TWO_BINDINGS).includes(code)) { $('binding-message').textContent = 'That key belongs to Player 2. Choose another.'; return; }
+    if (!lan && session?.mode === 'local' && Object.values(PLAYER_TWO_BINDINGS).includes(code)) { $('binding-message').textContent = 'That key belongs to Player 2. Choose another.'; return; }
     if (Object.entries(settings.bindings).some(([action, binding]) => action !== capture && binding === code)) { $('binding-message').textContent = 'That key is already in use. Choose another.'; return; }
     settings.bindings[capture] = code; capture = null; clearInputs(); refreshBindings(); save();
     $('binding-message').textContent = 'Binding saved. Arrow keys also move. Escape always pauses.'; return;
@@ -346,6 +503,10 @@ window.addEventListener('keydown', event => {
   const modalOpen = ['help-dialog', 'settings-dialog', 'match-dialog'].some(id => $(id).open);
   if (modalOpen && event.repeat && ['Enter', 'Space'].includes(code)) { event.preventDefault(); return; }
   if (!$('menu').hidden && !modalOpen) {
+    if (code === 'Escape' && !$('multiplayer-screen').hidden) {
+      event.preventDefault(); $('multiplayer-close').click();
+      return;
+    }
     if (code === 'Escape' && !$('cpu-setup').hidden) { event.preventDefault(); showMenuPanel(false); return; }
     if (!$('menu-home').hidden) {
       if (['KeyW', 'ArrowUp', 'KeyS', 'ArrowDown'].includes(code)) {
@@ -356,7 +517,7 @@ window.addEventListener('keydown', event => {
     if (code === 'Enter' && event.repeat) { event.preventDefault(); return; }
   }
   if (code === 'Escape' && active() && !resultShown) { event.preventDefault(); pauseGame(); return; }
-  if (active() && !session.match.result && !modalOpen) for (const input of session.mode === 'local' ? [controls, playerTwo] : [controls]) {
+  if (active() && !session.match.result && !modalOpen) for (const input of !lan && session.mode === 'local' ? [controls, playerTwo] : [controls]) {
     if (input.handles(code)) {
       event.preventDefault();
       if (introAge < INTRO_TICKS && [input.bindings.swap, input.bindings.raise].includes(code)) continue;

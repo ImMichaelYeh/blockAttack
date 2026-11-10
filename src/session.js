@@ -5,14 +5,16 @@ export const SERIES_LENGTHS = Object.freeze({ easy: 10, normal: 11, hard: 12 });
 export const SINGLE_LEVELS = CPU_LEVELS;
 
 export class Session {
-  constructor({ mode = 'single', difficulty = 'normal', level = 1 } = {}) {
+  constructor({ mode = 'single', difficulty = 'normal', level = 1, levels = [4, 4] } = {}) {
     if (!['single', 'series', 'local'].includes(mode) || !Object.hasOwn(CPU_PROFILES, difficulty)) throw new Error('Choose a valid mode and difficulty.');
     if (mode === 'single' && (!Number.isInteger(level) || level < 1 || level > SINGLE_LEVELS.length)) throw new Error('Choose a whole number of levels from 1 to 10.');
+    if (mode === 'local' && (!Array.isArray(levels) || levels.length !== 2 || levels.some(value => !Number.isInteger(value) || value < 1 || value > 10))) throw new Error('Choose two player levels from 1 to 10.');
     this.mode = mode;
     this.difficulty = mode === 'single' ? SINGLE_LEVELS[level - 1].difficulty : difficulty;
     this.length = mode === 'series' ? SERIES_LENGTHS[difficulty] : 1;
     this.level = mode === 'single' ? level : 1;
     this.match = null;
+    if (mode === 'local') this.levels = [...levels];
     this.stars = [0, 0];
     this.points = [0, 0];
     this.round = 1;
@@ -35,6 +37,7 @@ export class Session {
   start(seed = Date.now()) {
     this.match = new Match(seed, this.difficulty, this.profileStage, {
       cpu: this.mode !== 'local', opponent: this.mode === 'local' ? null : new ComputerPlayer(this.cpuLevel),
+      levels: this.mode === 'local' ? this.levels : null,
     });
     this.resultRecorded = false;
     return this.match;

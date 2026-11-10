@@ -1,10 +1,13 @@
 # Asset and code provenance
 
 The game uses original art and synthesized effects, plus two user-selected licensed music recordings.
-It makes no external runtime requests.
+It makes no external runtime requests. LAN peers exchange game inputs directly over WebRTC after
+manually exchanging invitation/answer codes; no public signaling, STUN or relay service is used.
 
 - `src/render.js`: new pixel-style Canvas drawings for Red and Blue square trash-block characters,
-  six symbol/color panel designs, cursor, grinning pressure blocks, particles, and reaction poses.
+  six ordinary symbol/color block designs plus the gray shock block, cursor, grinning pressure blocks,
+  particles, and reaction poses. The sixth ordinary design is a newly drawn dark blue inverted triangle
+  used by two-player levels 9–10; it is separate from the gray exclamation-mark block.
   Faces use newly drawn rivets, cheeks, eyes, and a toothed grille; no reference sprites are traced or loaded.
   Panels use the reference's saturated color/symbol associations, with independently drawn 16 × 16 pixel
   masks. Every scene, backdrop, menu, HUD, flight, impact, and transition is composed at 256 × 224.
@@ -24,6 +27,8 @@ It makes no external runtime requests.
 - `src/pixels.js`: new bitmap letter/digit definitions and pixel window/mask drawing routines.
   No copied game font, font file, or SVG icon is used. The canvas uses original bitmap lettering;
   Settings uses a system font in HTML for legibility. Round results use full seven-row pixel lettering.
+- `src/versus.js`: numeric two-player settings checked against native ROM tables and fresh SNES
+  runtime captures. No original sprite, sound or font data is included; see `docs/VERSUS_LEVELS.md`.
 - `style.css` and `index.html`: console frame, beveled windows, and SELECT/menu placement adapted
   from the user's clone layout. Colors, background, mascots, and screen content are original.
   Transparent native controls overlay the Canvas menus to preserve mouse, keyboard, and screen-reader

@@ -43,6 +43,7 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
   install('FormData', class { get() { return mode; } });
   install('performance', { now: () => now });
   get('difficulty').value = 'easy'; get('level').value = '1'; get('game').hidden = true;
+  for(const id of ['local-red-level','local-blue-level','lan-level'])get(id).value='4';
   const originalStep = Match.prototype.step;
   const originalStart = Session.prototype.start;
   const originalCue = AudioPlayer.prototype.cue, cues = [];
@@ -184,7 +185,26 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
     get('continue').click();
     assert.equal(get('match-title').textContent, 'CPU series · Level 1 / 10');
     get('pause').click(); get('overlay-menu').click();
-    get('menu-two-player').click(); advance(75);
+    get('menu-two-player').click();
+    assert.equal(get('multiplayer-screen').hidden,false,'Two-player setup is an in-frame screen');
+    assert.equal(get('menu-home').hidden,true);
+    assert.equal(get('cpu-setup').hidden,true);
+    browserWindow.fire('keydown',{code:'Escape'});
+    assert.equal(get('multiplayer-screen').hidden,true);assert.equal(get('menu-home').hidden,false);
+    get('menu-two-player').click();
+    assert.equal(get('game').hidden,true);
+    get('multiplayer-lan').click();
+    assert.equal(get('lan-lobby').hidden,false);
+    browserWindow.fire('keydown',{code:'Escape'});
+    assert.equal(get('multiplayer-screen').hidden,false);assert.equal(get('lan-lobby').hidden,true);
+    get('multiplayer-lan').click();
+    get('lan-back').click();
+    for(let i=0;i<20;i++){get('local-red-level-down').click();get('local-blue-level-up').click();}
+    assert.equal(Number(get('local-red-level').value),1);assert.equal(Number(get('local-blue-level').value),10);
+    get('local-red-level').value='11';get('multiplayer-local').click();
+    assert.equal(get('multiplayer-screen').hidden,false);assert.match(get('local-level-error').textContent,/1 to 10/);
+    get('local-red-level').value='1';get('multiplayer-local').click();advance(75);
+    assert.deepEqual(observedMatch.boards.map(board=>board.versusLevel),[1,10]);
     assert.equal(observedMatch.cpu,null);
     for(const board of observedMatch.boards) {
       board.occupiedHeight=()=>10;frame();
@@ -226,6 +246,7 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
     assert.match(get('control-hints').innerHTML, /Space/);
     assert.equal(JSON.parse([...stored.values()][0]).bindings.swap, 'Space');
     get('menu-two-player').click();
+    get('multiplayer-local').click();
     assert.equal(get('settings-dialog').open,true);
     assert.match(get('binding-message').textContent,/overlap/);
     assert.equal(get('game').hidden,true);
