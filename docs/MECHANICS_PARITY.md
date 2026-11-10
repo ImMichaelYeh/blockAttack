@@ -65,11 +65,21 @@ The retained mechanics suites continue to check the original measured timing fix
 
 CPU series retains Easy10 / Normal11 / Hard12 encounters and route board timing/speed.
 On November 8, 2026 the user approved independently designed AI instead of native CPU reconstruction.
-Single Match now uses ten custom profiles, with slower reaction intervals (30 down to 10 ticks),
-one- to three-swap planning, combo/cascade evaluation, and bounded search breadth.
+Single Match now uses ten custom profiles, with reaction intervals from 30 down to 3 ticks,
+one- to four-swap planning, combo/cascade evaluation, and bounded search breadth.
+Each level shortens the action interval by three ticks and increases search breadth and attack
+weights. Raising aggression also scales: level 1 preserves stop time, while each subsequent level
+raises the stack-height threshold for replenishing blocks during plans and cancelling stop.
+Idle raising targets increase from five to nine rows across the ten levels.
+All live CPU levels see whether the match has queued trash targeting their board. Pending or
+falling trash suppresses manual raising and cancels buffered raise steps, preserving stop time
+while the CPU continues pursuing clears. Aggressive raising resumes once the threat has passed.
 The CPU commits to plans, discards them when the field changes, and waits for fresh blocks instead
 of shuffling without a reachable clear. Easy series maps to AI levels 1–4, Normal 3–7, Hard 6–10.
 Single board profiles progress Easy (1–3), Normal (4–7), Hard (8–10), without changing board physics.
+Level 10 targets a fast, aggressive final-boss feel: it raises below height 9 even while travelling
+toward a planned swap, cancels its own stop time to replenish blocks, and respects animation locks.
+This is Bowser-inspired tuning, not a reconstruction of his native AI parameters.
 The old `Cpu`/`chooseMove` remain to run the recorded engine-parity fixtures; live sessions explicitly
 provide `ComputerPlayer`. Those historical replays do not test the new AI.
 

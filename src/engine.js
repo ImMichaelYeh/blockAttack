@@ -719,7 +719,7 @@ export class Match {
       if (actions.move && this.boards[player].move(...actions.move)) events.push({ type: 'move', player });
       if (actions.swap && this.boards[player].swap()) events.push({ type: 'swap', player });
     });
-    this.cpu?.step(this.boards[1]);
+    this.cpu?.step(this.boards[1], this.attacks.some(attack => attack.target === 1));
     this.boards.forEach((board, player) => {
       const actions = player === 1 && this.cpu ? { raise: this.cpu.raise } : inputs[player];
       for (const event of board.step({ raise: actions.raise, raisePressed: actions.raisePressed, scanPhase: (this.tick - 1) % 3 })) {

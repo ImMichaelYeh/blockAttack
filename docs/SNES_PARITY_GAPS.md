@@ -1,6 +1,6 @@
 # SNES mechanics verification backlog
 
-Updated November 8, 2026. Matching the sibling browser project is separate from
+Updated November 10, 2026. Matching the sibling browser project is separate from
 matching the original SNES game. Passing browser replays does not prove native AI.
 These are verification gaps unless explicitly described as intentional differences.
 
@@ -8,16 +8,34 @@ These are verification gaps unless explicitly described as intentional differenc
 
 The user approved our own AI instead of copying native CPU behavior, then reduced the requested
 range to ten calibrated levels. Native AI reconstruction is no longer a parity requirement.
-Live sessions now use `src/cpu.js`: 30-to-10-tick action intervals, one- to three-swap lookahead,
+Live sessions now use `src/cpu.js`: 30-to-3-tick action intervals, one- to four-swap lookahead,
 committed plans, stale-plan invalidation, and no blind shuffling when no clear is reachable.
-The strongest level caps cursor moves/swaps at six per second; the weakest caps them at two.
+The strongest level caps cursor moves/swaps at twenty per second; the weakest caps them at two.
 Board speed/timing/physics remain the established profiles. Raising requests are separate from
-cursor moves/swaps and pause while a plan or board resolution is active.
+cursor moves/swaps and pause while board resolution is active. Action intervals decrease by three
+ticks per level. Level 1 preserves stop time and pauses raising during plans; each subsequent level
+increases the stack-height threshold for cancelling stop and raising during plans by one row,
+up to height 9 at level 10. Idle raising targets also increase gradually from five to nine rows.
+All live CPU levels suspend manual raising when targeted trash is queued or falling, cancel
+buffered raise steps, and preserve remaining stop time. They continue planning clears while
+trash is queued and resume normal raising after it lands, subject to their stack-height limits.
+This targets Bowser's fast, aggressive final-boss feel without claiming native AI parity.
 
-Calibration: eight identical Normal-profile seeds (1–8), 3,600 steps each, cleared 313 / 362 / 559
+Historical November 8 calibration: eight identical Normal-profile seeds (1–8), 3,600 steps each, cleared 313 / 362 / 559
 blocks in aggregate at levels 1 / 5 / 10. In eight seeded two-minute AI matches (11,22,…,88),
 level 10 beat level 1 in all eight and level 5 in five, losing three. This is an automated baseline,
 not proof of how difficult a human will find each level. Human playtesting remains necessary.
+
+November 10 boss tuning: eight identical Hard-profile seeds (1–8), 3,600 steps each, produced
+55 combos and 69 chains at level 10, versus 27 combos and 33 chains with its previous 10-tick,
+height-7 raising policy. Neither tuning lost a board in this sample. The seeded match regression
+now requires the boss to beat level 5 in at least seven of eight matches; middle-level beatability
+is no longer the target for level 10.
+
+The subsequent ten-level gradient check uses eight identical Normal-profile seeds (1–8),
+3,600 steps each. Aggregate clears at levels 1–10 are 313 / 319 / 319 / 415 / 462 / 506 / 592 /
+686 / 731 / 850, with no lost boards. These samples verify a progression in automated play,
+not a guarantee that every higher level wins every seed or feels equally spaced to a human.
 
 The planner forecasts settled cascades and waits through animation/conversion. It does not plan
 timed swaps during a clear or simulate garbage conversion. These are explicit limits of our AI.

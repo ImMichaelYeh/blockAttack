@@ -758,7 +758,7 @@ class Match {
       if (actions.move && this.boards[player].move(...actions.move)) events.push({ type: 'move', player });
       if (actions.swap && this.boards[player].swap()) events.push({ type: 'swap', player });
     });
-    this.cpu?.step(this.boards[1]);
+    this.cpu?.step(this.boards[1], this.attacks.some(attack => attack.target === 1));
     this.boards.forEach((board, player) => {
       const actions = player === 1 && this.cpu ? { raise: this.cpu.raise } : inputs[player];
       for (const event of board.step({ raise: actions.raise, raisePressed: actions.raisePressed, scanPhase: (this.tick - 1) % 3 })) {
@@ -821,13 +821,14 @@ const CPU_LEVELS = Object.freeze(Array.from({ length: 10 }, (_, index) => {
   const level = index + 1;
   return Object.freeze({
     difficulty: level <= 3 ? 'easy' : level <= 7 ? 'normal' : 'hard',
-    interval: Math.round(30 - index * 20 / 9),
-    depth: level <= 3 ? 1 : level <= 7 ? 2 : 3,
-    beam: 2 + Math.floor(index / 3),
-    comboWeight: 1 + index,
-    chainWeight: index * 2,
+    interval: 30 - index * 3,
+    depth: 1 + Math.floor(index / 3),
+    beam: 2 + index,
+    comboWeight: 1 + index * 6,
+    chainWeight: index * 8,
     travelWeight: 1.5 - index / 12,
-    raiseBelow: 5 + Math.floor(index * 2 / 9),
+    raiseBelow: 5 + Math.floor(index * 4 / 9),
+    attackHeight: index,
   });
 }));
 
@@ -888,7 +889,7 @@ function choosePlan(board, profile) {
   let best = null;
   for (let depth = 0; depth < profile.depth; depth++) {
     const next = [];
-    for (const state of frontier) for (let y = 0; y < ROWS - 1; y++) for (let x = 0; x < COLS - 1; x++) {
+    for (const state of frontier) for (let y = 0; y < ROWS; y++) for (let x = 0; x < COLS - 1; x++) {
       const left = state.grid[y][x], right = state.grid[y][x + 1];
       if ((!left && !right) || left?.kind === right?.kind || (left && !idle(left)) || (right && !idle(right))) continue;
       if (depth === 0 && !board.canSwap(x, y)) continue;
@@ -924,15 +925,24 @@ class ComputerPlayer {
     this.waitKey = null;
   }
 
-  step(board) {
+  step(board, incoming = false) {
     this.raise = false;
     if (board.lost) { this.plan = []; return; }
+    const threatened = incoming || board.garbage.some(block => block.phase === 'fall');
+    if (threatened) {
+      // Releasing raise alone does not cancel the board's buffered row.
+      board.raiseQueued = false;
+      board.raiseRemaining = 0;
+      board.raiseDelay = null;
+    }
     const resolving = board.conversions.length || board.garbage.some(block => block.phase !== 'idle') ||
       board.grid.some(row => row.some(cell => isPanel(cell) && cell.phase !== 'idle'));
     if (resolving || findMatches(board.grid).length) return;
     const key = fieldKey(board.grid);
     if (this.plan.length && this.plan[0].before !== key) this.plan = [];
-    this.raise = !this.plan.length && !board.stop && board.occupiedHeight() < this.profile.raiseBelow;
+    const height = board.occupiedHeight(), aggressive = height < this.profile.attackHeight;
+    this.raise = !threatened && (aggressive || !this.plan.length) &&
+      (aggressive || !board.stop) && height < this.profile.raiseBelow;
     if (--this.cooldown > 0) return;
     this.cooldown = this.interval;
     if (!this.plan.length && key !== this.waitKey) {
@@ -940,7 +950,7 @@ class ComputerPlayer {
       this.waitKey = this.plan.length ? null : key;
     }
     if (!this.plan.length) return;
-    this.raise = false;
+    if (!aggressive) this.raise = false;
     const { x, y } = this.plan[0];
     if (!board.canSwap(x, y)) { this.plan = []; return; }
     if (board.cursor.y !== y) board.move(0, Math.sign(y - board.cursor.y));
