@@ -24,14 +24,29 @@ starting with CPU decision-making and the level 20 player report.
 
 ## Confirmed unchanged
 
-The engine comparison found no changes to `Board`, seeded generation, or the timing,
+The initial engine comparison found no changes to `Board`, seeded generation, or the timing,
 speed, stop-time, combo/chain, garbage, conversion, danger, and defeat constants/algorithms.
 The `Match` differences enable optional human control of board 2 and a custom CPU opponent.
 Human-versus-human boards omit the Red-only tutorial opening so both use the same generation rules.
 
-This includes falling/hover/landing timing, four-tick swaps, legal hover reversal and locked falling
+This includes falling/hover/landing timing, four-tick swaps, unfinished-swap reversal and locked falling
 panels, automatic-rise progression, committed manual-raise taps, held-raise transition pauses,
 clear/pop ordering, active chains, garbage scheduling/conversion, and simultaneous defeat.
+
+## Native hover correction — November 9, 2026
+
+A player reported sustaining unsupported blocks and moving them sideways with rapid swaps.
+Four fresh SNES Story Normal traces (560 frames total, verified US ROM SHA-1
+`2dc56eab3e70c0910ae47119d8b69f494e6000df`) reproduced the mismatch:
+after a supported block swaps into empty space, native hover rejects subsequent swap attempts.
+The inherited browser engine instead accepted them and restarted the swap/hover timers.
+
+`Board.canSwap` now locks hovering blocks, alongside falling/clearing/converting blocks.
+The four-tick animation and verified unfinished-swap reversal remain unchanged.
+`test/fixtures/snes-swap-hover-results.json` records release, repeated unsupported swaps,
+sideways traversal attempts, and a supported-floor control using the same input cadence.
+`test/swap-hover.test.js` checks positions on every frame without requiring a ROM/emulator.
+These traces establish this Story Normal case; they do not certify every native swap edge case.
 
 ## Regression evidence
 

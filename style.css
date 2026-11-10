@@ -4,6 +4,7 @@
 .game-frame{width:max-content;margin:0 auto;padding:19px 8px 8px;position:relative;background:#182e29;border:2px solid #90a58a;border-radius:10px;box-shadow:inset 1px 1px #d0d8b040,inset -2px -2px #081c20,0 18px 45px #061a2280}.frame-label{position:absolute;left:12px;top:5px;color:#d0e0b8;font-size:7px;letter-spacing:1px}.power-light{display:inline-block;width:4px;height:4px;background:#b8f878;margin-right:5px}.screw,.frame-bottom{display:none}
 .console-screen{--scale:2;position:relative;width:calc(256px * var(--scale));height:calc(224px * var(--scale));background:#181838;border-radius:8px;overflow:hidden;isolation:isolate;box-shadow:0 0 0 1px #091e26}
 #scene{display:block;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges}
+.topbar{height:auto;min-height:42px;flex-wrap:wrap;padding:6px 0}.top-actions{flex-wrap:wrap;justify-content:flex-end}#top-volume{width:clamp(48px,10vw,80px);margin:0;accent-color:#b8e078;cursor:pointer}
 .page-footer{display:flex;justify-content:space-between;gap:12px;font-size:9px;color:#a8c0b0;padding:12px 2px 0}
 .page-footer a{color:inherit}
 /* Semantic mouse/keyboard controls sit over the bitmap menu. Canvas supplies every visible pixel. */
@@ -19,28 +20,24 @@
 #play-button,#setup-back{position:absolute;left:16.4%;width:67.2%;height:6.25%;padding:0}#play-button{top:67.86%}#setup-back{top:77.68%}
 .sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 dialog{color-scheme:light;background:#cecece;color:#202048;border:6px solid #c67bd6;outline:2px solid #703878;box-shadow:inset 2px 2px #f7a5f7,5px 5px #181838;padding:20px;width:440px;max-width:calc(100vw - 35px);max-height:85vh;font-size:12px;border-radius:0}dialog::backdrop{background:#081c22b0}dialog h2{color:#214a8c;font-size:24px;line-height:1.25}dialog p{font-size:11px;line-height:1.6}.dialog-top{display:flex;justify-content:space-between;align-items:center;gap:10px}.eyebrow,.micro{font-size:9px;letter-spacing:1px;color:#703878}.instructions{padding-left:20px;line-height:1.7}.instructions li{margin:12px 0}.primary{background:#214a8c;color:#fff;border:2px solid #63d6ff;box-shadow:2px 2px #181838;padding:10px;font-weight:bold;width:100%;text-align:left}.full-width{width:100%;margin-top:10px}.settings-line{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #a89cb8}.settings-caption{margin:22px 0 12px}.binding-row{display:flex;justify-content:space-between;align-items:center;margin:8px 0}.binding-row button{min-width:95px}dialog .quiet{background:#214a8c;color:#fff;border-color:#63d6ff}.help-controls{border-top:1px solid #a89cb8;padding-top:12px}.error{color:#a01858}.error:empty{display:none}#settings-dialog>.primary{margin-top:20px}
-/* Dialog buttons keep native focus; result messages use smooth HTML lettering above them. */
+/* Dialog text stays on the pixel grid; transparent buttons keep native focus. */
 #match-dialog{position:fixed;padding:0;margin:0;max-width:none;max-height:none;border:0;outline:0;box-shadow:none;background:transparent;color:transparent;overflow:hidden}#match-dialog::backdrop{background:transparent}#match-dialog :is(p,h2){position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);margin:0;padding:0}#match-dialog button{position:absolute;left:12.5%;width:75%;height:6.25%;padding:0;margin:0;border:0;outline:0;background:transparent;color:transparent;box-shadow:none}#continue{top:57.14%}#overlay-menu{top:66.52%}
-#match-dialog[data-result="true"] :is(#overlay-title,#overlay-copy){left:9.375%;width:81.25%;height:auto;clip-path:none;overflow:visible;pointer-events:none;font-family:'Trebuchet MS',Arial,sans-serif;text-align:center;text-wrap:balance;letter-spacing:normal;color:#202048}
-#match-dialog[data-result="true"] #overlay-title{top:19.6429%;font-size:calc(16px * var(--scale,1));font-weight:800;line-height:1.2;color:#214a8c}
-#match-dialog[data-result="true"] #overlay-copy{top:31.25%;font-size:calc(11px * var(--scale,1));font-weight:500;line-height:1.45}
 .noscript{padding:12px;background:#703878;color:#fff;font-size:12px}
-/* Help/settings use the same native-resolution renderer and semantic input overlay. */
-#help-dialog,#settings-dialog{position:fixed;padding:0;margin:0;max-width:none;max-height:none;border:0;outline:0;box-shadow:none;background:transparent;color:transparent;overflow:hidden}
-#help-dialog::backdrop,#settings-dialog::backdrop{background:transparent}
-#help-dialog :is(h2,p,ol),#settings-dialog :is(h2,p),.binding-row>span{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);margin:0;padding:0}
-#help-dialog button,#settings-dialog button,#settings-dialog label,#settings-dialog input{opacity:0;color:transparent;background:transparent;border:0;box-shadow:none;outline:none;pointer-events:auto}
-#help-dialog .dialog-top,#settings-dialog .dialog-top,#bindings{position:absolute;inset:0;pointer-events:none}
-.binding-row{display:contents;pointer-events:none}
-#help-dialog .dialog-top button,#settings-dialog .dialog-top button{position:absolute;left:87.5%;top:5.36%;width:6.25%;height:5.36%;padding:0}
+/* Help keeps its canvas overlay; Settings uses readable, scrollable native controls. */
+#help-dialog{position:fixed;padding:0;margin:0;max-width:none;max-height:none;border:0;outline:0;box-shadow:none;background:transparent;color:transparent;overflow:hidden}
+#help-dialog::backdrop{background:transparent}
+#help-dialog :is(h2,p,ol){position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);margin:0;padding:0}
+#help-dialog button{opacity:0;color:transparent;background:transparent;border:0;box-shadow:none;outline:none;pointer-events:auto}
+#help-dialog .dialog-top{position:absolute;inset:0;pointer-events:none}
+#help-dialog .dialog-top button{position:absolute;left:87.5%;top:5.36%;width:6.25%;height:5.36%;padding:0}
 #help-dialog>.primary{position:absolute;left:9.375%;top:88.84%;width:81.25%;height:5.36%;padding:0;margin:0}
-#settings-dialog>.primary{position:absolute;left:7.8125%;top:86.16%;width:84.375%;height:4.91%;padding:0;margin:0}
-#settings-dialog>.settings-line{position:absolute;left:7.8125%;width:84.375%;height:5.36%;padding:0;display:block}
-#settings-dialog>.settings-line:nth-of-type(1){top:15.18%}#settings-dialog>.settings-line:nth-of-type(2){top:21.88%}#settings-dialog>.settings-line:nth-of-type(3){top:28.57%}
-#settings-dialog .settings-line input{position:absolute;right:0;top:0;height:100%;width:12%;margin:0}
-#settings-dialog .settings-line #volume{right:auto;left:44.44%;width:48.15%}
-#bindings button{position:absolute;left:58.98%;width:33.2%;height:4.46%;min-width:0;padding:0}
-.binding-row:nth-child(1) button{top:41.07%}.binding-row:nth-child(2) button{top:46.43%}.binding-row:nth-child(3) button{top:51.79%}.binding-row:nth-child(4) button{top:57.14%}.binding-row:nth-child(5) button{top:62.5%}.binding-row:nth-child(6) button{top:67.86%}
-#reset-controls{position:absolute;left:7.8125%;top:77.23%;width:35.16%;height:5.36%;padding:0}
-@media(max-width:600px){.topbar{height:38px;font-size:8px}.brand{font-size:9px;gap:3px}.quiet{font-size:8px;padding:4px}.game-frame{padding-top:16px}.frame-label{font-size:6px;top:4px}.page-footer{font-size:7px}.shell{padding:4px 6px}.top-actions{gap:3px}}
+#settings-dialog{font-family:'Courier New',monospace;font-size:16px;font-weight:700;line-height:1.6;width:520px;max-width:calc(100vw - 32px);max-height:85vh;max-height:85dvh;overflow-y:auto;padding:24px;border-radius:0;scrollbar-gutter:stable;scrollbar-color:#703878 #b8a8c8;overscroll-behavior:contain}
+#settings-dialog h2{font-size:28px;margin:12px 0;text-transform:uppercase;letter-spacing:2px;text-shadow:2px 2px #f8f0d8}#settings-dialog p{font-size:15px;letter-spacing:normal}#settings-dialog .eyebrow{font-size:12px;font-weight:700;letter-spacing:1px}
+#settings-dialog .settings-caption{font-size:14px;font-weight:700}#settings-dialog button{font-size:16px;min-height:40px;padding:8px 12px}#settings-dialog .dialog-top button{min-width:40px}
+#settings-dialog .settings-line{gap:16px;min-height:52px;font-weight:600}#settings-dialog input{accent-color:#214a8c}#settings-dialog input[type=checkbox]{width:22px;height:22px;flex-shrink:0}#settings-dialog input[type=range]{width:55%;min-height:32px;margin:0}
+#settings-dialog .binding-row{gap:16px;min-height:44px}#settings-dialog .binding-row button{min-width:130px;max-width:65%;white-space:normal;overflow-wrap:anywhere}#settings-dialog .help-controls{line-height:1.6}#settings-dialog :is(.muted,.error):empty{display:none}#settings-dialog>.primary{text-align:center}
+#settings-dialog button{border:2px solid;border-color:#63d6ff #181838 #181838 #63d6ff;border-radius:0;box-shadow:2px 2px #181838;text-transform:uppercase}#settings-dialog button:active{box-shadow:none;transform:translate(1px,1px)}#settings-dialog .settings-line{border-bottom:2px solid #a89cb8}
+#settings-dialog input[type=range]{appearance:none;background:transparent;cursor:pointer}#settings-dialog input[type=range]::-webkit-slider-runnable-track{height:8px;background:#8870a8;border:2px solid #703878}#settings-dialog input[type=range]::-moz-range-track{height:4px;background:#8870a8;border:2px solid #703878}
+#settings-dialog input[type=range]::-webkit-slider-thumb{appearance:none;width:16px;height:24px;margin-top:-10px;background:#214a8c;border:2px solid;border-color:#63d6ff #181838 #181838 #63d6ff;border-radius:0}#settings-dialog input[type=range]::-moz-range-thumb{width:12px;height:20px;background:#214a8c;border:2px solid;border-color:#63d6ff #181838 #181838 #63d6ff;border-radius:0}
+@media(max-width:600px){.topbar{min-height:38px;font-size:8px}.brand{font-size:9px;gap:3px}.quiet{font-size:8px;padding:4px}.game-frame{padding-top:16px}.frame-label{font-size:6px;top:4px}.page-footer{font-size:7px}.shell{padding:4px 6px}.top-actions{gap:3px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

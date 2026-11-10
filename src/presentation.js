@@ -57,7 +57,7 @@ export function victoryStarSlots(session, result) {
   return Array.from({ length: local ? 4 : 2 }, (_, index) => {
     const player = index % 2, slot = Math.floor(index / 2);
     return {
-      player, slot, x: 110 + player * 20, y: 188 + slot * 18,
+      player, slot, x: 110 + player * 20, y: 188 + slot * 16,
       filled: local ? slot < session.stars[player] : winner === player,
       awarded: winner === player && (!local || slot === session.stars[player] - 1),
     };

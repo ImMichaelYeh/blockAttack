@@ -45,12 +45,13 @@ test('one 256x224 bitmap composes native boards and HUD using integer pixels', (
   const stars=[1,0];match.result='win';
   scene.drawBattle(match,{boards,mascots,incoming},{session:{mode:'local',round:2,stars,difficulty:'normal'},effects:canvas(256,224),visualTick:36,resultAge:36,reduced:false});
   assert.deepEqual(stars,[1,0],'Rendering never awards another star');
-  assert.ok(screen.calls.some(call=>call.method==='fillRect'&&call.color==='#786020'&&call.args[1]>=206),'The second 2P star row is drawn inside the bottom HUD');
-  for(const y of [100,130,160])assert.ok(screen.calls.some(call=>call.method==='fillRect'&&call.color==='#4288ff'&&call.args[0]===104&&call.args[1]===y),'HUD plates share the reference left edge');
+  assert.ok(screen.calls.some(call=>call.method==='fillRect'&&call.color==='#786020'&&call.args[1]>=204),'The second 2P star row is drawn inside the bottom HUD');
+  assert.ok(screen.calls.some(call=>call.method==='fillRect'&&call.color==='#181038'&&call.args.join(',')==='106,22,44,196'),'Characters, stats and stars share one continuous center panel');
+  for(const x of [4,104,148])assert.ok(screen.calls.some(call=>call.method==='fillRect'&&call.color==='#382818'&&call.args[0]===x&&call.args[1]===20&&call.args[3]===200),'All three frames share top and bottom edges');
+  for(const y of [98,129,159,187])assert.ok(screen.calls.some(call=>call.method==='fillRect'&&call.color==='#585038'&&call.args.join(',')===`108,${y},40,1`),'Sections use matching inset dividers');
   for(const setup of [false,true]) scene.drawMenu({setup,index:0,mode:'series',difficulty:'hard',length:10,mascots,focus:'play-button'});
   scene.drawDialog({kicker:'Round complete',title:'Red wins!',copy:'Ready for the next round?',action:'Next level',focus:'continue'});
   scene.drawHelp({move:'WASD',swap:'Enter',raise:'Left Shift',focus:'help-done'});
-  scene.drawSettings({sound:true,volume:.4,reduced:false,rows:[{action:'raise',label:'Raise',key:'Left Shift'}],capture:null,message:'Saved',focus:'settings-done'});
   for(const call of [...screen.calls,...boards.flatMap(board=>board.calls)]) {
     assert.ok(!['fillText','strokeText','bezierCurveTo','arc','scale'].includes(call.method), `${call.method} must not introduce another rasterization grid`);
     for(const value of call.args) if(typeof value==='number') assert.ok(Number.isInteger(value),`${call.method} uses fractional pixels`);
@@ -69,15 +70,21 @@ test('the unplayable rising preview uses a darker palette than playable panels',
   board.cursor={x:0,y:0};assert.equal(board.move(0,-1),false);
 });
 
-test('result dialogs leave message text to the accessible overlay and preserve original buttons', () => {
+test('pause and result dialogs wrap fuller pixel lettering above the original buttons', () => {
   for(const [title,copy,action] of [
     ['Blue earns a star!','Red 1 - Blue 1. First to two stars wins the set.','Next round'],
     ['Blue takes it.','A little pressure builds a better player. Ready for another try?','Try again'],
     ['Series cleared.','You cleared all 12 levels. Nicely stacked.','Play series again'],
+    ['Paused.','The stack can wait. Resume when you are ready.','Resume'],
+    ['Back to menu?','Your current round will be lost.','Keep playing'],
   ]) {
-    const screen=canvas();new SceneRenderer(screen).drawDialog({kicker:'ROUND COMPLETE',title,copy,action,focus:'continue',result:true});
+    const screen=canvas();new SceneRenderer(screen).drawDialog({kicker:'TAKE A BREATHER',title,copy,action,focus:'continue'});
     const text=screen.calls.filter(call=>call.method==='fillRect'&&call.color==='#202048');
-    assert.equal(text.length,0,'The native overlay supplies smooth result lettering');
+    assert.ok(text.length&&text.every(call=>call.args[2]===1&&call.args[3]===1),'Copy uses the full seven-row pixel font');
+    assert.ok(text.every(call=>call.args[0]>=24&&call.args[0]+call.args[2]<=232&&call.args[1]>=87&&call.args[1]+call.args[3]<=124),'Wrapped copy stays clear of the buttons');
+    const heading=screen.calls.filter(call=>call.method==='fillRect'&&call.color==='#214a8c'&&call.args[1]<80);
+    assert.ok(heading.length&&heading.every(call=>call.args[2]===2&&call.args[3]===2),'Heading keeps crisp integer-size pixels');
+    assert.ok(heading.every(call=>call.args[0]>=24&&call.args[0]+call.args[2]<=232&&call.args[1]+call.args[3]<87),'Heading wraps without crossing into copy');
     for(const call of screen.calls.filter(call=>call.method==='fillRect')) {
       const [x,y,w,h]=call.args;assert.ok(x>=0&&y>=0&&x+w<=256&&y+h<=224);
     }
@@ -152,7 +159,7 @@ test('win stars use a 1x2 CPU grid and a 2x2 local grid with player columns', ()
   assert.equal(victoryStarSlots({mode:'series'},'win').length,2);
   const local={mode:'local',stars:[2,1]},before=JSON.stringify(local);
   const slots=victoryStarSlots(local,'win');
-  assert.deepEqual(slots.map(({x,y})=>[x,y]),[[110,188],[130,188],[110,206],[130,206]]);
+  assert.deepEqual(slots.map(({x,y})=>[x,y]),[[110,188],[130,188],[110,204],[130,204]]);
   assert.deepEqual(slots.map(star=>star.filled),[true,true,true,false]);
   assert.deepEqual(slots.filter(star=>star.awarded).map(star=>[star.player,star.slot]),[[0,1]]);
   assert.equal(JSON.stringify(local),before);
@@ -243,16 +250,28 @@ test('incoming glyphs show small groups, tall/wide blocks, metal, and queue over
   }
 });
 
-test('earned stars have smiling faces; blinking stops with reduced effects', () => {
-  for(const [tick,reduced,height]of [[0,false,2],[174,false,1],[174,true,2]]) {
+test('small earned stars bounce vertically; reduced effects keeps them still', () => {
+  const paint=(tick,reduced=false)=>{
     const surface=canvas();drawVictoryStar(surface.getContext('2d'),0,0,true,tick,reduced);
-    const eyes=surface.calls.filter(call=>call.color==='#302018'&&call.args[1]===5);
+    return surface.calls;
+  };
+  for(const [tick,reduced,height]of [[0,false,3],[174,false,1],[174,true,3]]) {
+    const calls=paint(tick,reduced);
+    const eyes=calls.filter(call=>call.color==='#302018');
     assert.equal(eyes.length,2);assert.ok(eyes.every(call=>call.args[3]===height));
-    assert.ok(surface.calls.some(call=>call.color==='#302018'&&call.args[1]===10),'A simple dark smile');
-    assert.ok(surface.calls.some(call=>call.color==='#f8e020'),'Bright yellow body');
-    assert.equal(surface.calls.filter(call=>call.color==='#ff9890').length,0,'No pink cheeks');
-    for(const call of surface.calls.filter(call=>call.method==='fillRect')) {
+    assert.ok(calls.some(call=>call.color==='#ffe838'),'Bright yellow body');
+  }
+  const eyesAt=tick=>paint(tick).filter(call=>call.color==='#302018').map(call=>call.args);
+  assert.ok(eyesAt(18)[0][1]<eyesAt(0)[0][1],'The star hops upward');
+  const outlineX=tick=>paint(tick).filter(call=>call.color==='#b87818').map(call=>call.args[0]);
+  for(let tick=0;tick<180;tick++)assert.deepEqual(outlineX(tick),outlineX(0),'Bouncing never shifts the star sideways');
+  assert.deepEqual(paint(0),paint(72),'The dance repeats');
+  assert.notDeepEqual(paint(144),paint(162),'The dance continues after the result celebration');
+  assert.deepEqual(paint(0,true),paint(174,true),'Reduced effects disables hopping, swaying and blinking');
+  for(let tick=0;tick<180;tick++) {
+    for(const call of paint(tick).filter(call=>call.method==='fillRect')) {
       const [x,y,w,h]=call.args;assert.ok(x>=0&&y>=0&&x+w<=16&&y+h<=16);
+      assert.ok(call.args.every(Number.isInteger),'The dance stays on the pixel grid');
     }
   }
   const empty=canvas();drawVictoryStar(empty.getContext('2d'),0,0,false);

@@ -4,8 +4,10 @@ An original rising-panel puzzle duel. In CPU mode, Red is you and Blue is the CP
 Local two-player lets two humans play Red versus Blue, first to two victory stars.
 The game starts directly at a SELECT menu inside an SNES-style console frame, with original
 Red/Blue square trash-block mascots, original pixel scenery, licensed music, and synthesized sound effects.
-Battle, menus, help, settings, pause, and result buttons render into one **256 × 224** bitmap.
-Round result messages use smooth HTML lettering above the original pixel buttons for legibility.
+Battle, menus, help, pause, and results render into one **256 × 224** bitmap.
+Pause and round results use fuller pixel lettering and wrapped lines above the original buttons.
+Settings uses readable monospace HTML lettering with a retro beveled frame and controls.
+Settings scrolls on smaller screens so every control remains reachable.
 
 ## Run
 
@@ -59,13 +61,13 @@ The preview binds only to this computer. Set `PORT` if 4173 is occupied.
 - One fixed NTSC-sized **256 × 224** scene scales by whole-number steps (1×, 2×, 3×, etc.) to fit
   the window. The display preserves 8:7 geometry and disables image smoothing.
 - Two 96 × 192 playfields use 16 × 16 panels at `(8, 24)` and `(152, 24)`, with a 48-pixel center
-  column for the characters and a 48-pixel-wide HUD: POINT (2P) or STAGE (1P), LEVEL, TIME,
+  panel with a shared gold frame for the characters, POINT (2P) or STAGE (1P), LEVEL, TIME,
   and 16-pixel victory stars. Single player has one star row; local play has a 2×2 grid.
   Scores and incoming trash sit at the top.
 - Saturated red-heart, yellow-star, green-circle, cyan-triangle, purple-diamond, and gray-! panels
   use newly drawn pixel masks and beveled edges. Original bitmap lettering is used throughout the canvas.
   Menus use the clone's compact SELECT arrangement; battles use a shaded forest backdrop.
-- The scene comes from Canvas, with smooth HTML result messages overlaid for legibility. Native HTML controls supply mouse hit areas,
+- The scene comes from Canvas, while Settings uses readable HTML text. Native HTML controls supply mouse hit areas,
   keyboard focus, form validation, and accessible labels for the bitmap menus. Pause/settings/menu
   utility buttons remain outside the game frame, along with the sound toggle.
 - Combo/chain cards appear beside the panels that cleared and float upward from that spot.
@@ -76,8 +78,8 @@ The preview binds only to this computer. Set `PORT` if 4173 is occupied.
   board names, scores, and the CPU VS / 1 MATCH header are omitted. Admitted trash replaces its icon.
   Attack trails fly between boards. Heavy landings shake the stack and throw up a brief impact burst.
 - Red and Blue sit together in the center with idle, attack, hit, win, and loss reactions.
-- Compact five-point yellow stars with narrow eyes, simple smiles, and a blink jump three times after a round win,
-  accompanied by a new sparkle cue. Local mode shows two star slots per player and keeps earned stars
+- Small golden stars with tall blinking eyes continuously bounce straight up and down after being earned,
+  accompanied by a sparkle cue when awarded. Local mode shows two star slots per player and keeps earned stars
   between rounds. CPU wins also show the new celebration without changing CPU match/series rules.
   Reduced effects displays a stationary star with open eyes.
 - A short curtain/READY/GO transition precedes each round. Simulation starts after GO.
@@ -112,6 +114,8 @@ Nothing is pushed or deployed by these commands.
 
 [Mechanics comparison](docs/MECHANICS_PARITY.md) records the audit against `../tetrisAttack`,
 the cursor fixes, and ten captured reference replays that verify engine state/event parity.
+It also records the native hover-swap correction: rapid swaps no longer restart an unsupported
+block's hover delay or carry it sideways during that delay. Four captured SNES traces cover this case.
 
 Automated checks cover retained engine mechanics, seeded play, legal CPU battles, series lengths 1–10,
 retry/draw/completion, input repeat/rebinding, controller navigation/pause/results, audio cleanup,

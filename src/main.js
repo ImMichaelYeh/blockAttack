@@ -40,7 +40,7 @@ function fitScene() {
   const scale = sceneScale(window.innerWidth || 1024, window.innerHeight || 900);
   $('scene-viewport').setAttribute('style', `--scale:${scale}`);
   const bounds = $('scene-viewport').getBoundingClientRect?.();
-  if (bounds) for (const id of ['match-dialog','help-dialog','settings-dialog']) $(id).setAttribute('style', `--scale:${scale};left:${bounds.left}px;top:${bounds.top}px;width:${bounds.width}px;height:${bounds.height}px`);
+  if (bounds) for (const id of ['match-dialog','help-dialog']) $(id).setAttribute('style', `--scale:${scale};left:${bounds.left}px;top:${bounds.top}px;width:${bounds.width}px;height:${bounds.height}px`);
 }
 
 function selectMenu(index, focus = false) {
@@ -69,6 +69,7 @@ function updateSettings() {
   $('sound').setAttribute('aria-pressed', String(!settings.sound));
   $('sound').setAttribute('aria-label', settings.sound ? 'Mute sound' : 'Enable sound');
   $('sound-setting').checked = settings.sound; $('volume').value = Math.round(settings.volume * 100); $('reduced').checked = settings.reduced;
+  $('top-volume').value = Math.round(settings.volume * 100);
   $('storage-message').textContent = storageFailed ? 'Settings cannot be saved in this browser. They still work for this visit.' : '';
   refreshBindings();
 }
@@ -117,7 +118,6 @@ function startRound() {
 }
 
 function setOverlay(kicker, title, copy, action) {
-  $('match-dialog').setAttribute('data-result', String(resultShown));
   $('overlay-kicker').textContent = kicker; $('overlay-title').textContent = title;
   $('overlay-copy').textContent = copy; $('continue').textContent = action;
   fitScene();
@@ -215,7 +215,7 @@ function draw() {
   audio.danger = lastDanger = danger;
   drawBattleEffects($('battle-effects'), match, { introAge, resultAge, visualTick, reduced: settings.reduced });
   scene.drawBattle(match, sceneBuffers, { session, effects: $('battle-effects'), visualTick, reduced: settings.reduced, resultAge: resultAge ?? 0 });
-  if ($('match-dialog').open) scene.drawDialog({ kicker: $('overlay-kicker').textContent, title: $('overlay-title').textContent, copy: $('overlay-copy').textContent, action: $('continue').textContent, focus: document.activeElement?.id || 'continue', result: resultShown });
+  if ($('match-dialog').open) scene.drawDialog({ kicker: $('overlay-kicker').textContent, title: $('overlay-title').textContent, copy: $('overlay-copy').textContent, action: $('continue').textContent, focus: document.activeElement?.id || 'continue' });
 }
 
 function frame(now) {
@@ -258,8 +258,7 @@ function frame(now) {
     scene.drawMenu({ setup: !$('cpu-setup').hidden, index: menuIndex, mode: new FormData($('setup')).get('mode'), difficulty: $('difficulty').value, level: $('level').value, mascots: [$('menu-red'), $('menu-blue')], focus: document.activeElement?.id });
   }
   const focus = document.activeElement?.id;
-  if ($('settings-dialog').open) scene.drawSettings({ sound: settings.sound, volume: settings.volume, reduced: settings.reduced, rows: Object.entries(LABELS).map(([action,label])=>({action,label,key:keyLabel(settings.bindings[action])})), capture, message: storageFailed ? 'Settings cannot be saved in this browser.' : capture ? 'Press a key. Esc or Tab cancels.' : $('binding-message').textContent, focus });
-  else if ($('help-dialog').open) scene.drawHelp({ move: ['up','left','down','right'].map(action=>keyLabel(settings.bindings[action])).join(''), swap: keyLabel(settings.bindings.swap), raise: keyLabel(settings.bindings.raise), focus });
+  if ($('help-dialog').open && !$('settings-dialog').open) scene.drawHelp({ move: ['up','left','down','right'].map(action=>keyLabel(settings.bindings[action])).join(''), swap: keyLabel(settings.bindings.swap), raise: keyLabel(settings.bindings.raise), focus });
   audio.updateMusic();
   requestAnimationFrame(frame);
 }
@@ -322,7 +321,12 @@ async function setSound(enabled) {
 }
 $('sound').addEventListener('click', () => { void setSound(!settings.sound); });
 $('sound-setting').addEventListener('change', () => { void setSound($('sound-setting').checked); });
-$('volume').addEventListener('input', () => { settings.volume = Number($('volume').value) / 100; audio.volume = settings.volume; audio.applyVolume(); save(); });
+for (const id of ['volume', 'top-volume']) $(id).addEventListener('input', () => {
+  settings.volume = Number($(id).value) / 100;
+  $('volume').value = $('top-volume').value = Math.round(settings.volume * 100);
+  audio.volume = settings.volume; audio.applyVolume(); save();
+});
+$('top-volume').addEventListener('focus', clearInputs);
 $('reduced').addEventListener('change', () => { settings.reduced = $('reduced').checked; save(); if (session) draw(); });
 $('reset-controls').addEventListener('click', () => { capture = null; settings.bindings = { ...DEFAULT_BINDINGS }; clearInputs(); refreshBindings(); save(); $('binding-message').textContent = 'Default controls restored.'; });
 
@@ -338,6 +342,7 @@ window.addEventListener('keydown', event => {
     $('binding-message').textContent = 'Binding saved. Arrow keys also move. Escape always pauses.'; return;
   }
   if (event.ctrlKey || event.altKey || event.metaKey || event.isComposing) return;
+  if (event.target?.id === 'top-volume' && code !== 'Escape') return;
   const modalOpen = ['help-dialog', 'settings-dialog', 'match-dialog'].some(id => $(id).open);
   if (modalOpen && event.repeat && ['Enter', 'Space'].includes(code)) { event.preventDefault(); return; }
   if (!$('menu').hidden && !modalOpen) {

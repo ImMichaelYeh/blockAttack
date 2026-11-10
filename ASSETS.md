@@ -12,16 +12,18 @@ It makes no external runtime requests.
   column-pair staggering. At stack height 10, idle blocks across the board animate inside fixed
   frames; symbols use newly drawn deformations rather than imported reference sprite pixels.
   `VICTORY_STAR` is a newly drawn compact five-point star on a 16-pixel grid, with bright yellow
-  fill, narrow blinking eyes and a simple dark smile. Empty slots use a muted gold outline.
+  fill, an amber edge and tall blinking eyes. Earned stars continuously bounce vertically;
+  reduced effects keeps them still. Empty slots use a muted gold outline.
   Its proportions follow the reference star; no original game's sprite is loaded.
   Incoming-trash previews use newly drawn miniature blue faces, wide/tall blocks, and riveted metal plates,
   grouped above the boards in the reference layout. Original combo/chain cards are drawn beside each clear.
-  The center HUD uses 48-pixel-wide plates for POINT/STAGE, LEVEL and TIME, followed by a compact,
-  plain dark inset and 16-pixel versions of our star artwork. POINT is a running 2P round-win total;
+  The center HUD is one 48-pixel-wide dark panel with a gold frame matching the playfields,
+  inset dividers, warm gold labels and cream values. It holds the characters, POINT/STAGE, LEVEL,
+  TIME and 16-pixel stars. POINT is a running 2P round-win total;
   stars track the current set. Single-player uses one row; two-player uses two rows of two.
 - `src/pixels.js`: new bitmap letter/digit definitions and pixel window/mask drawing routines.
   No copied game font, font file, or SVG icon is used. The canvas uses original bitmap lettering;
-  round result messages use a system font in the HTML overlay for legibility.
+  Settings uses a system font in HTML for legibility. Round results use full seven-row pixel lettering.
 - `style.css` and `index.html`: console frame, beveled windows, and SELECT/menu placement adapted
   from the user's clone layout. Colors, background, mascots, and screen content are original.
   Transparent native controls overlay the Canvas menus to preserve mouse, keyboard, and screen-reader

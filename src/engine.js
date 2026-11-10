@@ -195,7 +195,7 @@ export class Board {
     if (x < 0 || x >= COLS - 1 || y < 0 || y >= ROWS) return false;
     const cells = [this.grid[y][x], this.grid[y][x + 1]];
     return cells.some(Boolean) && cells.every(cell => !cell || (isPanel(cell) &&
-      (['idle', 'hover'].includes(cell.phase) || (cell.phase === 'swap' && cell.swapX === x))));
+      (cell.phase === 'idle' || (cell.phase === 'swap' && cell.swapX === x))));
   }
 
   swap() {

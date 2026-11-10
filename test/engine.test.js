@@ -100,17 +100,15 @@ test('reversals preserve position, restart four ticks, and reject overlapping pa
   }
 });
 
-test('hover stays swappable while clear, conversion, fall and garbage remain locked', () => {
+test('hover, clear, conversion, fall and garbage remain locked against swaps', () => {
   const board = emptyBoard();
   board.cursor = { x: 0, y: 0 };
-  for (const phase of ['clear', 'convert', 'fall']) {
+  for (const phase of ['clear', 'convert', 'fall', 'hover']) {
     board.grid[0][0] = panel(0, { phase, timer: 3 });
     assert.equal(board.swap(), false, phase);
   }
   board.grid[0][0] = { garbage: 1 };
   assert.equal(board.swap(), false);
-  board.grid[0][0] = panel(0, { phase: 'hover', timer: 3 });
-  assert.equal(board.swap(), true);
 });
 
 test('panels can swap into empty space and fall to the floor', () => {

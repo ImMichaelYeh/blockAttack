@@ -174,9 +174,10 @@ test('released clear-time taps cancel stop and remain buffered through cleanup a
 test('real hover/fall consumes stop, and a cancelled raise waits through landing before its first pixel', () => {
   for (const cancel of [false, true]) {
     const board = empty(); board.rise = 2 / 16;
-    board.grid[6][2] = panel(0); board.cursor = { x: 2, y: 6 }; board.stop = 25;
+    for(let y=0;y<=6;y++)board.grid[y][2]=panel(y%2);
+    board.cursor = { x: 2, y: 6 }; board.stop = 25;
     for (let frame = 0; frame <= 25; frame++) {
-      if (frame === 2) board.swap();
+      if (frame === 2) assert.equal(board.swap(),true);
       board.step({ raisePressed: cancel && frame === 8 });
       assert.equal(board.stop, cancel && frame >= 8 ? 0 : Math.max(0, 24 - frame));
       assert.equal(board.rise, cancel && frame >= 24 ? (3 + frame - 24) / 16 : 2 / 16);

@@ -32,14 +32,14 @@ const SQUASHED_SYMBOL_MASKS = SYMBOL_MASKS.map(mask=>{
 const ACCENTS = ['#e83848','#2868d8'];
 export const VICTORY_STAR = [
   '0000000000000000',
-  '0000000110000000',
+  '0000000000000000',
+  '0000000000000000',
   '0000000110000000',
   '0000001111000000',
   '0000001111000000',
   '0011111111111100',
-  '0001111111111000',
+  '0011111111111100',
   '0000111111110000',
-  '0000011111100000',
   '0000111111110000',
   '0000111111110000',
   '0001111001111000',
@@ -54,17 +54,21 @@ const STAR_INTERIOR = STAR_ROWS.map((row,y)=>[...row].map((bit,x)=>
 const rect = (ctx,x,y,w,h,color) => { ctx.fillStyle=color; ctx.fillRect(Math.round(x),Math.round(y),Math.round(w),Math.round(h)); };
 
 export function drawVictoryStar(ctx,x,y,filled=true,tick=0,reduced=false,size=16) {
+  const beat=filled&&!reduced?Math.floor(tick/6)%12:0;
+  const hop=[0,-1,-2,-3,-2,-1,0,-1,-2,-3,-2,-1][beat];
   const edge=value=>Math.floor(value*size/16);
-  const fill=(dx,dy,w,h,color)=>rect(ctx,x+edge(dx),y+edge(dy),edge(dx+w)-edge(dx),edge(dy+h)-edge(dy),color);
+  const fill=(dx,dy,w,h,color)=>{
+    rect(ctx,x+edge(dx),y+edge(dy+hop),edge(dx+w)-edge(dx),edge(dy+h)-edge(dy),color);
+  };
   const mask=(rows,dx,dy,color)=>{
     for(const [row,bits] of rows.split('/').entries())for(let column=0;column<bits.length;column++)if(bits[column]==='1')fill(dx+column,dy+row,1,1,color);
   };
-  mask(VICTORY_STAR,0,0,filled?'#f8e020':'#786020');
+  mask(VICTORY_STAR,0,0,filled?'#b87818':'#786020');
   if(filled) {
-    fill(7,2,1,2,'#fff8a0');
-    const eyes=!reduced&&Math.floor(tick)%180>=174?1:2;
-    fill(6,5,1,eyes,'#302018');fill(9,5,1,eyes,'#302018');
-    mask('1001/0110',6,9,'#302018');
+    mask(STAR_INTERIOR,0,0,'#ffe838');
+    fill(7,4,1,2,'#fff8a0');fill(4,7,1,1,'#fff8a0');
+    const eyes=!reduced&&Math.floor(tick)%180>=174?1:3;
+    fill(6,7,1,eyes,'#302018');fill(9,7,1,eyes,'#302018');
   } else mask(STAR_INTERIOR,0,0,'#181038');
 }
 
@@ -287,23 +291,22 @@ export class SceneRenderer {
       ctx.drawImage(buffers.incoming[player],left,0);
     }
     const local=session.mode==='local';
+    rect(ctx,104,20,48,200,'#382818');rect(ctx,105,21,46,198,'#a88038');
+    rect(ctx,106,22,44,196,'#181038');rect(ctx,106,22,44,1,'#f0d078');
+    rect(ctx,149,23,1,195,'#585038');
+    for(const y of [98,129,159,187])rect(ctx,108,y,40,1,'#585038');
     pixelText(ctx,'P1',116,42,'#ffb8c8',{small:true,center:true});pixelText(ctx,local?'P2':'CPU',local?140:138,42,'#b8e8ff',{small:true,center:true});
     ctx.drawImage(buffers.mascots[0],104,50);ctx.drawImage(buffers.mascots[1],128,50);
-    pixelText(ctx,'VS',128,84,'#f8f800',{center:true});
-    for(const [y,height] of [[100,28],[130,28],[160,27]]) {
-      rect(ctx,104,y,48,height,'#181038');rect(ctx,104,y,2,height,'#4288ff');rect(ctx,150,y,2,height,'#f878b8');
-      rect(ctx,106,y,44,1,'#f8c830');rect(ctx,106,y+height-1,44,1,'#903858');
-    }
-    pixelText(ctx,local?'POINT':'STAGE',128,104,'#f8f800',{center:true});
-    if(local) for(let player=0;player<2;player++) pixelText(ctx,session.points?.[player]??0,118+player*20,115,player?'#ff80c0':'#63d6ff',{small:true,scale:(session.points?.[player]??0)<100?2:1,center:true});
-    else pixelText(ctx,session.mode==='series'?session.level:1,128,115,'#f8f800',{small:true,scale:2,center:true});
-    pixelText(ctx,'LEVEL',128,134,'#f8f800',{center:true});
-    if(local) for(let player=0;player<2;player++) pixelText(ctx,({easy:3,normal:5,hard:7}[match.boards[player].difficulty]),118+player*20,145,player?'#ff80c0':'#63d6ff',{small:true,scale:2,center:true});
-    else pixelText(ctx,session.cpuLevel??session.level,128,145,'#f8f800',{small:true,scale:2,center:true});
-    pixelText(ctx,'TIME',128,164,'#f8e8f8',{center:true});
+    pixelText(ctx,'VS',128,84,'#f0d078',{center:true});
+    pixelText(ctx,local?'POINT':'STAGE',128,104,'#f0d078',{center:true});
+    if(local) for(let player=0;player<2;player++) pixelText(ctx,session.points?.[player]??0,118+player*20,115,player?'#b8e8ff':'#ffb8c8',{small:true,scale:(session.points?.[player]??0)<100?2:1,center:true});
+    else pixelText(ctx,session.mode==='series'?session.level:1,128,115,'#fff0c0',{small:true,scale:2,center:true});
+    pixelText(ctx,'LEVEL',128,134,'#f0d078',{center:true});
+    if(local) for(let player=0;player<2;player++) pixelText(ctx,({easy:3,normal:5,hard:7}[match.boards[player].difficulty]),118+player*20,145,player?'#b8e8ff':'#ffb8c8',{small:true,scale:2,center:true});
+    else pixelText(ctx,session.cpuLevel??session.level,128,145,'#fff0c0',{small:true,scale:2,center:true});
+    pixelText(ctx,'TIME',128,164,'#f0d078',{center:true});
     const seconds=Math.floor(match.tick/60),time=`${Math.floor(seconds/60)}:${String(seconds%60).padStart(2,'0')}`;
-    pixelText(ctx,time,128,174,'#f8d8f8',{small:true,scale:2,center:true});
-    rect(ctx,106,188,44,local?35:17,'#181038');
+    pixelText(ctx,time,128,174,'#fff0c0',{small:true,scale:2,center:true});
     for(const star of victoryStarSlots(session,match.result)) {
       drawVictoryStar(ctx,star.x,star.y+(star.awarded?Math.round(victoryStarOffset(resultAge,reduced)/6):0),star.filled,visualTick+star.player*37+star.slot*17,reduced,16);
     }
@@ -320,7 +323,6 @@ export class SceneRenderer {
       entries.forEach((text,row)=>{const y=65+row*22;if(row===index){rect(ctx,40,y-3,113,15,'#f8e8f8');pixelMask(ctx,'1000/1100/1110/1111/1110/1100/1000',42,y,'#a83088');}pixelText(ctx,text,51,y,['#214a8c','#a83058','#887810','#188848'][row],{shadow:false});});
       pixelWindow(ctx,170,52,80,35,true);pixelText(ctx,['READY TO','LOCAL DUEL','MAKE SOME','YOUR KEYS'][index],210,60,'#a01878',{small:true,center:true,shadow:false});pixelText(ctx,['MAKE A CHAIN?','FIRST TO 2!','BIG COMEBACKS!','YOUR SOUND!'][index],210,72,'#a01878',{small:true,center:true,shadow:false});
       ctx.drawImage(mascots[0],170,121,48,64);ctx.drawImage(mascots[1],222,158);
-      pixelText(ctx,'W/S SELECT  ENTER CONFIRM',128,205,'#fff',{small:true,center:true});
     } else {
       pixelWindow(ctx,26,49,204,145);
       pixelText(ctx,'1 PLAYER GAME',128,58,'#214a8c',{center:true,shadow:false});
@@ -347,13 +349,18 @@ export class SceneRenderer {
       pixelText(ctx,'TAB SELECT  ENTER PLAY  ESC BACK',128,205,'#fff',{small:true,center:true});
     }
   }
-  drawDialog({kicker,title,copy,action,focus,result=false}) {
-    const ctx=this.ctx;pixelWindow(ctx,result?8:16,result?25:49,result?240:224,result?149:125,true);
-    pixelText(ctx,kicker,128,result?33:57,'#703878',{small:true,center:true,shadow:false});
-    if(!result) {
-      pixelText(ctx,title,128,70,'#214a8c',{center:true,shadow:false});
-      const words=copy.toUpperCase().split(' ');let line='',row=0;
-      for(const word of [...words,'']){if((line+word).length>45||!word){pixelText(ctx,line,128,87+row*7,'#202048',{small:true,center:true,shadow:false});line='';row++;}line+=word+' ';}
+  drawDialog({kicker,title,copy,action,focus}) {
+    const ctx=this.ctx;pixelWindow(ctx,8,25,240,149,true);
+    pixelText(ctx,kicker,128,33,'#703878',{center:true,shadow:false});
+    for(const [text,y,scale,limit,color]of [[title,45,2,17,'#214a8c'],[copy,87,1,34,'#202048']]) {
+      let line='',row=0;
+      for(const word of [...text.toUpperCase().split(' '),'']) {
+        if(line&&((line+' '+word).length>limit||!word)) {
+          pixelText(ctx,line,128,y+row*(scale===2?18:10),color,{scale,center:true,shadow:false});
+          line='';row++;
+        }
+        line+=(line?' ':'')+word;
+      }
     }
     for(const [id,label,y]of[['continue',action,128],['overlay-menu','MAIN MENU',149]]){rect(ctx,32,y,192,14,focus===id?'#703878':'#214a8c');rect(ctx,33,y+1,190,1,'#63d6ff');pixelText(ctx,label,128,y+4,'#fff',{center:true});}
   }
@@ -369,17 +376,5 @@ export class SceneRenderer {
     lessons.forEach(([title,lines],index)=>{const y=40+index*34;pixelText(ctx,title,20,y,'#703878',{shadow:false});lines.forEach((line,row)=>pixelText(ctx,line,20,y+12+row*7,'#202048',{small:true,shadow:false}));});
     pixelText(ctx,`${move} MOVE  ${swap} SWAP`,128,181,'#214a8c',{small:true,center:true,shadow:false});pixelText(ctx,`${raise} RAISE  ESC PAUSE`,128,190,'#214a8c',{small:true,center:true,shadow:false});
     rect(ctx,24,199,208,12,focus==='help-done'?'#703878':'#214a8c');pixelText(ctx,'GOT IT!',128,202,'#fff',{center:true});
-  }
-  drawSettings({sound,volume,reduced,rows,capture,message,focus}) {
-    const ctx=this.ctx;pixelWindow(ctx,8,8,240,208,true);pixelText(ctx,'SETTINGS',128,18,'#214a8c',{center:true,shadow:false});pixelText(ctx,'X',231,17,focus==='settings-close'?'#a01878':'#214a8c',{shadow:false});
-    for(const [id,label,value,y]of[['sound-setting','SOUND',sound?'ON':'OFF',37],['reduced','REDUCED FX',reduced?'ON':'OFF',67]]){
-      pixelText(ctx,label,20,y,'#202048',{small:true,shadow:false});pixelText(ctx,value,211,y,'#a01878',{small:true,center:true,shadow:false});if(focus===id)pixelText(ctx,'>',11,y,'#a01878',{small:true,shadow:false});
-    }
-    pixelText(ctx,'VOLUME',20,52,'#202048',{small:true,shadow:false});rect(ctx,116,54,104,2,'#8870a8');rect(ctx,116+Math.round(volume*100),50,4,8,focus==='volume'?'#a01878':'#214a8c');
-    pixelText(ctx,'PLAYER 1 CONTROLS',20,82,'#703878',{small:true,shadow:false});
-    rows.forEach(({action,label,key},index)=>{const y=94+index*12;pixelText(ctx,label,20,y,'#202048',{small:true,shadow:false});rect(ctx,151,y-2,85,10,capture===action||focus===`bind-${action}`?'#703878':'#214a8c');pixelText(ctx,capture===action?'PRESS KEY':key,193,y,'#fff',{small:true,center:true});});
-    rect(ctx,20,173,90,12,focus==='reset-controls'?'#703878':'#214a8c');pixelText(ctx,'RESET KEYS',65,176,'#fff',{small:true,center:true});pixelText(ctx,'P2: IJKL / RSHIFT / SPACE',128,187,'#214a8c',{small:true,center:true,shadow:false});
-    rect(ctx,20,193,216,11,focus==='settings-done'?'#703878':'#214a8c');pixelText(ctx,'DONE',128,195,'#fff',{center:true});
-    if(message)pixelText(ctx,message.slice(0,53),128,206,'#a01878',{small:true,center:true,shadow:false});
   }
 }

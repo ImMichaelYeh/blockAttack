@@ -94,6 +94,18 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
     browserWindow.fire('keyup', { code: 'NumpadEnter' });
     for (let i = 0; i < 100; i++) frame();
     assert.ok(observedMatch.boards[0].score > 0, 'The opening swap actually clears panels');
+    get('top-volume').value = '65';get('top-volume').fire('input');
+    assert.equal(observedAudio.volume,.65,'Top slider changes live audio without pausing');
+    assert.equal(Number(get('volume').value),65,'Settings volume stays synchronized');
+    assert.equal(JSON.parse(stored.get('blockAttack.original.settings.v1')).volume,.65);
+    assert.equal(get('match-dialog').open,false);
+    const cursorBeforeVolume={...observedMatch.boards[0].cursor};
+    browserWindow.fire('keydown',{code:'ArrowLeft',target:get('top-volume'),preventDefault(){assert.fail('Slider arrows must keep their native behavior');}});
+    frame();
+    assert.deepEqual(observedMatch.boards[0].cursor,cursorBeforeVolume,'Slider arrows do not move the game cursor');
+    get('volume').value='40';get('volume').fire('input');
+    assert.equal(observedAudio.volume,.4);
+    assert.equal(Number(get('top-volume').value),40,'Settings changes update the top slider too');
     for (const board of observedMatch.boards) {
       let height = 9;
       board.occupiedHeight = () => height;
@@ -116,7 +128,6 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
     }
     browserWindow.fire('blur');
     assert.equal(get('overlay-title').textContent, 'Paused.');
-    assert.equal(get('match-dialog').attributes['data-result'], 'false');
     const clock = get('clock').textContent;
     for (let i = 0; i < 100; i++) frame();
     assert.equal(get('clock').textContent, clock);
@@ -136,7 +147,6 @@ test('CPU controller covers menu, play, focus pause, settings, results and serie
     assert.equal(get('battle-announcement').textContent, 'Blue wins!', 'Resuming presentation does not start another round');
     advance(155);
     assert.equal(get('overlay-title').textContent, 'Blue takes it.');
-    assert.equal(get('match-dialog').attributes['data-result'], 'true');
     let blockedRepeat = false;
     browserWindow.fire('keydown', { code: 'Enter', repeat: true, preventDefault() { blockedRepeat = true; } });
     assert.ok(blockedRepeat, 'Held confirm cannot skip the result menu');
